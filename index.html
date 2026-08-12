@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Just Another Sheep — Same farm. Different sheep.</title>
+<meta name="description" content="Same farm. Different sheep. The story of Sheep, the farm, Sheep Records and everything waiting on the other side of the gate.">
+<meta name="theme-color" content="#22301a">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Just Another Sheep">
+<meta property="og:description" content="Same farm. Different sheep.">
+<meta property="og:image" content="assets/img/og-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+<!-- Self-hosted fonts: no third party request, no cookie banner, faster on mobile -->
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-black-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/permanent-marker-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/oswald-600-latin.woff2" crossorigin>
+<link rel="preload" as="image" href="assets/img/hero.jpg" fetchpriority="high">
+
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<!-- scroll animations only run when JS is available; without it everything stays visible -->
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="site-header__inner">
+    <a class="brand" href="#top" aria-label="Just Another Sheep — home">
+      <span class="brand__line">Just Another</span>
+      <span class="brand__line">Sheep</span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Main">
+      <ul>
+        <li><a href="#story">Story</a></li>
+        <li><a href="#characters">Characters</a></li>
+        <li><a href="#records">Sheep Records</a></li>
+        <li><a href="#token">$Sheep</a></li>
+      </ul>
+    </nav>
+
+    <a class="btn btn--solid btn--header" href="https://x.com/" target="_blank" rel="noopener">Follow on X</a>
+
+    <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav" hidden>
+  <nav aria-label="Mobile">
+    <ul>
+      <li><a href="#story"><span class="mobile-nav__num">02</span> Story</a></li>
+      <li><a href="#characters"><span class="mobile-nav__num">03</span> Characters</a></li>
+      <li><a href="#records"><span class="mobile-nav__num">04</span> Sheep Records</a></li>
+      <li><a href="#gate"><span class="mobile-nav__num">05</span> The Other Side</a></li>
+      <li><a href="#token"><span class="mobile-nav__num">06</span> $Sheep</a></li>
+    </ul>
+  </nav>
+  <a class="btn btn--solid btn--block" href="https://x.com/" target="_blank" rel="noopener">Follow on X</a>
+  <p class="mobile-nav__note">Same farm. Different sheep.</p>
+</div>
+
+<main id="main">
+
+  <!-- ================= 01 / HERO ================= -->
+  <section class="hero" id="top">
+    <div class="hero__media">
+      <img src="assets/img/hero.jpg" alt="Sheep standing in front of the farm gate while the flock lines up behind him"
+           width="1920" height="1080" fetchpriority="high" decoding="async"
+           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+    </div>
+    <div class="hero__scrim" aria-hidden="true"></div>
+
+    <div class="hero__content wrap">
+      <p class="eyebrow eyebrow--light">Welcome to the farm</p>
+      <h1 class="hero__title">
+        <span>Just Another</span>
+        <span>Sheep</span>
+      </h1>
+      <p class="hero__tagline">Same farm. Different sheep.</p>
+      <a class="btn btn--solid btn--lg" href="#story">Explore the farm</a>
+    </div>
+
+    <a class="hero__scroll" href="#story" aria-label="Scroll to the story">
+      <span class="hero__scroll-line" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- ================= 02 / LIFE IN THE FLOCK ================= -->
+  <section class="section section--cream flock" id="story">
+    <figure class="media media--wide reveal">
+      <img src="assets/img/flock.jpg" alt="The shepherd walking through the feeding barn between two long rows of sheep"
+           width="1920" height="900" loading="lazy" decoding="async"
+           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+    </figure>
+
+    <div class="wrap flock__grid">
+      <div class="flock__head reveal">
+        <p class="eyebrow"><span class="num">02</span> / Life in the flock</p>
+        <h2 class="h-display">A perfect day.<br>Every day.</h2>
+      </div>
+
+      <div class="flock__body reveal">
+        <p>The bell rings at seven.<br>Breakfast begins at eight.<br>By nine, every sheep is exactly where it is supposed to be.</p>
+        <p>The farm provides food, shelter and protection. Nobody gets lost. Nobody is left behind. Nobody has to worry about making the wrong choice.</p>
+        <p>The gates simply close once everyone is safely inside.</p>
+      </div>
+
+      <div class="flock__aside reveal">
+        <p class="statement">Comfort is easy when every decision has already been made for you.</p>
+        <p class="whisper">Please enjoy your freedom between the fences.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 03 / MEET SHEEP ================= -->
+  <section class="section split split--green" id="characters">
+    <figure class="split__media reveal">
+      <img src="assets/img/sheep-wall.jpg" alt="Sheep spraying BAAAAAHN THE SYSTEM on the wall of a barn at sunset"
+           width="1200" height="1100" loading="lazy" decoding="async"
+           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+    </figure>
+
+    <div class="split__text reveal">
+      <p class="eyebrow eyebrow--gold"><span class="num">03</span> / Meet Sheep</p>
+      <hr class="rule">
+      <h2 class="h-display h-display--light">Just Another<br>Sheep.</h2>
+      <p class="kicker">At least, that is what they called him.</p>
+
+      <p>Sheep grew up like everyone else on the farm: follow the bell, stay inside the lines and never ask too many questions.</p>
+      <p>For a while, that seemed comfortable enough. But Sheep has always noticed the little things. The locked gates. The watchful speakers. How every day looks suspiciously like the one before it.</p>
+      <p>He is not a hero. He does not have a master plan. He simply believes that a life without choices is not much of a life at all.</p>
+      <p>So while the flock follows the schedule, Sheep has started leaving a few thoughts of his own behind.</p>
+
+      <p class="whisper whisper--gold">Apparently, independent thinking is a personality defect.</p>
+    </div>
+  </section>
+
+  <!-- ================= 04 / SHEEP RECORDS ================= -->
+  <section class="section split split--cream split--reverse" id="records">
+    <figure class="split__media reveal">
+      <img src="assets/img/studio.jpg" alt="Sheep recording in a small wooden barn studio filled with vintage equipment"
+           width="1200" height="1100" loading="lazy" decoding="async"
+           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+    </figure>
+
+    <div class="split__text reveal">
+      <p class="eyebrow"><span class="num">04</span> / Sheep Records</p>
+      <hr class="rule">
+      <h2 class="h-display h-display--green">Ideas build<br>worlds.</h2>
+
+      <p>Between the bells, Sheep began building something of his own.</p>
+      <p>He founded Sheep Records and runs it in his spare time. It is an independent studio where ideas grow into music, films and visual worlds.</p>
+      <p>Together, we produce original releases, music videos, visual identities and campaigns. Sound, image and storytelling are developed as one, from the first idea to the finished world.</p>
+
+      <p class="tags">Music <span>·</span> Videos <span>·</span> Visuals <span>·</span> Campaigns</p>
+      <a class="btn btn--outline" href="#records">Enter Sheep Records</a>
+      <p class="whisper">Independent by nature. Different by choice.</p>
+    </div>
+  </section>
+
+  <!-- ================= 05 / THE OTHER SIDE ================= -->
+  <section class="section gate" id="gate">
+    <figure class="media media--wide reveal">
+      <img src="assets/img/gate.jpg" alt="Sheep pushing open the farm gate, looking towards the SOLANGELES hills at golden hour"
+           width="1920" height="900" loading="lazy" decoding="async"
+           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+    </figure>
+
+    <div class="gate__panel">
+      <div class="wrap gate__grid">
+        <div class="gate__head reveal">
+          <p class="eyebrow eyebrow--gold"><span class="num">05</span> / The other side</p>
+          <hr class="rule">
+          <h2 class="h-display h-display--light">The fence was never the horizon.</h2>
+        </div>
+
+        <div class="gate__col reveal">
+          <p>Sheep had spent his whole life being told what waited beyond the farm.</p>
+          <p>Uncertainty. Disorder. Mistakes without anyone there to correct them.</p>
+          <p>But when he looked toward <span class="sc">Solangeles</span>, he saw something the farm had never offered him.</p>
+          <p>A choice.</p>
+        </div>
+
+        <div class="gate__col reveal">
+          <p>The city promised no safety and no simple answers. It only proved that another way of living was possible.</p>
+          <p>For the first time, the unknown did not feel empty.</p>
+          <p>It felt open.</p>
+          <p class="statement statement--light">The gate was still closed.<br>Sheep was no longer certain that it should be.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+  ================================================================
+  SECTIONS 06 – 08 GO HERE
+  ----------------------------------------------------------------
+  Copy one of the layouts above and change the id + content:
+
+    · full-bleed image + text columns  →  .section.gate      (05)
+    · image left / text right          →  .section.split.split--reverse (04)
+    · text left / image right          →  .section.split     (03)
+    · image on top + 3 text columns    →  .section.flock     (02)
+
+  Colour variants: .split--cream / .split--green / .section--cream
+  The nav already links to #token for the $SHEEP section.
+  ================================================================
+  -->
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <a class="brand brand--footer" href="#top">
+      <span class="brand__line">Just Another</span>
+      <span class="brand__line">Sheep</span>
+    </a>
+
+    <nav class="site-footer__nav" aria-label="Footer">
+      <a href="#story">Story</a>
+      <a href="#characters">Characters</a>
+      <a href="#records">Sheep Records</a>
+      <a href="#token">$Sheep</a>
+      <a href="https://x.com/" target="_blank" rel="noopener">X</a>
+    </nav>
+
+    <p class="site-footer__note">Same farm. Different sheep.</p>
+    <p class="site-footer__legal">© <span id="year">2026</span> Just Another Sheep. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
