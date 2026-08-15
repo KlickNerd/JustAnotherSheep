@@ -18,9 +18,12 @@ Hier liegen die Tracks für den Player in Sektion 05 (Sheep Records).
 
 ## Texte und Prompts
 
-`album.md` — Albumkonzept, Dramaturgie, Übersicht aller 14 Tracks.
+`album-complete.md` — **alles in einer Datei**: Konzept plus alle 14
+Songtexte und Suno-Prompts. Die Fassung zum Weitergeben oder Ausdrucken.
+`album.md` — nur das Konzept: Dramaturgie, Motive, Übersicht.
 `tracks/NN-titel.md` — pro Track: vollständiger Songtext, Suno-Prompt
 (Style of Music, Exclude Styles, getaggte Lyrics) und Produktionsnotizen.
+Das ist die Arbeitsfassung — beim Produzieren jeweils eine Datei offen haben.
 
 Titel und Dateiname stehen in `index.html` am Element `.player`
 (`data-src`, `data-title`) und im Text darüber (`.player__title`).
