@@ -88,6 +88,85 @@
     items.forEach(function (el) { io.observe(el); });
   }
 
+  /* ---------- Sheep Records player ----------
+     Die Audiodatei wird erst angefasst, wenn jemand auf Play drückt —
+     bis dahin kostet der Player kein einziges Byte Mobilfunkvolumen.
+     Fehlt die Datei, sagt der Player das, statt kaputt dazustehen. */
+  document.querySelectorAll('.player').forEach(function (root) {
+    var btn = root.querySelector('.player__toggle');
+    var seek = root.querySelector('.player__seek');
+    var cur = root.querySelector('.player__cur');
+    var dur = root.querySelector('.player__dur');
+    var note = root.querySelector('.player__note');
+    var title = root.dataset.title || 'Track';
+    var audio = null;
+    var scrubbing = false;
+
+    function fmt(s) {
+      if (!isFinite(s)) return '–:––';
+      var m = Math.floor(s / 60);
+      var r = Math.floor(s % 60);
+      return m + ':' + (r < 10 ? '0' : '') + r;
+    }
+
+    function fail() {
+      root.classList.remove('is-playing');
+      root.classList.add('is-missing');
+      btn.disabled = true;
+      seek.disabled = true;
+      btn.setAttribute('aria-label', title + ' ist noch nicht verfügbar');
+      if (note) note.hidden = false;
+    }
+
+    function build() {
+      audio = new Audio();
+      audio.preload = 'metadata';
+      audio.src = root.dataset.src;
+
+      audio.addEventListener('loadedmetadata', function () {
+        dur.textContent = fmt(audio.duration);
+        seek.disabled = false;
+      });
+      audio.addEventListener('timeupdate', function () {
+        cur.textContent = fmt(audio.currentTime);
+        if (!scrubbing && audio.duration) {
+          seek.value = (audio.currentTime / audio.duration) * 1000;
+        }
+      });
+      audio.addEventListener('ended', function () {
+        root.classList.remove('is-playing');
+        btn.setAttribute('aria-label', title + ' abspielen');
+        audio.currentTime = 0;
+        seek.value = 0;
+      });
+      audio.addEventListener('error', fail);
+      return audio;
+    }
+
+    btn.addEventListener('click', function () {
+      if (!audio) build();
+      if (audio.paused) {
+        var p = audio.play();
+        if (p && p.catch) p.catch(fail);
+        root.classList.add('is-playing');
+        btn.setAttribute('aria-label', title + ' pausieren');
+      } else {
+        audio.pause();
+        root.classList.remove('is-playing');
+        btn.setAttribute('aria-label', title + ' abspielen');
+      }
+    });
+
+    seek.addEventListener('input', function () {
+      scrubbing = true;
+      if (audio && audio.duration) cur.textContent = fmt(seek.value / 1000 * audio.duration);
+    });
+    seek.addEventListener('change', function () {
+      if (audio && audio.duration) audio.currentTime = seek.value / 1000 * audio.duration;
+      scrubbing = false;
+    });
+  });
+
   /* ---------- footer year ---------- */
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();

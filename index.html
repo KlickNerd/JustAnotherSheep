@@ -228,6 +228,24 @@
       <p>He founded Sheep Records and runs it in his spare time. It is an independent studio where ideas grow into music, films and visual worlds.</p>
       <p>Together, we produce original releases, music videos, visual identities and campaigns. Sound, image and storytelling are developed as one, from the first idea to the finished world.</p>
 
+      <!-- Player: lädt nichts, bis jemand auf Play drückt. Fehlt die Datei,
+           schaltet er sich selbst in den „kommt bald"-Zustand. -->
+      <div class="player" data-src="assets/audio/seven.mp3" data-title="Seven">
+        <div class="player__row">
+          <button class="player__toggle" type="button" aria-label="Seven abspielen">
+            <span class="player__icon" aria-hidden="true"></span>
+          </button>
+          <div class="player__meta">
+            <p class="player__label">Release 001 · Sheep Records</p>
+            <p class="player__title">Seven</p>
+          </div>
+        </div>
+        <input class="player__seek" type="range" min="0" max="1000" value="0" step="1"
+               aria-label="Position im Track" disabled>
+        <p class="player__time"><span class="player__cur">0:00</span><span class="player__dur">–:––</span></p>
+        <p class="player__note" hidden>Der erste Track wird gerade fertig gemischt.</p>
+      </div>
+
       <p class="tags">Music <span>·</span> Videos <span>·</span> Visuals <span>·</span> Campaigns</p>
       <a class="btn btn--outline" href="#records">Enter Sheep Records</a>
       <p class="whisper">Independent by nature. Different by choice.</p>
