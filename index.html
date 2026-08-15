@@ -50,6 +50,7 @@
         <li><a href="#story">Story</a></li>
         <li><a href="#characters">Characters</a></li>
         <li><a href="#records">Sheep Records</a></li>
+        <li><a href="#paper">The Open Gate</a></li>
         <li><a href="#token">$Sheep</a></li>
       </ul>
     </nav>
@@ -69,8 +70,9 @@
       <li><a href="#story"><span class="mobile-nav__num">03</span> Story</a></li>
       <li><a href="#characters"><span class="mobile-nav__num">04</span> Characters</a></li>
       <li><a href="#records"><span class="mobile-nav__num">05</span> Sheep Records</a></li>
-      <li><a href="#gate"><span class="mobile-nav__num">06</span> The Other Side</a></li>
-      <li><a href="#token"><span class="mobile-nav__num">07</span> $Sheep</a></li>
+      <li><a href="#paper"><span class="mobile-nav__num">06</span> The Open Gate</a></li>
+      <li><a href="#gate"><span class="mobile-nav__num">07</span> The Other Side</a></li>
+      <li><a href="#token"><span class="mobile-nav__num">08</span> $Sheep</a></li>
     </ul>
   </nav>
   <a class="btn btn--solid btn--block" href="https://x.com/" target="_blank" rel="noopener">Follow on X</a>
@@ -173,7 +175,7 @@
   </section>
 
   <!-- ================= 04 / MEET SHEEP ================= -->
-  <section class="section split split--green split--wall" id="characters">
+  <section class="section split split--green split--wall split--whole" id="characters">
     <figure class="split__media reveal">
       <picture>
         <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/sheep-wall-mobile.webp">
@@ -232,7 +234,45 @@
     </div>
   </section>
 
-  <!-- ================= 06 / THE OTHER SIDE ================= -->
+  <!-- ================= 06 / THE OPEN GATE ================= -->
+  <section class="section split split--ink split--whole" id="paper">
+    <figure class="split__media reveal">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/opengate-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/opengate-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/opengate-1000.webp 1000w, assets/img/opengate.webp 1057w" sizes="(min-width: 1000px) 55vw, 100vw">
+        <img src="assets/img/opengate.jpg"
+             srcset="assets/img/opengate-1000.jpg 1000w, assets/img/opengate.jpg 1057w" sizes="(min-width: 1000px) 55vw, 100vw"
+             alt="Ewe pulling a fresh copy of The Open Gate off a hand press in her archive room at night"
+             width="1057" height="916" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
+    </figure>
+
+    <div class="split__text reveal">
+      <p class="eyebrow eyebrow--gold"><span class="num">06</span> / The Open Gate</p>
+      <hr class="rule">
+      <h2 class="h-display h-display--light">Truth travels hoof to hoof.</h2>
+      <p class="kicker">Vol. 01 · Farm edition · Printed before the morning bell</p>
+
+      <p>Sheep is not the only one on the farm building something after hours.</p>
+      <p>Ewe listens. She asks precise questions, writes the answers down and notices the details the flock has learned to overlook.</p>
+      <p>At night she sets them in type. <em>The Open Gate</em> is an independent paper: she writes it, prints it and carries it across the farm before the bell rings.</p>
+      <p>It does not tell the flock what to think. It tells them what happened and trusts them with the rest.</p>
+
+      <div class="clipping">
+        <p class="clipping__label">From issue 01</p>
+        <p class="clipping__head">Who changed the morning?</p>
+        <p class="clipping__body">For three minutes, the farm stopped following the bell. Here is what happened instead.</p>
+      </div>
+
+      <p class="tags">Farm reports <span>·</span> Culture <span>·</span> Opinion <span>·</span> Letters</p>
+      <a class="btn btn--outline btn--paper" href="#paper">Read The Open Gate</a>
+      <p class="whisper whisper--gold">Some stories travel better folded.</p>
+    </div>
+  </section>
+
+  <!-- ================= 07 / THE OTHER SIDE ================= -->
   <section class="section gate" id="gate">
     <figure class="media media--wide reveal">
       <picture>
@@ -250,7 +290,7 @@
     <div class="gate__panel">
       <div class="wrap gate__grid">
         <div class="gate__head reveal">
-          <p class="eyebrow eyebrow--gold"><span class="num">06</span> / The other side</p>
+          <p class="eyebrow eyebrow--gold"><span class="num">07</span> / The other side</p>
           <hr class="rule">
           <h2 class="h-display h-display--light">The fence was never the horizon.</h2>
         </div>
@@ -274,15 +314,15 @@
 
   <!--
   ================================================================
-  SECTIONS 07 – 09 GO HERE
+  SECTIONS 08 – 10 GO HERE
   ----------------------------------------------------------------
   Copy one of the layouts above and change the id + content:
 
-    · full-bleed image + text columns  →  .section.gate      (06)
+    · full-bleed image + text columns  →  .section.gate      (07)
     · image left / text right          →  .section.split.split--reverse (05)
-    · text left / image right          →  .section.split     (04)
-    · image on top + 3 text columns    →  .section.flock     (03)
-    · image + kompaktes Farbpanel      →  .section.gate.gate--intro (02)
+    · text left / image right          →  .section.split     (02, 04, 06)
+
+  Farbvarianten: .split--green, .split--cream, .split--ink, .section--cream
 
   Colour variants: .split--cream / .split--green / .section--cream
   The nav already links to #token for the $SHEEP section.

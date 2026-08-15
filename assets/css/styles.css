@@ -308,7 +308,7 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .js .reveal.is-in{ opacity:1; transform:none; }
 
 /* =============================================================
-   02 / LIFE IN THE FLOCK
+   03 / LIFE IN THE FLOCK
    ============================================================= */
 /* das Motiv ist ein sehr breites Band (2,86:1) — auf dem Handy läuft ein
    3:2-Ausschnitt, ab Tablet das ungeschnittene Bild */
@@ -319,10 +319,13 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .flock__aside .statement{ margin-bottom:1rem; }
 
 /* =============================================================
-   03 / 04 split sections
+   02 / 04 / 05 / 06 split sections
    ============================================================= */
 .split--green{ background:var(--green); color:var(--cream); }
 .split--cream{ background:var(--cream); color:var(--ink-soft); }
+/* Die Zeitung wird nachts gedruckt — dieser Abschnitt bekommt deshalb eine
+   dritte, dunklere Fläche statt noch einmal Grün oder Creme. */
+.split--ink{ background:var(--black); color:rgba(242,237,226,.82); }
 .split__media img{
   width:100%;
   aspect-ratio:4/3;
@@ -340,12 +343,38 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .split__text h2{ margin-bottom:1.2rem; }
 .split__text p + p{ margin-top:1.1rem; }
 .split--green .split__text p{ color:rgba(242,237,226,.86); }
+.split--ink .split__text p{ color:rgba(242,237,226,.8); }
+.split--ink .split__text em{ font-style:italic; color:var(--cream); }
 .split__text .tags{ margin-top:1.8rem; }
 .split__text .btn{ margin-top:1.1rem; }
 .split__text .whisper{ margin-top:1.4rem; }
 
+/* Ausriss aus der aktuellen Ausgabe — liest sich wie eine Meldung,
+   ohne die Sektion in eine Karte zu verwandeln */
+.clipping{
+  margin-top:2rem;
+  padding-top:1.25rem;
+  border-top:1px solid rgba(198,160,74,.45);
+}
+.clipping__label{
+  font-family:var(--f-label); font-weight:600;
+  text-transform:uppercase; letter-spacing:.16em; font-size:.72rem;
+  color:var(--gold);
+}
+.clipping__head{
+  font-family:var(--f-display);
+  font-size:clamp(1.3rem,4.4vw,1.7rem); line-height:1.15;
+  color:var(--cream) !important;
+  margin:.5rem 0 .6rem;
+  text-wrap:balance;
+}
+.clipping__body{ color:rgba(242,237,226,.72) !important; }
+
+.btn--paper{ color:var(--gold); }
+.btn--paper:hover{ background:var(--gold); color:var(--black); border-color:var(--gold); }
+
 /* =============================================================
-   05 / THE OTHER SIDE
+   07 / THE OTHER SIDE
    ============================================================= */
 .gate{ background:var(--green); }
 /* Sheep steht ganz links, das SOLANGELES-Schild ganz rechts — dieses Bild
@@ -458,11 +487,11 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .split__media img{ height:100%; aspect-ratio:auto; min-height:640px; }
   .split--welcome .split__media img{ aspect-ratio:auto; }
 
-  /* Das Wandbild lebt von der Schrift ganz rechts. Es darf deshalb nicht
-     formatfüllend beschnitten werden, sondern steht vollständig und
-     vertikal zentriert in der Spalte. */
-  .split--wall .split__media{ align-self:center; height:auto; }
-  .split--wall .split__media img{ height:auto; min-height:0; aspect-ratio:auto; }
+  /* Manche Motive tragen ihre Aussage an den Rändern — die Wandschrift in 04,
+     der Zeitungskopf in 06. Die dürfen nicht formatfüllend beschnitten werden,
+     sondern stehen vollständig und vertikal zentriert in der Spalte. */
+  .split--whole .split__media{ align-self:center; height:auto; }
+  .split--whole .split__media img{ height:auto; min-height:0; aspect-ratio:auto; }
   .split__text{
     order:1; display:flex; flex-direction:column; justify-content:center;
     padding:clamp(4rem,6vw,6rem) clamp(2.5rem,4.5vw,5rem);
