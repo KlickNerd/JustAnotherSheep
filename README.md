@@ -43,6 +43,7 @@ python3 -m http.server 8000
 | 05  | Sheep Records      | `#records`    | Bild links / Text rechts (creme)    |
 | 06  | The Open Gate      | `#paper`      | Text links (schwarz) / Bild rechts  |
 | 07  | The other side     | `#gate`       | Bild oben, grünes Panel mit 2 Spalten |
+| —   | Abspann            | `#outro`      | Vollbild mit Text im Bild (ab 1000 px) |
 
 ### Weitere Sektionen (08–10) ergänzen
 

@@ -15,6 +15,7 @@ eines kaputten Bildes.
 | ✅ `studio.*`, `studio-1000.*`, `studio-mobile.*` | 05 / Sheep Records | Sheep am Studio-Schuppen | **erledigt** |
 | ✅ `opengate.*`, `opengate-1000.*`, `opengate-mobile.*` | 06 / The Open Gate | Ewe an der Druckpresse | **erledigt** |
 | ✅ `gate.*`, `gate-1200.*`, `gate-mobile.*` | 07 / The other side | Sheep am Tor, Blick nach SOLANGELES | **erledigt** |
+| ✅ `outro.*`, `outro-1200.*`, `outro-mobile.*` | Abspann | Sheep, Wachhund, Herde am Turm | **erledigt** |
 | ✅ `og-cover.jpg` | Social Preview | aus dem Hero geschnitten | **erledigt** |
 | ✅ `apple-touch-icon.png` | iOS Homescreen | Sheeps Kopf aus dem Hero | **erledigt** |
 
@@ -31,7 +32,7 @@ eines kaputten Bildes.
 ## Was mit dem Hero passiert ist
 
 Die Originale liegen unverändert unter `assets/originals/` (`hero.png`,
-`welcome.png`, `flock.png`, `sheep-wall.png`, `studio.png`, `gate.png`, `opengate.png`) und werden von der Seite **nicht** geladen. Daraus erzeugt sind:
+`welcome.png`, `flock.png`, `sheep-wall.png`, `studio.png`, `gate.png`, `opengate.png`, `outro.png`) und werden von der Seite **nicht** geladen. Daraus erzeugt sind:
 
 * `hero.jpg` / `hero.webp` — volle Breite (1672 px) für große Screens
 * `hero-1200.jpg` / `.webp` — für mittlere Screens

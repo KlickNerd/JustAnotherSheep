@@ -312,6 +312,37 @@
     </div>
   </section>
 
+  <!-- ================= OUTRO — bewusst ohne Nummer, das ist der
+       Abspann, keine weitere Station der Geschichte ================= -->
+  <section class="outro" id="outro">
+    <figure class="outro__media">
+      <picture>
+        <source media="(max-width: 999px)" type="image/webp" srcset="assets/img/outro-mobile.webp">
+        <source media="(max-width: 999px)" type="image/jpeg" srcset="assets/img/outro-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/outro-1200.webp 1200w, assets/img/outro.webp 1672w" sizes="100vw">
+        <img src="assets/img/outro.jpg"
+             srcset="assets/img/outro-1200.jpg 1200w, assets/img/outro.jpg 1672w" sizes="100vw"
+             alt="Sheep in sunglasses standing on the farm road while a guard dog watches him and the flock walks back towards the bell tower"
+             width="1672" height="941" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
+    </figure>
+    <div class="outro__scrim" aria-hidden="true"></div>
+
+    <div class="outro__content wrap reveal">
+      <p class="eyebrow eyebrow--gold">The farm is still watching.</p>
+      <h2 class="h-display h-display--light">The next bell won't sound the same.</h2>
+
+      <p>The fences still stand. The flock still follows. The farm still expects tomorrow to look exactly like today.</p>
+      <p>But one sheep has stopped waiting for permission.</p>
+      <p>He started making noise. Others have started listening.</p>
+
+      <p class="statement statement--light">Tomorrow morning, the flock will hear it too.</p>
+
+      <a class="btn btn--solid btn--lg" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
+    </div>
+  </section>
+
   <!--
   ================================================================
   SECTIONS 08 – 10 GO HERE
