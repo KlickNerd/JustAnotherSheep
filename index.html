@@ -21,10 +21,12 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-black-400-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/permanent-marker-400-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/oswald-600-latin.woff2" crossorigin>
-<!-- Hero-Bild so früh wie möglich anstoßen — je nach Screen die passende Fassung -->
+<!-- Hero-Bild so früh wie möglich anstoßen. Ab 700 px muss der Preload dieselbe
+     Auswahl treffen wie das srcset im <picture> — sonst lädt der Browser zwei
+     Fassungen. Deshalb hier dasselbe srcset/sizes noch einmal. -->
 <link rel="preload" as="image" href="assets/img/hero-mobile.webp" media="(max-width: 699px)" fetchpriority="high">
-<link rel="preload" as="image" href="assets/img/hero-1200.webp" media="(min-width: 700px) and (max-width: 1199px)" fetchpriority="high">
-<link rel="preload" as="image" href="assets/img/hero.webp" media="(min-width: 1200px)" fetchpriority="high">
+<link rel="preload" as="image" href="assets/img/hero.jpg" media="(min-width: 700px)" fetchpriority="high"
+      imagesrcset="assets/img/hero-1200.webp 1200w, assets/img/hero.webp 1672w" imagesizes="100vw">
 
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
@@ -233,9 +235,16 @@
   <!-- ================= 06 / THE OTHER SIDE ================= -->
   <section class="section gate" id="gate">
     <figure class="media media--wide reveal">
-      <img src="assets/img/gate.jpg" alt="Sheep pushing open the farm gate, looking towards the SOLANGELES hills at golden hour"
-           width="1920" height="900" loading="lazy" decoding="async"
-           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/gate-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/gate-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/gate-1200.webp 1200w, assets/img/gate.webp 1717w" sizes="100vw">
+        <img src="assets/img/gate.jpg"
+             srcset="assets/img/gate-1200.jpg 1200w, assets/img/gate.jpg 1717w" sizes="100vw"
+             alt="Sheep holding the farm gate open, looking out at the road and the SOLANGELES hills at golden hour"
+             width="1717" height="612" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
     </figure>
 
     <div class="gate__panel">

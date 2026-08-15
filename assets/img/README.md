@@ -1,8 +1,10 @@
 # Bilder / Images
 
-Lege die Artworks mit **genau diesen Dateinamen** in diesen Ordner. Solange eine
-Datei fehlt, zeigt die Seite automatisch `placeholder.svg` an — sie bleibt also
-immer funktionsfähig.
+Alle Motive der Startseite sind eingebaut. Kommt ein neues dazu (oder wird eins
+ausgetauscht), gilt: Original nach `assets/originals/` legen, daraus die drei
+Web-Fassungen erzeugen (volle Breite, mittlere Größe, Handy-Ausschnitt) und per
+`<picture>` einbinden. Fehlt eine Datei, zeigt die Seite `placeholder.svg` statt
+eines kaputten Bildes.
 
 | Datei             | Abschnitt                | Motiv                                        | Empfohlen            |
 |-------------------|--------------------------|----------------------------------------------|----------------------|
@@ -11,7 +13,7 @@ immer funktionsfähig.
 | ✅ `flock.*`, `flock-1200.*`, `flock-mobile.*` | 03 / Life in the flock | Schäfer im Futterstall | **erledigt** |
 | ✅ `sheep-wall.*`, `sheep-wall-1000.*`, `sheep-wall-mobile.*` | 04 / Meet Sheep | Sheep sprüht „BAAAAAHN THE SYSTEM" | **erledigt** |
 | ✅ `studio.*`, `studio-1000.*`, `studio-mobile.*` | 05 / Sheep Records | Sheep am Studio-Schuppen | **erledigt** |
-| `gate.jpg`        | 06 / The other side      | Sheep am Tor, Blick nach SOLANGELES           | 2400 × 1125 (21:9)   |
+| ✅ `gate.*`, `gate-1200.*`, `gate-mobile.*` | 06 / The other side | Sheep am Tor, Blick nach SOLANGELES | **erledigt** |
 | ✅ `og-cover.jpg` | Social Preview | aus dem Hero geschnitten | **erledigt** |
 | ✅ `apple-touch-icon.png` | iOS Homescreen | Sheeps Kopf aus dem Hero | **erledigt** |
 
@@ -28,7 +30,7 @@ immer funktionsfähig.
 ## Was mit dem Hero passiert ist
 
 Die Originale liegen unverändert unter `assets/originals/` (`hero.png`,
-`welcome.png`, `flock.png`, `sheep-wall.png`, `studio.png`) und werden von der Seite **nicht** geladen. Daraus erzeugt sind:
+`welcome.png`, `flock.png`, `sheep-wall.png`, `studio.png`, `gate.png`) und werden von der Seite **nicht** geladen. Daraus erzeugt sind:
 
 * `hero.jpg` / `hero.webp` — volle Breite (1672 px) für große Screens
 * `hero-1200.jpg` / `.webp` — für mittlere Screens

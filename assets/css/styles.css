@@ -348,7 +348,9 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
    05 / THE OTHER SIDE
    ============================================================= */
 .gate{ background:var(--green); }
-.gate .media--wide img{ object-position:35% center; }
+/* Sheep steht ganz links, das SOLANGELES-Schild ganz rechts — dieses Bild
+   verträgt keinen Beschnitt. Das Handy bekommt eine eigene, engere Fassung. */
+.gate .media--wide img{ aspect-ratio:auto; object-position:center; }
 .gate__panel{ background:var(--green); color:var(--cream); }
 .gate__grid{ padding-block:var(--section-y); display:grid; gap:2rem; }
 .gate__head h2{ margin-top:.2rem; }
@@ -470,7 +472,7 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .split__text .tags{ max-width:none; }
 
   /* 05 */
-  .gate .media--wide img{ aspect-ratio:21/9; }
+  .gate .media--wide img{ aspect-ratio:auto; }
   .gate__grid{ grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr); gap:3.5rem; align-items:start; }
   .gate__head{ grid-column:auto; }
   .gate__head .h-display{ font-size:clamp(1.9rem,2.8vw,2.6rem); line-height:1.02; }
