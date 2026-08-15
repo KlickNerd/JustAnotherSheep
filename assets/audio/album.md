@@ -253,24 +253,28 @@ Letzter Ton: der Glockenschlag, **abgeschnitten** — genau wie am Ende von „S
 
 ## Übersicht
 
-| # | Titel | BPM | Charakter | Status |
-|---|-------|-----|-----------|--------|
-| 01 | Morning Bell | — | Intro, Feldaufnahme | offen |
-| 02 | Perfect Day | 116 | Sunshine-Pop, ironisch | offen |
-| 03 | Headcount | 92 | mechanisch, perkussiv | offen |
-| 04 | Wool | 72 | Folk-Blues, schwer | offen |
-| 05 | **Seven** | 86 | Downtempo Boom Bap | ✅ fertig |
-| 06 | Baaahn the System | 140 | Garage-Punk, kurz | offen |
-| 07 | Hoof to Hoof | 88 | Duett mit Ewe | offen |
-| 08 | Good Dog | 100 | Marsch, Antagonist | offen |
-| 09 | Curfew | 96 | eng, nervös | offen |
-| 10 | Volunteers | 80 | Chor, düster | offen |
-| 11 | Shepherd's Lullaby | 64 | Schlaflied, Dur | offen |
-| 12 | **The Other Side** | ~120 | Anthem | ✅ Text fertig |
-| 13 | Solangeles | 104 | Neon, elektronisch | offen |
-| 14 | Different Sheep | 70 | Closer, Glocke | offen |
+Zu **jedem** Track liegt in `tracks/` eine eigene Datei mit vollständigem
+Songtext, Suno-Prompt (Style, Exclude, getaggte Lyrics) und Produktionsnotizen.
 
-Laufzeit grob 46–50 Minuten.
+| # | Titel | BPM | Charakter | Datei | Status |
+|---|-------|-----|-----------|-------|--------|
+| 01 | Morning Bell | — | Intro, Feldaufnahme | `tracks/01-morning-bell.md` | Text fertig |
+| 02 | Perfect Day | 116 | Sunshine-Pop, aufrichtig | `tracks/02-perfect-day.md` | Text fertig |
+| 03 | Headcount | 92 | mechanisch, perkussiv | `tracks/03-headcount.md` | Text fertig |
+| 04 | Wool | 72 | Folk-Blues, schwer | `tracks/04-wool.md` | Text fertig |
+| 05 | **Seven** | 86 | Downtempo Boom Bap | `tracks/05-seven.md` | ✅ produziert |
+| 06 | Baaahn the System | 140 | Garage-Punk, kurz | `tracks/06-baaahn-the-system.md` | Text fertig |
+| 07 | Hoof to Hoof | 88 | Duett mit Ewe | `tracks/07-hoof-to-hoof.md` | Text fertig |
+| 08 | Good Dog | 100 | Marsch, Antagonist | `tracks/08-good-dog.md` | Text fertig |
+| 09 | Curfew | 96 | eng, nervös | `tracks/09-curfew.md` | Text fertig |
+| 10 | Volunteers | 80 | Chor, düster | `tracks/10-volunteers.md` | Text fertig |
+| 11 | Shepherd's Lullaby | 64 | Schlaflied, Dur | `tracks/11-shepherds-lullaby.md` | Text fertig |
+| 12 | **The Other Side** | 120 | Anthem | `tracks/12-the-other-side.md` | Text fertig |
+| 13 | Solangeles | 104 | Neon, elektronisch | `tracks/13-solangeles.md` | Text fertig |
+| 14 | Different Sheep | 70 | Closer, Glocke | `tracks/14-different-sheep.md` | Text fertig |
+
+Laufzeit grob 46–50 Minuten. **Alle 14 Texte und Suno-Prompts sind
+geschrieben** — produziert ist bisher nur Track 05.
 
 ## Wenn 14 zu viel werden
 
