@@ -235,9 +235,10 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
    01 / HERO
    ============================================================= */
 .hero{
-  /* Bildausschnitt: Sheep steht bei ca. 70 % der Bildbreite.
-     Auf schmalen Screens wird nach rechts geschwenkt, damit er im Bild bleibt. */
-  --hero-focus: 78% center;
+  /* Bildausschnitt. Auf dem Handy läuft ein eigener Hochkant-Zuschnitt
+     (hero-mobile), der ist schon auf Sheep zentriert. Ab Tablet kommt das
+     volle Breitbild, das nach rechts geschwenkt wird, damit er drin bleibt. */
+  --hero-focus: center;
 
   position:relative;
   min-height:100vh;
@@ -251,6 +252,7 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   background:linear-gradient(to bottom, #cfc9b6 0%, #b7b39c 42%, #6f7452 68%, #3d472b 100%);
 }
 .hero__media{ position:absolute; inset:0; }
+.hero__media picture{ display:block; width:100%; height:100%; }
 .hero__media img{
   width:100%; height:100%;
   object-fit:cover;
@@ -263,6 +265,8 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
     linear-gradient(to top, rgba(16,18,11,.88) 0%, rgba(16,18,11,.72) 22%, rgba(16,18,11,.34) 46%, rgba(16,18,11,.06) 68%, rgba(16,18,11,.30) 100%);
 }
 .hero__content{ position:relative; z-index:2; color:var(--cream); }
+.hero__content .eyebrow,
+.hero__tagline{ text-shadow:0 1px 14px rgba(0,0,0,.55); }
 .hero__title{
   font-family:var(--f-brush);
   font-weight:400;
@@ -407,9 +411,14 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   /* hero */
   .hero{ align-items:center; padding-bottom:0; --hero-focus:center; }
   .hero__scrim{
-    background:linear-gradient(100deg, rgba(12,14,9,.55) 0%, rgba(12,14,9,.25) 42%, rgba(12,14,9,0) 65%);
+    background:
+      linear-gradient(100deg, rgba(12,14,9,.62) 0%, rgba(12,14,9,.30) 44%, rgba(12,14,9,0) 66%),
+      linear-gradient(to top, rgba(12,14,9,.30) 0%, rgba(12,14,9,0) 30%);
   }
-  .hero__content{ max-width:60%; }
+  /* .wrap zentriert den Block; die Textzeilen sollen aber am linken Rand
+     kleben wie in der Vorlage — deshalb keine zusätzliche Breitenbremse */
+  .hero__content{ max-width:var(--wrap); }
+  .hero__content > *{ max-width:min(46rem, 52%); }
   .hero__title{ font-size:clamp(4.5rem,7.5vw,7.5rem); }
   .hero__scroll{
     display:block; position:absolute; left:50%; bottom:2.5rem; z-index:3;
