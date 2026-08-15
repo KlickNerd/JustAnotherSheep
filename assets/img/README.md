@@ -7,7 +7,7 @@ immer funktionsfähig.
 | Datei             | Abschnitt                | Motiv                                        | Empfohlen            |
 |-------------------|--------------------------|----------------------------------------------|----------------------|
 | ✅ `hero.jpg` + `hero.webp`, `hero-1200.*`, `hero-mobile.*` | 01 / Hero | Sheep vor dem Turm | **erledigt** |
-| ✅ `welcome.*`, `welcome-1200.*`, `welcome-mobile.*` | Welcome (nach dem Hero) | Schäfer öffnet das Tor | **erledigt** |
+| ✅ `welcome.*`, `welcome-1200.*`, `welcome-mobile.*` | 02 / Welcome to the farm | Schäfer öffnet das Tor | **erledigt** |
 | ✅ `flock.*`, `flock-1200.*`, `flock-mobile.*` | 03 / Life in the flock | Schäfer im Futterstall | **erledigt** |
 | `sheep-wall.jpg`  | 04 / Meet Sheep          | Sheep sprüht „BAAAAAHN THE SYSTEM"            | 1600 × 1600 (quadr.) |
 | `studio.jpg`      | 05 / Sheep Records       | Sheep im Barn-Studio                          | 1600 × 1600 (quadr.) |

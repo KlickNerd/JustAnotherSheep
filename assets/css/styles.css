@@ -329,6 +329,7 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   object-fit:cover;
 }
 .split--green .split__media img{ object-position:60% center; }
+.split--welcome .split__media img{ aspect-ratio:3/4; object-position:center; }
 .split__text{ padding:var(--section-y) var(--pad); }
 .split__text .eyebrow{ margin-bottom:.4rem; }
 .split__text h2{ margin-bottom:1.2rem; }
@@ -349,11 +350,6 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .gate__col p + p{ margin-top:1.05rem; }
 .gate__col p{ color:rgba(242,237,226,.86); }
 .gate__col .statement--light{ margin-top:1.8rem; color:var(--cream); }
-
-/* Überleitung „Welcome to the farm" — gleiche Bauweise wie 05,
-   aber zwei Spalten und ein Bild, das nicht zum Streifen geschnitten wird */
-.gate--intro .media--wide img{ aspect-ratio:3/4; object-position:center; }
-.gate--intro .gate__grid{ padding-block:clamp(2.75rem,7vw,5rem); }
 
 /* =============================================================
    FOOTER
@@ -392,8 +388,6 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .gate__grid{ grid-template-columns:1fr 1fr; gap:2.5rem 3rem; }
   .gate__head{ grid-column:1 / -1; }
 
-  .gate--intro .media--wide img{ aspect-ratio:16/9; }
-  .gate--intro .gate__head{ grid-column:auto; }
 
   .site-footer__inner{ text-align:left; grid-template-columns:1fr auto; align-items:center; }
   .site-footer__note{ grid-column:1; }
@@ -455,6 +449,7 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .split__media{ order:2; height:100%; }
   .split--reverse .split__media{ order:0; }
   .split__media img{ height:100%; aspect-ratio:auto; min-height:640px; }
+  .split--welcome .split__media img{ aspect-ratio:auto; }
   .split__text{
     order:1; display:flex; flex-direction:column; justify-content:center;
     padding:clamp(4rem,6vw,6rem) clamp(2.5rem,4.5vw,5rem);
@@ -467,9 +462,6 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .gate__head{ grid-column:auto; }
   .gate__head .h-display{ font-size:clamp(1.9rem,2.8vw,2.6rem); line-height:1.02; }
 
-  .gate--intro .media--wide img{ aspect-ratio:16/9; }
-  .gate--intro .gate__grid{ grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:4rem; align-items:center; }
-  .gate--intro .gate__head .h-display{ font-size:clamp(2.2rem,3.6vw,3.4rem); }
 }
 
 @keyframes scrollHint{
