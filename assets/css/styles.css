@@ -5,17 +5,20 @@
    ============================================================= */
 
 :root{
-  /* colour */
-  --cream:        #f2ede2;
-  --cream-2:      #e8e0d1;
-  --ink:          #17170f;
-  --ink-soft:     #3d3b31;
+  /* colour — Papier, Tinte, Messing, ein Rest Weide.
+     Die Seite läuft vom Tag (Papier) in die Nacht (Tinte). */
+  --cream:        #efe8d6;   /* Papier */
+  --cream-2:      #e5dbc4;
+  --ink:          #16130e;   /* warmes Schwarz — die Jacke, nicht #000 */
+  --ink-2:        #1d1913;   /* angehobene dunkle Fläche */
+  --ink-soft:     #3d3a2f;
   --stone:        #6e6a5c;
   --green:        #2b3a1e;
-  --green-deep:   #22301a;
-  --gold:         #c6a04a;
+  --green-deep:   #202b15;
+  --gold:         #c6a04a;   /* Glockenmessing */
   --gold-soft:    #ddc78f;
-  --black:        #14140f;
+  --beacon:       #a83d27;   /* das rote Turmlicht — nur für „live"-Signale */
+  --black:        #14110c;
 
   /* type */
   --f-display: "Archivo Black", "Arial Black", Impact, sans-serif;
@@ -52,6 +55,15 @@ body{
   -webkit-tap-highlight-color: rgba(198,160,74,.25);
 }
 img{ max-width:100%; height:auto; display:block; }
+
+/* Feines Filmkorn über allem — nimmt den Flächen das Sterile.
+   Statisch, klickdurchlässig, im Druck aus. */
+body::after{
+  content:""; position:fixed; inset:0; z-index:300;
+  pointer-events:none; opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:280px 280px;
+}
 figure{ margin:0; }
 h1,h2,h3,p{ margin:0; }
 a{ color:inherit; }
@@ -74,6 +86,7 @@ hr.rule{
 
 /* ---------- type helpers ---------- */
 .h-display{
+  text-wrap:balance;
   font-family:var(--f-display);
   font-weight:400;
   line-height:.92;
@@ -83,6 +96,17 @@ hr.rule{
   color:var(--ink);
 }
 .h-display--light{ color:var(--cream); }
+/* Sheeps Stimme: die Pinselschrift von der Jacke. Nur dort, wo ER spricht —
+   Hero, Meet Sheep, Player, Abspann. Die Farm behält die Beamten-Grotesk. */
+.h-brush{
+  font-family:var(--f-brush);
+  text-transform:none;
+  letter-spacing:0;
+  line-height:1.06;
+  font-size:clamp(2.1rem, 7.2vw, 3.8rem);
+  transform:rotate(-1.4deg);
+  transform-origin:left bottom;
+}
 .h-display--green{ color:var(--green); }
 
 .eyebrow{
@@ -94,8 +118,18 @@ hr.rule{
   color:var(--ink-soft);
 }
 .eyebrow--gold{ color:var(--gold); }
-.eyebrow--light{ color:rgba(242,237,226,.9); }
-.eyebrow .num{ color:var(--gold); }
+.eyebrow--light{ color:rgba(239,232,214,.9); }
+/* Sektionsnummern als Ohrmarken — wie die gelben Tags der Herde im Artwork.
+   Das Loch ist echt: durch den transparenten Kreis scheint die Fläche durch. */
+.eyebrow .num{
+  display:inline-block;
+  background:radial-gradient(circle at .38em 50%, transparent .11em, var(--gold) .12em);
+  color:var(--ink);
+  font-weight:700;
+  padding:.18em .5em .18em .78em;
+  margin-right:.35em;
+  border-radius:.25em .5em .5em .25em;
+}
 
 .kicker{
   font-family:var(--f-label);
@@ -163,16 +197,16 @@ hr.rule{
   padding-inline:var(--pad);
 }
 .site-header.is-stuck{
-  background:rgba(242,237,226,.94);
+  background:rgba(239,232,214,.94);
   box-shadow:0 1px 0 rgba(23,23,15,.12);
   backdrop-filter:saturate(140%) blur(10px);
   -webkit-backdrop-filter:saturate(140%) blur(10px);
 }
 
 .brand{
-  font-family:var(--f-label); font-weight:700;
-  text-transform:uppercase; letter-spacing:.08em;
-  font-size:.95rem; line-height:1.05;
+  font-family:var(--f-brush); font-weight:400;
+  text-transform:none; letter-spacing:0;
+  font-size:1.1rem; line-height:1.05;
   text-decoration:none; color:var(--cream);
   text-shadow:0 1px 12px rgba(0,0,0,.35);
   transition:color .3s var(--ease), text-shadow .3s var(--ease);
@@ -268,6 +302,8 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .hero__content .eyebrow,
 .hero__tagline{ text-shadow:0 1px 14px rgba(0,0,0,.55); }
 .hero__title{
+  transform:rotate(-1.6deg);
+  transform-origin:left bottom;
   font-family:var(--f-brush);
   font-weight:400;
   text-transform:uppercase;
@@ -322,6 +358,17 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
    02 / 04 / 05 / 06 split sections
    ============================================================= */
 .split--green{ background:var(--green); color:var(--cream); }
+/* Tageslicht — die Farm-Propaganda spricht auf Papier */
+.split--paper{ background:var(--cream); color:var(--ink-soft); }
+/* Nacht — ab hier gehört die Seite Sheep */
+.split--night{ background:var(--ink-2); color:rgba(239,232,214,.82); }
+.split--night .split__text p{ color:rgba(239,232,214,.8); }
+/* dunkles Weidegrün für Sheep Records */
+.split--forest{ background:var(--green-deep); color:rgba(239,232,214,.85); }
+.split--forest .split__text p{ color:rgba(239,232,214,.82); }
+.split--forest .btn--outline{ color:var(--gold-soft); }
+.split--forest .btn--outline:hover{ background:var(--gold); color:var(--ink); border-color:var(--gold); }
+.split--forest .rule{ opacity:.35; }
 .split--cream{ background:var(--cream); color:var(--ink-soft); }
 /* Die Zeitung wird nachts gedruckt — dieser Abschnitt bekommt deshalb eine
    dritte, dunklere Fläche statt noch einmal Grün oder Creme. */
@@ -348,6 +395,15 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .split__text .tags{ margin-top:1.8rem; }
 .split__text .btn{ margin-top:1.1rem; }
 .split__text .whisper{ margin-top:1.4rem; }
+
+/* Papier-Riss: die Kante, an der der Tag der Farm in Sheeps Nacht kippt.
+   Die helle Zunge oben ist das „abgerissene" Papier der Sektion darüber. */
+.tear{ position:relative; }
+.tear::before{
+  content:""; position:absolute; top:-1px; left:0; width:100%; height:20px; z-index:3;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='20' preserveAspectRatio='none'%3E%3Cpath d='M0 0h260v3l-13 7-12-6-14 9-15-7-12 6-13-8-12 9-14-6-11 5-13-8-15 7-12-5-13 8-14-9-12 6-13-4-14 8-12-7-26 6z' fill='%23efe8d6'/%3E%3C/svg%3E") repeat-x;
+  background-size:260px 20px;
+}
 
 /* Ausriss aus der aktuellen Ausgabe — liest sich wie eine Meldung,
    ohne die Sektion in eine Karte zu verwandeln */
@@ -395,17 +451,21 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .player{
   margin-top:2rem;
   padding-top:1.5rem;
-  border-top:1px solid rgba(43,58,30,.25);
+  border-top:1px solid rgba(239,232,214,.22);
   max-width:none !important;
+}
+/* das rote Turmlicht: leuchtet nur, während der Track läuft */
+.player.is-playing .player__label::before{
+  content:"● "; color:var(--beacon);
 }
 .player__row{ display:flex; align-items:center; gap:1rem; }
 .player__toggle{
   flex:none; width:56px; height:56px; border-radius:50%;
-  background:var(--green); color:var(--cream);
+  background:var(--gold); color:var(--ink);
   display:grid; place-items:center; cursor:pointer;
   transition:background .25s var(--ease), transform .15s var(--ease);
 }
-.player__toggle:hover{ background:var(--black); }
+.player__toggle:hover{ background:var(--cream); }
 .player__toggle:active{ transform:scale(.96); }
 .player__toggle[disabled]{ opacity:.4; cursor:default; }
 
@@ -431,40 +491,40 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   color:var(--gold);
 }
 .player__title{
-  font-family:var(--f-display);
-  font-size:clamp(1.15rem,3.6vw,1.4rem); line-height:1.1;
-  color:var(--green);
-  margin-top:.15rem;
+  font-family:var(--f-brush);
+  font-size:clamp(1.35rem,4vw,1.7rem); line-height:1.05;
+  color:var(--cream);
+  margin-top:.1rem;
 }
 .player__seek{
   -webkit-appearance:none; appearance:none;
   width:100%; height:22px; margin-top:1.1rem;
   background:transparent; cursor:pointer;
-  accent-color:var(--green);
+  accent-color:var(--gold);
 }
 .player__seek::-webkit-slider-runnable-track{
-  height:3px; background:rgba(43,58,30,.22);
+  height:3px; background:rgba(239,232,214,.25);
 }
-.player__seek::-moz-range-track{ height:3px; background:rgba(43,58,30,.22); }
+.player__seek::-moz-range-track{ height:3px; background:rgba(239,232,214,.25); }
 .player__seek::-webkit-slider-thumb{
   -webkit-appearance:none; appearance:none;
   width:14px; height:14px; margin-top:-5.5px; border-radius:50%;
-  background:var(--green);
+  background:var(--gold);
 }
 .player__seek::-moz-range-thumb{
-  width:14px; height:14px; border:0; border-radius:50%; background:var(--green);
+  width:14px; height:14px; border:0; border-radius:50%; background:var(--gold);
 }
 .player__seek[disabled]{ opacity:.45; cursor:default; }
 .player__time{
   display:flex; justify-content:space-between;
   font-family:var(--f-label); letter-spacing:.1em; font-size:.75rem;
-  color:var(--stone);
+  color:rgba(239,232,214,.55);
   font-variant-numeric:tabular-nums;
   margin-top:-.2rem;
 }
 .player__note{
   font-family:var(--f-serif); font-style:italic;
-  color:var(--stone); margin-top:.6rem;
+  color:var(--gold-soft); margin-top:.6rem;
 }
 
 /* =============================================================

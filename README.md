@@ -37,13 +37,21 @@ python3 -m http.server 8000
 | Nr. | Abschnitt          | Anker         | Layout                              |
 |-----|--------------------|---------------|-------------------------------------|
 | 01  | Hero               | `#top`        | Vollbild-Bild mit Titel             |
-| 02  | Welcome to the farm| `#welcome`    | Text links (grün) / Bild rechts     |
-| 03  | Life in the flock  | `#story`      | Bild oben, darunter 3 Textspalten   |
-| 04  | Meet Sheep         | `#characters` | Text links (grün) / Bild rechts     |
-| 05  | Sheep Records      | `#records`    | Bild links / Text rechts (creme)    |
-| 06  | The Open Gate      | `#paper`      | Text links (schwarz) / Bild rechts  |
+| 02  | Welcome to the farm| `#welcome`    | Text links / Bild rechts — **Papier** |
+| 03  | Life in the flock  | `#story`      | Bild oben, 3 Textspalten — **Papier** |
+| 04  | Meet Sheep         | `#characters` | Text links / Bild rechts — **Nacht**, Papier-Riss oben |
+| 05  | Sheep Records      | `#records`    | Bild links / Text rechts — **dunkles Grün**, Player |
+| 06  | The Open Gate      | `#paper`      | Text links / Bild rechts — **Tinte** |
 | 07  | The other side     | `#gate`       | Bild oben, grünes Panel mit 2 Spalten |
 | —   | Abspann            | `#outro`      | Vollbild mit Text im Bild (ab 1000 px) |
+
+**Design-Idee „Vom Tag in die Nacht":** Die Seite beginnt hell (02–03, die
+Farm spricht auf Papier) und kippt bei 04 mit einem Papier-Riss in die Nacht —
+ab dort gehört die Seite Sheep. Zwei Stimmen: Farm-Überschriften in der
+Grotesk (`.h-display`), Sheeps Momente in der Pinselschrift der Jacke
+(`.h-brush` — Hero, 04, Player, Abspann). Sektionsnummern sind Ohrmarken
+(`.eyebrow .num`), über allem liegt ein feines Filmkorn (`body::after`),
+und das rote Turmlicht (`--beacon`) leuchtet nur, wenn der Track läuft.
 
 ### Weitere Sektionen (08–10) ergänzen
 
@@ -56,7 +64,8 @@ Layouts sind wiederverwendbar:
 * `.section.split.split--reverse` → Bild links / Text rechts
 * `.section.gate` → Bild oben + farbiges Panel
 
-Farbvarianten: `.split--green`, `.split--cream`, `.split--ink`, `.section--cream`.
+Farbvarianten: `.split--paper`, `.split--night`, `.split--forest`, `.split--ink`,
+`.split--green`, `.split--cream`, `.section--cream`.
 Mit `.split--whole` bleibt das Bild ungeschnitten (für Motive, deren Aussage am
 Bildrand steht).
 Die Navigation verlinkt bereits auf `#token` für die kommende `$SHEEP`-Sektion.
