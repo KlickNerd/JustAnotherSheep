@@ -330,6 +330,8 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 }
 .split--green .split__media img{ object-position:60% center; }
 .split--welcome .split__media img{ aspect-ratio:3/4; object-position:center; }
+/* Sheep links, Graffiti rechts — beides soll im Ausschnitt bleiben */
+.split--wall .split__media img{ object-position:center; }
 .split__text{ padding:var(--section-y) var(--pad); }
 .split__text .eyebrow{ margin-bottom:.4rem; }
 .split__text h2{ margin-bottom:1.2rem; }
@@ -450,6 +452,12 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .split--reverse .split__media{ order:0; }
   .split__media img{ height:100%; aspect-ratio:auto; min-height:640px; }
   .split--welcome .split__media img{ aspect-ratio:auto; }
+
+  /* Das Wandbild lebt von der Schrift ganz rechts. Es darf deshalb nicht
+     formatfüllend beschnitten werden, sondern steht vollständig und
+     vertikal zentriert in der Spalte. */
+  .split--wall .split__media{ align-self:center; height:auto; }
+  .split--wall .split__media img{ height:auto; min-height:0; aspect-ratio:auto; }
   .split__text{
     order:1; display:flex; flex-direction:column; justify-content:center;
     padding:clamp(4rem,6vw,6rem) clamp(2.5rem,4.5vw,5rem);

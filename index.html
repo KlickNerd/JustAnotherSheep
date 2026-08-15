@@ -171,11 +171,18 @@
   </section>
 
   <!-- ================= 04 / MEET SHEEP ================= -->
-  <section class="section split split--green" id="characters">
+  <section class="section split split--green split--wall" id="characters">
     <figure class="split__media reveal">
-      <img src="assets/img/sheep-wall.jpg" alt="Sheep spraying BAAAAAHN THE SYSTEM on the wall of a barn at sunset"
-           width="1200" height="1100" loading="lazy" decoding="async"
-           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/sheep-wall-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/sheep-wall-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/sheep-wall-1000.webp 1000w, assets/img/sheep-wall.webp 1438w" sizes="(min-width: 1000px) 55vw, 100vw">
+        <img src="assets/img/sheep-wall.jpg"
+             srcset="assets/img/sheep-wall-1000.jpg 1000w, assets/img/sheep-wall.jpg 1438w" sizes="(min-width: 1000px) 55vw, 100vw"
+             alt="Sheep spraying BAAAAAHN THE SYSTEM on the wall of a barn at sunset"
+             width="1438" height="1094" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
     </figure>
 
     <div class="split__text reveal">
@@ -185,9 +192,9 @@
       <p class="kicker">At least, that is what they called him.</p>
 
       <p>Sheep grew up like everyone else on the farm: follow the bell, stay inside the lines and never ask too many questions.</p>
-      <p>For a while, that seemed comfortable enough. But Sheep has always noticed the little things. The locked gates. The watchful speakers. How every day looks suspiciously like the one before it.</p>
-      <p>He is not a hero. He does not have a master plan. He simply believes that a life without choices is not much of a life at all.</p>
-      <p>So while the flock follows the schedule, Sheep has started leaving a few thoughts of his own behind.</p>
+      <p>For a while, that was comfortable enough. But Sheep has always noticed the little things. The locked gates. The watchful speakers. How every day looks suspiciously like the one before it.</p>
+      <p>He is not a hero. He does not have a master plan. He simply believes a life without choices is not much of a life.</p>
+      <p>So while the flock follows the schedule, Sheep has started writing things on walls.</p>
 
       <p class="whisper whisper--gold">Apparently, independent thinking is a personality defect.</p>
     </div>

@@ -9,7 +9,7 @@ immer funktionsfähig.
 | ✅ `hero.jpg` + `hero.webp`, `hero-1200.*`, `hero-mobile.*` | 01 / Hero | Sheep vor dem Turm | **erledigt** |
 | ✅ `welcome.*`, `welcome-1200.*`, `welcome-mobile.*` | 02 / Welcome to the farm | Schäfer öffnet das Tor | **erledigt** |
 | ✅ `flock.*`, `flock-1200.*`, `flock-mobile.*` | 03 / Life in the flock | Schäfer im Futterstall | **erledigt** |
-| `sheep-wall.jpg`  | 04 / Meet Sheep          | Sheep sprüht „BAAAAAHN THE SYSTEM"            | 1600 × 1600 (quadr.) |
+| ✅ `sheep-wall.*`, `sheep-wall-1000.*`, `sheep-wall-mobile.*` | 04 / Meet Sheep | Sheep sprüht „BAAAAAHN THE SYSTEM" | **erledigt** |
 | `studio.jpg`      | 05 / Sheep Records       | Sheep im Barn-Studio                          | 1600 × 1600 (quadr.) |
 | `gate.jpg`        | 06 / The other side      | Sheep am Tor, Blick nach SOLANGELES           | 2400 × 1125 (21:9)   |
 | ✅ `og-cover.jpg` | Social Preview | aus dem Hero geschnitten | **erledigt** |
@@ -28,7 +28,7 @@ immer funktionsfähig.
 ## Was mit dem Hero passiert ist
 
 Die Originale liegen unverändert unter `assets/originals/` (`hero.png`,
-`welcome.png`, `flock.png`) und werden von der Seite **nicht** geladen. Daraus erzeugt sind:
+`welcome.png`, `flock.png`, `sheep-wall.png`) und werden von der Seite **nicht** geladen. Daraus erzeugt sind:
 
 * `hero.jpg` / `hero.webp` — volle Breite (1672 px) für große Screens
 * `hero-1200.jpg` / `.webp` — für mittlere Screens
