@@ -37,14 +37,15 @@ python3 -m http.server 8000
 | Nr. | Abschnitt          | Anker         | Layout                              |
 |-----|--------------------|---------------|-------------------------------------|
 | 01  | Hero               | `#top`        | Vollbild-Bild mit Titel             |
-| 02  | Life in the flock  | `#story`      | Bild oben, darunter 3 Textspalten   |
-| 03  | Meet Sheep         | `#characters` | Text links (grün) / Bild rechts     |
-| 04  | Sheep Records      | `#records`    | Bild links / Text rechts (creme)    |
-| 05  | The other side     | `#gate`       | Bild oben, grünes Panel mit 2 Spalten |
+| 02  | Welcome to the farm| `#welcome`    | Bild oben, grünes Panel mit 2 Spalten |
+| 03  | Life in the flock  | `#story`      | Bild oben, darunter 3 Textspalten   |
+| 04  | Meet Sheep         | `#characters` | Text links (grün) / Bild rechts     |
+| 05  | Sheep Records      | `#records`    | Bild links / Text rechts (creme)    |
+| 06  | The other side     | `#gate`       | Bild oben, grünes Panel mit 2 Spalten |
 
-### Weitere Sektionen (06–08) ergänzen
+### Weitere Sektionen (07–09) ergänzen
 
-In `index.html` steht direkt nach Sektion 05 ein markierter Kommentarblock.
+In `index.html` steht direkt nach Sektion 06 ein markierter Kommentarblock.
 Dort eine der vorhandenen Sektionen kopieren, `id` und Inhalt anpassen — die
 Layouts sind wiederverwendbar:
 
@@ -52,6 +53,7 @@ Layouts sind wiederverwendbar:
 * `.section.split` → Text links / Bild rechts
 * `.section.split.split--reverse` → Bild links / Text rechts
 * `.section.gate` → Bild oben + farbiges Panel
+* `.section.gate.gate--intro` → wie oben, aber kompakter und zweispaltig
 
 Farbvarianten: `.split--green`, `.split--cream`, `.section--cream`.
 Die Navigation verlinkt bereits auf `#token` für die kommende `$SHEEP`-Sektion.

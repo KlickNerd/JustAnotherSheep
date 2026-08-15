@@ -8,10 +8,10 @@ immer funktionsfähig.
 |-------------------|--------------------------|----------------------------------------------|----------------------|
 | ✅ `hero.jpg` + `hero.webp`, `hero-1200.*`, `hero-mobile.*` | 01 / Hero | Sheep vor dem Turm | **erledigt** |
 | ✅ `welcome.*`, `welcome-1200.*`, `welcome-mobile.*` | Welcome (nach dem Hero) | Schäfer öffnet das Tor | **erledigt** |
-| `flock.jpg`       | 02 / Life in the flock   | Schäfer im Futterstall                        | 2400 × 1125 (21:9)   |
-| `sheep-wall.jpg`  | 03 / Meet Sheep          | Sheep sprüht „BAAAAAHN THE SYSTEM"            | 1600 × 1600 (quadr.) |
-| `studio.jpg`      | 04 / Sheep Records       | Sheep im Barn-Studio                          | 1600 × 1600 (quadr.) |
-| `gate.jpg`        | 05 / The other side      | Sheep am Tor, Blick nach SOLANGELES           | 2400 × 1125 (21:9)   |
+| ✅ `flock.*`, `flock-1200.*`, `flock-mobile.*` | 03 / Life in the flock | Schäfer im Futterstall | **erledigt** |
+| `sheep-wall.jpg`  | 04 / Meet Sheep          | Sheep sprüht „BAAAAAHN THE SYSTEM"            | 1600 × 1600 (quadr.) |
+| `studio.jpg`      | 05 / Sheep Records       | Sheep im Barn-Studio                          | 1600 × 1600 (quadr.) |
+| `gate.jpg`        | 06 / The other side      | Sheep am Tor, Blick nach SOLANGELES           | 2400 × 1125 (21:9)   |
 | ✅ `og-cover.jpg` | Social Preview | aus dem Hero geschnitten | **erledigt** |
 | ✅ `apple-touch-icon.png` | iOS Homescreen | Sheeps Kopf aus dem Hero | **erledigt** |
 
@@ -28,7 +28,7 @@ immer funktionsfähig.
 ## Was mit dem Hero passiert ist
 
 Die Originale liegen unverändert unter `assets/originals/` (`hero.png`,
-`welcome.png`) und werden von der Seite **nicht** geladen. Daraus erzeugt sind:
+`welcome.png`, `flock.png`) und werden von der Seite **nicht** geladen. Daraus erzeugt sind:
 
 * `hero.jpg` / `hero.webp` — volle Breite (1672 px) für große Screens
 * `hero-1200.jpg` / `.webp` — für mittlere Screens

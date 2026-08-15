@@ -63,11 +63,12 @@
 <div class="mobile-nav" id="mobileNav" hidden>
   <nav aria-label="Mobile">
     <ul>
-      <li><a href="#story"><span class="mobile-nav__num">02</span> Story</a></li>
-      <li><a href="#characters"><span class="mobile-nav__num">03</span> Characters</a></li>
-      <li><a href="#records"><span class="mobile-nav__num">04</span> Sheep Records</a></li>
-      <li><a href="#gate"><span class="mobile-nav__num">05</span> The Other Side</a></li>
-      <li><a href="#token"><span class="mobile-nav__num">06</span> $Sheep</a></li>
+      <li><a href="#welcome"><span class="mobile-nav__num">02</span> Welcome</a></li>
+      <li><a href="#story"><span class="mobile-nav__num">03</span> Story</a></li>
+      <li><a href="#characters"><span class="mobile-nav__num">04</span> Characters</a></li>
+      <li><a href="#records"><span class="mobile-nav__num">05</span> Sheep Records</a></li>
+      <li><a href="#gate"><span class="mobile-nav__num">06</span> The Other Side</a></li>
+      <li><a href="#token"><span class="mobile-nav__num">07</span> $Sheep</a></li>
     </ul>
   </nav>
   <a class="btn btn--solid btn--block" href="https://x.com/" target="_blank" rel="noopener">Follow on X</a>
@@ -108,8 +109,7 @@
     </a>
   </section>
 
-  <!-- ================= WELCOME (Überleitung, bewusst ohne Nummer,
-       damit die Nummerierung der Vorlagen 02–05 unverändert bleibt) ======= -->
+  <!-- ================= 02 / WELCOME TO THE FARM ================= -->
   <section class="section gate gate--intro" id="welcome">
     <figure class="media media--wide reveal">
       <picture>
@@ -127,7 +127,7 @@
     <div class="gate__panel">
       <div class="wrap gate__grid">
         <div class="gate__head reveal">
-          <p class="eyebrow eyebrow--gold">Welcome to the farm</p>
+          <p class="eyebrow eyebrow--gold"><span class="num">02</span> / Welcome to the farm</p>
           <hr class="rule">
           <h2 class="h-display h-display--light">Everyone is welcome.</h2>
         </div>
@@ -141,17 +141,24 @@
     </div>
   </section>
 
-  <!-- ================= 02 / LIFE IN THE FLOCK ================= -->
+  <!-- ================= 03 / LIFE IN THE FLOCK ================= -->
   <section class="section section--cream flock" id="story">
     <figure class="media media--wide reveal">
-      <img src="assets/img/flock.jpg" alt="The shepherd walking through the feeding barn between two long rows of sheep"
-           width="1920" height="900" loading="lazy" decoding="async"
-           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/flock-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/flock-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/flock-1200.webp 1200w, assets/img/flock.webp 1672w" sizes="100vw">
+        <img src="assets/img/flock.jpg"
+             srcset="assets/img/flock-1200.jpg 1200w, assets/img/flock.jpg 1672w" sizes="100vw"
+             alt="The shepherd walking through the feeding barn between two long rows of sheep"
+             width="1672" height="585" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
     </figure>
 
     <div class="wrap flock__grid">
       <div class="flock__head reveal">
-        <p class="eyebrow"><span class="num">02</span> / Life in the flock</p>
+        <p class="eyebrow"><span class="num">03</span> / Life in the flock</p>
         <h2 class="h-display">A perfect day.<br>Every day.</h2>
       </div>
 
@@ -168,7 +175,7 @@
     </div>
   </section>
 
-  <!-- ================= 03 / MEET SHEEP ================= -->
+  <!-- ================= 04 / MEET SHEEP ================= -->
   <section class="section split split--green" id="characters">
     <figure class="split__media reveal">
       <img src="assets/img/sheep-wall.jpg" alt="Sheep spraying BAAAAAHN THE SYSTEM on the wall of a barn at sunset"
@@ -177,7 +184,7 @@
     </figure>
 
     <div class="split__text reveal">
-      <p class="eyebrow eyebrow--gold"><span class="num">03</span> / Meet Sheep</p>
+      <p class="eyebrow eyebrow--gold"><span class="num">04</span> / Meet Sheep</p>
       <hr class="rule">
       <h2 class="h-display h-display--light">Just Another<br>Sheep.</h2>
       <p class="kicker">At least, that is what they called him.</p>
@@ -191,7 +198,7 @@
     </div>
   </section>
 
-  <!-- ================= 04 / SHEEP RECORDS ================= -->
+  <!-- ================= 05 / SHEEP RECORDS ================= -->
   <section class="section split split--cream split--reverse" id="records">
     <figure class="split__media reveal">
       <img src="assets/img/studio.jpg" alt="Sheep recording in a small wooden barn studio filled with vintage equipment"
@@ -200,7 +207,7 @@
     </figure>
 
     <div class="split__text reveal">
-      <p class="eyebrow"><span class="num">04</span> / Sheep Records</p>
+      <p class="eyebrow"><span class="num">05</span> / Sheep Records</p>
       <hr class="rule">
       <h2 class="h-display h-display--green">Ideas build<br>worlds.</h2>
 
@@ -214,7 +221,7 @@
     </div>
   </section>
 
-  <!-- ================= 05 / THE OTHER SIDE ================= -->
+  <!-- ================= 06 / THE OTHER SIDE ================= -->
   <section class="section gate" id="gate">
     <figure class="media media--wide reveal">
       <img src="assets/img/gate.jpg" alt="Sheep pushing open the farm gate, looking towards the SOLANGELES hills at golden hour"
@@ -225,7 +232,7 @@
     <div class="gate__panel">
       <div class="wrap gate__grid">
         <div class="gate__head reveal">
-          <p class="eyebrow eyebrow--gold"><span class="num">05</span> / The other side</p>
+          <p class="eyebrow eyebrow--gold"><span class="num">06</span> / The other side</p>
           <hr class="rule">
           <h2 class="h-display h-display--light">The fence was never the horizon.</h2>
         </div>
@@ -249,14 +256,15 @@
 
   <!--
   ================================================================
-  SECTIONS 06 – 08 GO HERE
+  SECTIONS 07 – 09 GO HERE
   ----------------------------------------------------------------
   Copy one of the layouts above and change the id + content:
 
-    · full-bleed image + text columns  →  .section.gate      (05)
-    · image left / text right          →  .section.split.split--reverse (04)
-    · text left / image right          →  .section.split     (03)
-    · image on top + 3 text columns    →  .section.flock     (02)
+    · full-bleed image + text columns  →  .section.gate      (06)
+    · image left / text right          →  .section.split.split--reverse (05)
+    · text left / image right          →  .section.split     (04)
+    · image on top + 3 text columns    →  .section.flock     (03)
+    · image + kompaktes Farbpanel      →  .section.gate.gate--intro (02)
 
   Colour variants: .split--cream / .split--green / .section--cream
   The nav already links to #token for the $SHEEP section.
