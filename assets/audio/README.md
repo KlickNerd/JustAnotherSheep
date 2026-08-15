@@ -4,7 +4,7 @@ Hier liegen die Tracks für den Player in Sektion 05 (Sheep Records).
 
 | Datei        | Titel | Verwendung |
 |--------------|-------|------------|
-| `seven.mp3`  | Seven | Release 001, Player auf der Startseite |
+| ✅ `seven.mp3` | Seven | Release 001, Player auf der Startseite — 2:46, 3,7 MB |
 
 ## Anforderungen
 
@@ -19,3 +19,11 @@ Hier liegen die Tracks für den Player in Sektion 05 (Sheep Records).
 Titel und Dateiname stehen in `index.html` am Element `.player`
 (`data-src`, `data-title`) und im Text darüber (`.player__title`).
 Fehlt die Datei, schaltet der Player automatisch in den Hinweiszustand.
+
+## Springen im Track
+
+Der Player setzt `currentTime` — das funktioniert nur, wenn der Webserver
+**Bereichsanfragen** (HTTP Range) beantwortet. GitHub Pages, Netlify, Vercel und
+jeder normale Webserver tun das. Der eingebaute Python-Testserver
+(`python3 -m http.server`) tut es **nicht**: Dort springt der Track auf 0:00
+zurück. Das ist kein Fehler der Seite, sondern eine Einschränkung des Testservers.
