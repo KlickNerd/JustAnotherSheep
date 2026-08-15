@@ -201,11 +201,18 @@
   </section>
 
   <!-- ================= 05 / SHEEP RECORDS ================= -->
-  <section class="section split split--cream split--reverse" id="records">
+  <section class="section split split--cream split--reverse split--studio" id="records">
     <figure class="split__media reveal">
-      <img src="assets/img/studio.jpg" alt="Sheep recording in a small wooden barn studio filled with vintage equipment"
-           width="1200" height="1100" loading="lazy" decoding="async"
-           onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/studio-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/studio-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/studio-1000.webp 1000w, assets/img/studio.webp 1536w" sizes="(min-width: 1000px) 55vw, 100vw">
+        <img src="assets/img/studio.jpg"
+             srcset="assets/img/studio-1000.jpg 1000w, assets/img/studio.jpg 1536w" sizes="(min-width: 1000px) 55vw, 100vw"
+             alt="Sheep leaning against the Sheep Records shed, the door open onto a small recording desk"
+             width="1536" height="1024" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
     </figure>
 
     <div class="split__text reveal">

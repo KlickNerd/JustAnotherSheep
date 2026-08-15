@@ -332,6 +332,9 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .split--welcome .split__media img{ aspect-ratio:3/4; object-position:center; }
 /* Sheep links, Graffiti rechts — beides soll im Ausschnitt bleiben */
 .split--wall .split__media img{ object-position:center; }
+/* Sheep und das Schild „Sheep Records" stehen rechts im Bild — der
+   Ausschnitt wird deshalb nach rechts gezogen, die Weide links darf weg */
+.split--studio .split__media img{ object-position:72% center; }
 .split__text{ padding:var(--section-y) var(--pad); }
 .split__text .eyebrow{ margin-bottom:.4rem; }
 .split__text h2{ margin-bottom:1.2rem; }
@@ -463,6 +466,8 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
     padding:clamp(4rem,6vw,6rem) clamp(2.5rem,4.5vw,5rem);
   }
   .split__text > *{ max-width:38ch; }
+  /* die Schlagwortzeile soll nicht umbrechen wie ein Fließtext */
+  .split__text .tags{ max-width:none; }
 
   /* 05 */
   .gate .media--wide img{ aspect-ratio:21/9; }
