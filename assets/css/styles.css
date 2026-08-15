@@ -235,6 +235,10 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
    01 / HERO
    ============================================================= */
 .hero{
+  /* Bildausschnitt: Sheep steht bei ca. 70 % der Bildbreite.
+     Auf schmalen Screens wird nach rechts geschwenkt, damit er im Bild bleibt. */
+  --hero-focus: 78% center;
+
   position:relative;
   min-height:100vh;
   min-height:100svh;              /* no jump when the URL bar hides */
@@ -242,18 +246,21 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   padding-bottom:calc(3.5rem + env(safe-area-inset-bottom));
   padding-top:calc(var(--header-h) + 2rem);
   overflow:hidden;
-  background:var(--green-deep);
+  /* steht schon vor dem Bild da und ist grob so gefärbt wie das Motiv:
+     heller Himmel oben, dunkle Wiese unten — kein schwarzer Blitz beim Laden */
+  background:linear-gradient(to bottom, #cfc9b6 0%, #b7b39c 42%, #6f7452 68%, #3d472b 100%);
 }
 .hero__media{ position:absolute; inset:0; }
 .hero__media img{
   width:100%; height:100%;
   object-fit:cover;
-  object-position:72% center;      /* keeps Sheep in frame on portrait screens */
+  object-position:var(--hero-focus);
 }
 .hero__scrim{
   position:absolute; inset:0;
   background:
-    linear-gradient(to top, rgba(12,14,9,.88) 0%, rgba(12,14,9,.55) 32%, rgba(12,14,9,.12) 62%, rgba(12,14,9,.28) 100%);
+    /* unten dunkel für die Schrift, oben ein Hauch für Logo und Navigation */
+    linear-gradient(to top, rgba(16,18,11,.88) 0%, rgba(16,18,11,.72) 22%, rgba(16,18,11,.34) 46%, rgba(16,18,11,.06) 68%, rgba(16,18,11,.30) 100%);
 }
 .hero__content{ position:relative; z-index:2; color:var(--cream); }
 .hero__title{
@@ -361,6 +368,8 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 @media (min-width:700px){
   :root{ --header-h:76px; }
 
+  .hero{ --hero-focus:70% center; }
+
   .media--wide img{ aspect-ratio:16/9; }
   .is-placeholder{ aspect-ratio:16/9; }
 
@@ -396,8 +405,7 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .btn--header{ display:inline-flex; }
 
   /* hero */
-  .hero{ align-items:center; padding-bottom:0; }
-  .hero__media img{ object-position:center; }
+  .hero{ align-items:center; padding-bottom:0; --hero-focus:center; }
   .hero__scrim{
     background:linear-gradient(100deg, rgba(12,14,9,.55) 0%, rgba(12,14,9,.25) 42%, rgba(12,14,9,0) 65%);
   }
