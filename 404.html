@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outside the marked areas — Just Another Sheep</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/JustAnotherSheep/assets/img/favicon.svg" type="image/svg+xml">
+<!-- GitHub Pages liefert diese Seite unter beliebigen Pfaden aus,
+     deshalb absolute Pfade. Bei eigener Domain später anpassen. -->
+<link rel="stylesheet" href="/JustAnotherSheep/assets/css/fonts.css">
+<link rel="stylesheet" href="/JustAnotherSheep/assets/css/styles.css">
+<style>
+  .lost{
+    min-height:100svh;
+    background:var(--ink);
+    display:flex; align-items:center;
+    padding:var(--pad);
+  }
+  .lost__inner{ max-width:38rem; margin-inline:auto; }
+  .lost__inner > * + *{ margin-top:1.2rem; }
+  .lost p{ color:rgba(239,232,214,.8); }
+  .lost .whisper{ color:var(--stone); }
+  .lost .btn{ margin-top:2rem; }
+</style>
+</head>
+<body>
+<main class="lost">
+  <div class="lost__inner">
+    <p class="eyebrow eyebrow--gold"><span class="num">404</span> / Notice</p>
+    <h1 class="h-display h-display--light h-brush">There is no pasture here.</h1>
+    <p>The page you were looking for lies outside the marked areas. The farm insists it has always been that way.</p>
+    <p class="whisper">Please enjoy your freedom between the fences.</p>
+    <a class="btn btn--solid" style="background:var(--gold);color:var(--ink)" href="/JustAnotherSheep/">Back inside the fences</a>
+  </div>
+</main>
+</body>
+</html>

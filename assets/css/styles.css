@@ -74,6 +74,7 @@ hr.rule{
   background:currentColor; opacity:.28; width:min(340px,100%);
 }
 :focus-visible{ outline:2px solid var(--gold); outline-offset:3px; border-radius:2px; }
+::selection{ background:var(--gold); color:var(--ink); }
 
 .skip-link{
   position:absolute; left:-9999px; top:0; z-index:200;
@@ -256,8 +257,25 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   border-bottom:1px solid rgba(242,237,226,.14);
 }
 .mobile-nav__num{
-  font-family:var(--f-label); font-size:.8rem; letter-spacing:.14em;
-  color:var(--gold); flex:none;
+  font-family:var(--f-label); font-size:.72rem; letter-spacing:.1em;
+  font-weight:700; flex:none;
+  background:radial-gradient(circle at .42em 50%, transparent .12em, var(--gold) .13em);
+  color:var(--ink);
+  padding:.2em .55em .2em .85em;
+  border-radius:.25em .5em .5em .25em;
+}
+.mobile-nav__soon{
+  display:flex; align-items:baseline; gap:.9rem;
+  padding:1rem 0; min-height:56px;
+  font-family:var(--f-display); text-transform:uppercase;
+  font-size:clamp(1.6rem,7.5vw,2.2rem); line-height:1.1;
+  color:rgba(239,232,214,.4);
+  border-bottom:1px solid rgba(239,232,214,.14);
+}
+.mobile-nav__soon .mobile-nav__num{ opacity:.5; }
+.mobile-nav__soon small{
+  font-family:var(--f-label); font-size:.65rem; letter-spacing:.14em;
+  color:var(--gold); align-self:center;
 }
 .mobile-nav .btn--solid{ background:var(--gold); color:var(--green-deep); }
 .mobile-nav__note{
@@ -299,6 +317,15 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
     linear-gradient(to top, rgba(16,18,11,.88) 0%, rgba(16,18,11,.72) 22%, rgba(16,18,11,.34) 46%, rgba(16,18,11,.06) 68%, rgba(16,18,11,.30) 100%);
 }
 .hero__content{ position:relative; z-index:2; color:var(--cream); }
+/* Auftritt beim Laden — nur mit JS, und die globale reduced-motion-Regel
+   schaltet die Animationen ohnehin ab. Der Titel behält seine Drehung. */
+@keyframes heroRise{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:none; } }
+@keyframes heroRiseTilt{ from{ opacity:0; transform:translateY(16px) rotate(-1.6deg); } to{ opacity:1; transform:rotate(-1.6deg); } }
+.js .hero__content > *{ animation:heroRise .7s var(--ease) both; }
+.js .hero__content > .eyebrow{ animation-delay:.05s; }
+.js .hero__content > .hero__title{ animation-name:heroRiseTilt; animation-delay:.18s; }
+.js .hero__content > .hero__tagline{ animation-delay:.34s; }
+.js .hero__content > .btn{ animation-delay:.5s; }
 .hero__content .eyebrow,
 .hero__tagline{ text-shadow:0 1px 14px rgba(0,0,0,.55); }
 .hero__title{
@@ -403,6 +430,34 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   content:""; position:absolute; top:-1px; left:0; width:100%; height:20px; z-index:3;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='20' preserveAspectRatio='none'%3E%3Cpath d='M0 0h260v3l-13 7-12-6-14 9-15-7-12 6-13-8-12 9-14-6-11 5-13-8-15 7-12-5-13 8-14-9-12 6-13-4-14 8-12-7-26 6z' fill='%23efe8d6'/%3E%3C/svg%3E") repeat-x;
   background-size:260px 20px;
+}
+
+/* Der Tagesablauf als Aushang: die Bürokratie der Farm als Form.
+   dt in Tabellenziffern, damit die Zeiten wie gestempelt untereinander stehen. */
+.timetable{ margin:0 0 1.5rem; border-top:1px solid rgba(61,58,47,.3); }
+.timetable__row{
+  display:flex; align-items:baseline; gap:1.1rem;
+  padding:.6rem 0;
+  border-bottom:1px solid rgba(61,58,47,.22);
+}
+.timetable dt{
+  flex:none;
+  font-family:var(--f-label); font-weight:700;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.08em;
+  color:var(--green);
+}
+.timetable dd{ margin:0; }
+
+/* Gummistempel — für Dinge, die es ehrlich noch nicht gibt */
+.stamp{
+  display:inline-block;
+  font-family:var(--f-label); font-weight:700;
+  text-transform:uppercase; letter-spacing:.16em; font-size:.8rem;
+  color:var(--gold); border:2px solid var(--gold);
+  padding:.55rem 1rem; border-radius:2px;
+  transform:rotate(-2deg); transform-origin:center;
+  opacity:.9;
 }
 
 /* Ausriss aus der aktuellen Ausgabe — liest sich wie eine Meldung,
@@ -636,6 +691,18 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   }
   .site-header.is-stuck .nav-desktop a{ color:var(--ink); text-shadow:none; }
   .nav-desktop a:hover{ color:var(--gold); }
+  .nav-soon{
+    font-family:var(--f-label); font-weight:600;
+    text-transform:uppercase; letter-spacing:.14em; font-size:.8rem;
+    color:var(--cream); opacity:.55; cursor:default;
+    text-shadow:0 1px 10px rgba(0,0,0,.4);
+    padding-block:.5rem; display:inline-block;
+  }
+  .site-header.is-stuck .nav-soon{ color:var(--ink); text-shadow:none; }
+  .nav-soon small{
+    font-size:.62em; color:var(--gold); opacity:1;
+    letter-spacing:.1em; vertical-align:super; margin-left:.3em;
+  }
   .btn--header{ display:inline-flex; }
 
   /* hero */

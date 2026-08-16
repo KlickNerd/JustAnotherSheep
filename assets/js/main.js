@@ -114,7 +114,7 @@
       root.classList.add('is-missing');
       btn.disabled = true;
       seek.disabled = true;
-      btn.setAttribute('aria-label', title + ' ist noch nicht verfügbar');
+      btn.setAttribute('aria-label', title + ' is not available yet');
       if (note) note.hidden = false;
     }
 
@@ -135,7 +135,7 @@
       });
       audio.addEventListener('ended', function () {
         root.classList.remove('is-playing');
-        btn.setAttribute('aria-label', title + ' abspielen');
+        btn.setAttribute('aria-label', 'Play ' + title);
         audio.currentTime = 0;
         seek.value = 0;
       });
@@ -149,11 +149,11 @@
         var p = audio.play();
         if (p && p.catch) p.catch(fail);
         root.classList.add('is-playing');
-        btn.setAttribute('aria-label', title + ' pausieren');
+        btn.setAttribute('aria-label', 'Pause ' + title);
       } else {
         audio.pause();
         root.classList.remove('is-playing');
-        btn.setAttribute('aria-label', title + ' abspielen');
+        btn.setAttribute('aria-label', 'Play ' + title);
       }
     });
 

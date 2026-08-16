@@ -25,6 +25,13 @@ Die Artworks fehlen noch. Sie müssen nur mit den richtigen Dateinamen in
 Solange ein Bild fehlt, zeigt die Seite automatisch einen Platzhalter an,
 statt kaputt auszusehen.
 
+## Extras
+
+* `404.html` — eigene Fehlerseite für GitHub Pages, im Ton der Welt
+  („There is no pasture here."). Nutzt absolute Pfade auf
+  `/JustAnotherSheep/` — bei eigener Domain anpassen.
+* Favicon ist die Ohrmarke der Herde (`assets/img/favicon.svg`).
+
 ## Lokal ansehen
 
 ```bash

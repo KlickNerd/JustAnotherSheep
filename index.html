@@ -11,10 +11,14 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Just Another Sheep">
 <meta property="og:description" content="Same farm. Different sheep.">
-<meta property="og:image" content="assets/img/og-cover.jpg">
+<!-- absolute URL: Scraper lösen relative og:image nicht auf.
+     Bei eigener Domain später hier und bei og:url anpassen. -->
+<meta property="og:url" content="https://klicknerd.github.io/JustAnotherSheep/">
+<meta property="og:image" content="https://klicknerd.github.io/JustAnotherSheep/assets/img/og-cover.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"Just Another Sheep","url":"https://klicknerd.github.io/JustAnotherSheep/"},{"@type":"MusicRecording","name":"Seven","byArtist":{"@type":"MusicGroup","name":"Just Another Sheep"},"duration":"PT2M46S","inAlbum":{"@type":"MusicAlbum","name":"Freedom Between the Fences"}}]}</script>
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
 <!-- Self-hosted fonts: no third party request, no cookie banner, faster on mobile -->
@@ -51,7 +55,7 @@
         <li><a href="#characters">Characters</a></li>
         <li><a href="#records">Sheep Records</a></li>
         <li><a href="#paper">The Open Gate</a></li>
-        <li><a href="#token">$Sheep</a></li>
+        <li><span class="nav-soon">$Sheep<small>soon</small></span></li>
       </ul>
     </nav>
 
@@ -72,7 +76,7 @@
       <li><a href="#records"><span class="mobile-nav__num">05</span> Sheep Records</a></li>
       <li><a href="#paper"><span class="mobile-nav__num">06</span> The Open Gate</a></li>
       <li><a href="#gate"><span class="mobile-nav__num">07</span> The Other Side</a></li>
-      <li><a href="#token"><span class="mobile-nav__num">08</span> $Sheep</a></li>
+      <li><span class="mobile-nav__soon"><span class="mobile-nav__num">08</span> $Sheep <small>soon</small></span></li>
     </ul>
   </nav>
   <a class="btn btn--solid btn--block" href="https://x.com/" target="_blank" rel="noopener">Follow on X</a>
@@ -162,7 +166,11 @@
       </div>
 
       <div class="flock__body reveal">
-        <p>The bell rings at seven.<br>Breakfast begins at eight.<br>By nine, every sheep is exactly where it is supposed to be.</p>
+        <dl class="timetable" aria-label="The daily schedule">
+          <div class="timetable__row"><dt>07:00</dt><dd>The bell rings.</dd></div>
+          <div class="timetable__row"><dt>08:00</dt><dd>Breakfast begins.</dd></div>
+          <div class="timetable__row"><dt>09:00</dt><dd>Every sheep is exactly where it is supposed to be.</dd></div>
+        </dl>
         <p>The farm provides food, shelter and protection. Nobody gets lost. Nobody is left behind. Nobody has to worry about making the wrong choice.</p>
         <p>The gates simply close once everyone is safely inside.</p>
       </div>
@@ -232,7 +240,7 @@
            schaltet er sich selbst in den „kommt bald"-Zustand. -->
       <div class="player" data-src="assets/audio/seven.mp3" data-title="Seven">
         <div class="player__row">
-          <button class="player__toggle" type="button" aria-label="Seven abspielen">
+          <button class="player__toggle" type="button" aria-label="Play Seven">
             <span class="player__icon" aria-hidden="true"></span>
           </button>
           <div class="player__meta">
@@ -241,13 +249,13 @@
           </div>
         </div>
         <input class="player__seek" type="range" min="0" max="1000" value="0" step="1"
-               aria-label="Position im Track" disabled>
+               aria-label="Track position" disabled>
         <p class="player__time"><span class="player__cur">0:00</span><span class="player__dur">–:––</span></p>
-        <p class="player__note" hidden>Der erste Track wird gerade fertig gemischt.</p>
+        <p class="player__note" hidden>The first track is still at the mixing desk.</p>
+        <noscript><audio controls preload="none" src="assets/audio/seven.mp3" style="width:100%;margin-top:.75rem"></audio></noscript>
       </div>
 
       <p class="tags">Music <span>·</span> Videos <span>·</span> Visuals <span>·</span> Campaigns</p>
-      <a class="btn btn--outline" href="#records">Enter Sheep Records</a>
       <p class="whisper whisper--gold">Independent by nature. Different by choice.</p>
     </div>
   </section>
@@ -285,7 +293,7 @@
       </div>
 
       <p class="tags">Farm reports <span>·</span> Culture <span>·</span> Opinion <span>·</span> Letters</p>
-      <a class="btn btn--outline btn--paper" href="#paper">Read The Open Gate</a>
+      <p class="stamp">Issue 01 — at the press</p>
       <p class="whisper whisper--gold">Some stories travel better folded.</p>
     </div>
   </section>
@@ -391,7 +399,7 @@
       <a href="#story">Story</a>
       <a href="#characters">Characters</a>
       <a href="#records">Sheep Records</a>
-      <a href="#token">$Sheep</a>
+      <a href="#paper">The Open Gate</a>
       <a href="https://x.com/" target="_blank" rel="noopener">X</a>
     </nav>
 
