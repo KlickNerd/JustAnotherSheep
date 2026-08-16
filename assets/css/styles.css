@@ -346,18 +346,18 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 
 /* ---------- Split: Bild als Karte + Text ---------- */
 .split{
-  padding:var(--panel-pad);
-  display:grid; gap:1.8rem;
+  padding:0;
+  display:grid; gap:0;
 }
+.split__text{ padding:1.6rem var(--panel-pad) var(--panel-pad); }
 .split__media img,
 .split__media picture{ border-radius:var(--radius); }
-.split__media img,
-.split__media picture{ border-radius:14px; }
-.split__media img{
-  width:100%; height:auto;
-  border:1px solid var(--line);
-  box-shadow:0 10px 30px rgba(20,16,6,.18);
-}
+.split__media img{ width:100%; height:auto; display:block; }
+/* Bildausschnitte pro Sektion, wenn das Bild als Cover beschnitten wird */
+#welcome .split__media img{ object-position:55% center; }
+#characters .split__media img{ object-position:70% center; }
+#records .split__media img{ object-position:70% center; }
+#paper .split__media img{ object-position:45% center; }
 .split__text .eyebrow{ margin-bottom:.5rem; }
 .split__text h2{ margin-bottom:1.3rem; }
 .split__text p{ color:var(--txt-2); }
@@ -489,8 +489,8 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .gate__grid{ padding:1.8rem var(--panel-pad) var(--panel-pad); display:grid; gap:1.8rem; }
 .gate__head h2{ margin-top:.2rem; }
 .gate__col p + p{ margin-top:1.05rem; }
-.gate__col p{ color:var(--txt-2); }
-.gate__col .statement--light{ margin-top:1.8rem; }
+.gate__col p{ color:rgba(243,239,230,.78); }
+.gate__col .statement--light{ margin-top:1.8rem; color:#f3efe6; }
 
 /* =============================================================
    OUTRO — Vollbild-Abspann
@@ -604,23 +604,27 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
     animation:scrollHint 2.4s var(--ease) infinite;
   }
 
-  /* Splits: Text schmaler, Bild größer, engerer Abstand */
-  .split{ grid-template-columns:minmax(0,10fr) minmax(0,11fr); gap:clamp(2rem,3vw,2.8rem); align-items:center; }
+  /* Splits: Text-Hälfte gepolstert, Bild-Hälfte randlos in voller Höhe */
+  .split{ grid-template-columns:minmax(0,10fr) minmax(0,11fr); align-items:stretch; min-height:440px; }
   .split--reverse{ grid-template-columns:minmax(0,11fr) minmax(0,10fr); }
-  .split__media{ order:2; }
+  .split__media{ order:2; position:relative; }
   .split--reverse .split__media{ order:0; }
-  .split__text{ order:1; }
-  .split__text > *{ max-width:36rem; }
+  .split__media img{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover;
+  }
+  .split__text{
+    order:1; align-self:center;
+    padding:clamp(2rem,3.2vw,3rem) var(--panel-pad);
+  }
+  .split__text > *{ max-width:34rem; }
 
-  /* 03 */
-  .flock__grid{ grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr); gap:2.2rem; align-items:start; }
-  .flock__head{ grid-column:auto; }
-  .flock__head .h-display{ font-size:clamp(1.8rem,2.6vw,2.3rem); }
-
-  /* 07 */
-  .gate__grid{ grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr); gap:2.2rem; align-items:start; }
-  .gate__head{ grid-column:auto; }
-  .gate__head .h-display{ font-size:clamp(1.8rem,2.6vw,2.3rem); }
+  /* 03 + 07: Kopf über volle Breite, darunter zwei gleich behandelte Spalten */
+  .flock .media--wide img{ aspect-ratio:21/9; }
+  .flock__grid{ grid-template-columns:1fr 1fr; gap:1.2rem 3rem; align-items:start; }
+  .flock__head{ grid-column:1 / -1; }
+  .gate__grid{ grid-template-columns:1fr 1fr; gap:1.2rem 3rem; align-items:start; }
+  .gate__head{ grid-column:1 / -1; }
 
   /* Outro: Text liegt im Bild */
   .outro{ min-height:86svh; display:flex; align-items:center; }
