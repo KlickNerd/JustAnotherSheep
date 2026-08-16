@@ -296,21 +296,47 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .hero__scroll{ display:none; }
 
 /* =============================================================
-   Sektionen — ein Grund, Abwechslung über Layout
+   Sektionen als Panels — jede Sektion ist eine abgesetzte Karte
+   auf dem Papier. Die Nacht-Sektionen (04, 06, 07) sind dunkle
+   Panels und geben der Seite Rhythmus.
    ============================================================= */
-.section{ position:relative; }
-/* alte Farbvarianten: alle auf dem gleichen Grund */
-.section--cream, .split--paper, .split--night, .split--forest,
-.split--ink, .split--green, .split--cream{ background:var(--bg); color:var(--txt-2); }
+:root{ --panel-pad: clamp(1.4rem, 3vw, 2.75rem); }
 
-/* Volle-Breite-Bilder (03/07): sanft gerundet im Rahmen */
-.media--wide{ max-width:var(--wrap); margin-inline:auto; padding-inline:var(--pad); }
-.media--wide img,
-.media--wide picture{ border-radius:var(--radius); }
+.section{
+  position:relative;
+  width:min(100% - 2*var(--pad), var(--wrap));
+  margin-inline:auto;
+  margin-block:clamp(1.1rem, 2vw, 1.75rem);
+  border-radius:clamp(18px, 2.2vw, 28px);
+  background:var(--bg-2);
+  border:1px solid var(--line);
+  box-shadow:0 18px 50px rgba(40,32,12,.08);
+  overflow:hidden;               /* Cover-Bilder enden an den Panel-Ecken */
+  color:var(--txt-2);
+}
+.hero + .section{ margin-top:clamp(1.4rem, 2.5vw, 2.25rem); }
+
+/* dunkle Panels: die Nacht-Sektionen */
+.split--night, .split--ink, .section.gate{
+  background:#221d13;
+  border-color:rgba(255,255,255,.07);
+}
+.split--night .h-display, .split--ink .h-display, .gate .h-display,
+.gate .statement{ color:#f3efe6; }
+.split--night .split__text p, .split--ink .split__text p, .gate__col p{ color:rgba(243,239,230,.76); }
+.split--night .whisper, .split--ink .whisper, .gate .whisper{ color:rgba(243,239,230,.5); }
+.split--night .kicker, .split--ink .kicker{ color:rgba(243,239,230,.55); }
+.split--night .eyebrow, .split--ink .eyebrow, .gate .eyebrow{ color:var(--amber-2); }
+.split--night .eyebrow .num, .split--ink .eyebrow .num, .gate .eyebrow .num{ color:rgba(243,239,230,.5); }
+.split--night .tags, .split--ink .tags{ color:rgba(243,239,230,.6); }
+.split--night .tags span, .split--ink .tags span{ color:var(--amber-2); }
+.split--ink .stamp{ color:var(--amber-2); border-color:rgba(224,167,99,.5); }
+
+/* Bild-Bänder (03/07): laufen als Cover bis an die Panel-Kanten */
+.media--wide{ margin:0; }
 .media--wide img{
   width:100%; aspect-ratio:3/2; object-fit:cover;
-  border:1px solid var(--line);
-  box-shadow:0 14px 40px rgba(40,32,12,.12);
+  border-bottom:1px solid var(--line);
 }
 .is-placeholder{ width:100%; aspect-ratio:3/2; object-fit:cover; background:var(--bg-2); }
 
@@ -320,16 +346,17 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 
 /* ---------- Split: Bild als Karte + Text ---------- */
 .split{
-  max-width:var(--wrap); margin-inline:auto;
-  padding:var(--section-y) var(--pad);
-  display:grid; gap:2.2rem;
+  padding:var(--panel-pad);
+  display:grid; gap:1.8rem;
 }
 .split__media img,
 .split__media picture{ border-radius:var(--radius); }
+.split__media img,
+.split__media picture{ border-radius:14px; }
 .split__media img{
   width:100%; height:auto;
   border:1px solid var(--line);
-  box-shadow:0 14px 40px rgba(40,32,12,.12);
+  box-shadow:0 10px 30px rgba(20,16,6,.18);
 }
 .split__text .eyebrow{ margin-bottom:.5rem; }
 .split__text h2{ margin-bottom:1.3rem; }
@@ -341,9 +368,8 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 .split__text .rule{ display:none; }   /* Linien braucht die Richtung nicht */
 
 /* ---------- 03 / Flock: Bild-Band + Spalten ---------- */
-.flock{ padding-top:var(--section-y); }
 .flock .media--wide img{ aspect-ratio:3/2; }
-.flock__grid{ padding-block:2.2rem var(--section-y); display:grid; gap:2rem; }
+.flock__grid{ padding:1.8rem var(--panel-pad) var(--panel-pad); display:grid; gap:1.8rem; }
 .flock__head .eyebrow{ margin-bottom:.7rem; }
 .flock__body p{ color:var(--txt-2); }
 .flock__body p + p{ margin-top:1.05rem; }
@@ -351,7 +377,7 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 
 /* Stundenplan als Karte */
 .timetable{
-  background:var(--bg-2);
+  background:var(--bg-3);
   border:1px solid var(--line);
   border-radius:16px;
   padding:.4rem 1.2rem;
@@ -373,30 +399,30 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 /* ---------- 06 / Zeitungs-Ausriss ---------- */
 .clipping{
   margin-top:2rem;
-  background:var(--bg-2);
-  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);
   border-radius:16px;
   padding:1.3rem 1.4rem 1.4rem;
 }
 .clipping__label{
   font-weight:700; text-transform:uppercase; letter-spacing:.22em;
-  font-size:.68rem; color:var(--amber);
+  font-size:.68rem; color:var(--amber-2);
 }
 .clipping__head{
   font-weight:700; letter-spacing:-.02em;
   font-size:clamp(1.2rem,3.6vw,1.45rem); line-height:1.25;
-  color:var(--txt);
+  color:#f3efe6;
   margin:.5rem 0 .45rem;
   text-wrap:balance;
 }
-.clipping__body{ color:var(--txt-2); font-size:.95rem; }
+.clipping__body{ color:rgba(243,239,230,.72); font-size:.95rem; }
 
 /* =============================================================
    AUDIO-PLAYER — angehobene Karte
    ============================================================= */
 .player{
   margin-top:2rem;
-  background:var(--bg-2);
+  background:var(--bg-3);
   border:1px solid var(--line);
   border-radius:16px;
   padding:1.2rem 1.3rem 1.1rem;
@@ -459,10 +485,8 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
 /* =============================================================
    07 / THE OTHER SIDE — Bild-Band + zwei Spalten
    ============================================================= */
-.gate{ padding-top:var(--section-y); background:var(--bg); }
-.gate .media--wide img{ aspect-ratio:auto; }
-.gate__panel{ color:var(--txt-2); }
-.gate__grid{ padding-block:2.2rem var(--section-y); display:grid; gap:2rem; }
+.gate .media--wide img{ aspect-ratio:auto; border-bottom-color:rgba(255,255,255,.08); }
+.gate__grid{ padding:1.8rem var(--panel-pad) var(--panel-pad); display:grid; gap:1.8rem; }
 .gate__head h2{ margin-top:.2rem; }
 .gate__col p + p{ margin-top:1.05rem; }
 .gate__col p{ color:var(--txt-2); }
@@ -581,7 +605,7 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   }
 
   /* Splits: Text schmaler, Bild größer, engerer Abstand */
-  .split{ grid-template-columns:minmax(0,10fr) minmax(0,11fr); gap:clamp(2.2rem,3.5vw,3.2rem); align-items:center; }
+  .split{ grid-template-columns:minmax(0,10fr) minmax(0,11fr); gap:clamp(2rem,3vw,2.8rem); align-items:center; }
   .split--reverse{ grid-template-columns:minmax(0,11fr) minmax(0,10fr); }
   .split__media{ order:2; }
   .split--reverse .split__media{ order:0; }
@@ -589,12 +613,12 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .split__text > *{ max-width:36rem; }
 
   /* 03 */
-  .flock__grid{ grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr); gap:2.4rem; align-items:start; }
+  .flock__grid{ grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr); gap:2.2rem; align-items:start; }
   .flock__head{ grid-column:auto; }
   .flock__head .h-display{ font-size:clamp(1.8rem,2.6vw,2.3rem); }
 
   /* 07 */
-  .gate__grid{ grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr); gap:2.4rem; align-items:start; }
+  .gate__grid{ grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr); gap:2.2rem; align-items:start; }
   .gate__head{ grid-column:auto; }
   .gate__head .h-display{ font-size:clamp(1.8rem,2.6vw,2.3rem); }
 
