@@ -27,12 +27,11 @@ jobs:
           for item in manifest['files']:
               path = pathlib.Path(item['path'])
               path.parent.mkdir(parents=True, exist_ok=True)
-              tmp = path.with_suffix('.tmp.png')
-              urllib.request.urlretrieve(item['url'], tmp)
-              print('downloaded', item['path'], tmp.stat().st_size)
+              urllib.request.urlretrieve(item['url'], path)
+              print('downloaded', item['path'], path.stat().st_size)
           EOF
           sudo apt-get install -y imagemagick >/dev/null 2>&1 || true
-          for f in assets/originals/*.tmp.png; do
+          find assets/originals -name '*.tmp.png' | while read -r f; do
             out="${f%.tmp.png}.jpg"
             convert "$f" -resize '1920x1920>' -quality 90 "$out"
             rm "$f"
