@@ -167,6 +167,18 @@
     });
   });
 
+  /* ---------- „Play Seven"-Knöpfe außerhalb des Players ----------
+     Scrollen zum Release-Panel und starten den Track im selben Klick. */
+  document.querySelectorAll('.js-play').forEach(function (link) {
+    link.addEventListener('click', function () {
+      var player = document.querySelector('.player');
+      if (!player || player.classList.contains('is-missing')) return;
+      if (!player.classList.contains('is-playing')) {
+        player.querySelector('.player__toggle').click();
+      }
+    });
+  });
+
   /* ---------- footer year ---------- */
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();

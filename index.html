@@ -22,7 +22,9 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
 <!-- Self-hosted fonts: no third party request, no cookie banner, faster on mobile -->
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-700-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-black-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/permanent-marker-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/oswald-600-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-400-latin.woff2" crossorigin>
 <!-- Hero-Bild so früh wie möglich anstoßen. Ab 700 px muss der Preload dieselbe
      Auswahl treffen wie das srcset im <picture> — sonst lädt der Browser zwei
@@ -108,12 +110,45 @@
         <span>Sheep</span>
       </h1>
       <p class="hero__tagline">Same farm. Different sheep.</p>
-      <a class="btn btn--solid btn--lg" href="#story">Explore the farm</a>
+      <div class="hero__cta">
+        <a class="btn btn--red btn--lg js-play" href="#listen">&#9654;&ensp;Play &ldquo;Seven&rdquo;</a>
+        <a class="btn btn--solid btn--lg" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
+      </div>
     </div>
+
+    <span class="sticker sticker--hero" aria-hidden="true">Release 001 &mdash; out now</span>
 
     <a class="hero__scroll" href="#story" aria-label="Scroll to the story">
       <span class="hero__scroll-line" aria-hidden="true"></span>
     </a>
+  </section>
+
+  <div class="ticker" aria-hidden="true"><span>Same farm &mdash; different sheep &#9733; Baaahn the system &#9733; Join the herd &#9733; Release 001 out now &#9733; Same farm &mdash; different sheep &#9733; Baaahn the system &#9733; Join the herd &#9733; Release 001 out now &#9733;&ensp;</span></div>
+
+  <!-- ================= RELEASE 001 — der Track gehört nach oben ================= -->
+  <section class="section listen" id="listen">
+    <div class="listen__inner">
+      <p class="eyebrow">Release 001 &middot; Sheep Records</p>
+      <h2 class="h-display h-brush">Seven.</h2>
+      <p class="listen__line">The farm&rsquo;s morning bell, flipped into a beat.</p>
+
+      <div class="player" data-src="assets/audio/seven.mp3" data-title="Seven">
+        <div class="player__row">
+          <button class="player__toggle" type="button" aria-label="Play Seven">
+            <span class="player__icon" aria-hidden="true"></span>
+          </button>
+          <div class="player__meta">
+            <p class="player__label">Release 001 &middot; Sheep Records</p>
+            <p class="player__title">Seven <span class="player__eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></p>
+          </div>
+        </div>
+        <input class="player__seek" type="range" min="0" max="1000" value="0" step="1"
+               aria-label="Track position" disabled>
+        <p class="player__time"><span class="player__cur">0:00</span><span class="player__dur">&ndash;:&ndash;&ndash;</span></p>
+        <p class="player__note" hidden>The first track is still at the mixing desk.</p>
+        <noscript><audio controls preload="none" src="assets/audio/seven.mp3" style="width:100%;margin-top:.75rem"></audio></noscript>
+      </div>
+    </div>
   </section>
 
   <!-- ================= 02 / WELCOME TO THE FARM ================= -->
@@ -199,7 +234,7 @@
     <div class="split__text reveal">
       <p class="eyebrow eyebrow--gold"><span class="num">04</span> / Meet Sheep</p>
       <hr class="rule">
-      <h2 class="h-display h-display--light">Just Another<br>Sheep.</h2>
+      <h2 class="h-display h-display--light h-brush">Just Another<br>Sheep.</h2>
       <p class="kicker">At least, that is what they called him.</p>
 
       <p>Sheep grew up like everyone else on the farm: follow the bell, stay inside the lines and never ask too many questions.</p>
@@ -229,30 +264,13 @@
     <div class="split__text reveal">
       <p class="eyebrow eyebrow--gold"><span class="num">05</span> / Sheep Records</p>
       <hr class="rule">
-      <h2 class="h-display h-display--light">Ideas build<br>worlds.</h2>
+      <h2 class="h-display h-display--light h-brush">Ideas build<br>worlds.</h2>
 
       <p>Between the bells, Sheep began building something of his own.</p>
       <p>He founded Sheep Records and runs it in his spare time. It is an independent studio where ideas grow into music, films and visual worlds.</p>
       <p>Together, we produce original releases, music videos, visual identities and campaigns. Sound, image and storytelling are developed as one, from the first idea to the finished world.</p>
 
-      <!-- Player: lädt nichts, bis jemand auf Play drückt. Fehlt die Datei,
-           schaltet er sich selbst in den „kommt bald"-Zustand. -->
-      <div class="player" data-src="assets/audio/seven.mp3" data-title="Seven">
-        <div class="player__row">
-          <button class="player__toggle" type="button" aria-label="Play Seven">
-            <span class="player__icon" aria-hidden="true"></span>
-          </button>
-          <div class="player__meta">
-            <p class="player__label">Release 001 · Sheep Records</p>
-            <p class="player__title">Seven</p>
-          </div>
-        </div>
-        <input class="player__seek" type="range" min="0" max="1000" value="0" step="1"
-               aria-label="Track position" disabled>
-        <p class="player__time"><span class="player__cur">0:00</span><span class="player__dur">–:––</span></p>
-        <p class="player__note" hidden>The first track is still at the mixing desk.</p>
-        <noscript><audio controls preload="none" src="assets/audio/seven.mp3" style="width:100%;margin-top:.75rem"></audio></noscript>
-      </div>
+      <p class="listen-link"><a class="js-play" href="#listen">&#9654;&ensp;Hear what he built &mdash; Release 001</a></p>
 
       <p class="tags">Music <span>·</span> Videos <span>·</span> Visuals <span>·</span> Campaigns</p>
       <p class="whisper whisper--gold">Independent by nature. Different by choice.</p>
@@ -356,7 +374,7 @@
 
     <div class="outro__content wrap reveal">
       <p class="eyebrow eyebrow--gold">The farm is still watching.</p>
-      <h2 class="h-display h-display--light">The next bell won't sound the same.</h2>
+      <h2 class="h-display h-display--light h-brush">The next bell won't sound the same.</h2>
 
       <p>The fences still stand. The flock still follows. The farm still expects tomorrow to look exactly like today.</p>
       <p>But one sheep has stopped waiting for permission.</p>
@@ -364,7 +382,10 @@
 
       <p class="statement statement--light">Tomorrow morning, the flock will hear it too.</p>
 
-      <a class="btn btn--solid btn--lg" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
+      <div class="outro__cta">
+        <a class="btn btn--red btn--lg" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
+        <span class="sticker">$SHEEP &mdash; soon</span>
+      </div>
     </div>
   </section>
 
@@ -386,6 +407,8 @@
   -->
 
 </main>
+
+<div class="ticker ticker--red" aria-hidden="true"><span>Join the herd &#9733; $SHEEP soon &#9733; The Open Gate &mdash; issue 01 at the press &#9733; Baaahn the system &#9733; Join the herd &#9733; $SHEEP soon &#9733; The Open Gate &mdash; issue 01 at the press &#9733; Baaahn the system &#9733;&ensp;</span></div>
 
 <footer class="site-footer">
   <div class="wrap site-footer__inner">

@@ -668,3 +668,156 @@ body.nav-open .burger span:nth-child(3){ transform:translateY(-8px) rotate(-45de
   .site-header,.mobile-nav,.hero__scroll{ display:none !important; }
   body{ background:#fff; color:#000; }
 }
+
+
+/* =============================================================
+   ENERGIE-SCHICHT — Rebellion statt Broschüre.
+   Bewusst als Überschreibung am Ende: laute Typo, Spray-Rot,
+   Ticker, Sticker, harte Schatten, Bewegung.
+   ============================================================= */
+:root{
+  --red:    #d3341c;   /* Sprühdosen-Rot — der Energie-Akzent */
+  --red-2:  #b32812;
+  --f-black:'Archivo Black', 'Arial Black', Impact, sans-serif;
+  --f-brush:'Permanent Marker', 'Archivo Black', sans-serif;
+  --f-label:'Oswald', 'Arial Narrow', sans-serif;
+}
+
+/* ---------- Laute Typo: Versalien für die Farm, Pinsel für Sheep ---------- */
+.h-display{
+  font-family:var(--f-black);
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:-.01em;
+  line-height:.95;
+  font-size:clamp(2rem, 6.5vw, 3.9rem);
+}
+.h-brush{
+  font-family:var(--f-brush);
+  text-transform:none;
+  letter-spacing:0;
+  line-height:1.04;
+  font-size:clamp(2.1rem, 7vw, 4rem);
+  transform:rotate(-1.5deg);
+  transform-origin:left bottom;
+}
+.eyebrow{ font-family:var(--f-label); letter-spacing:.24em; }
+.kicker{ font-family:var(--f-label); }
+.tags{ font-family:var(--f-label); }
+.player__label, .player__time{ font-family:var(--f-label); }
+.brand{ font-family:var(--f-brush); text-transform:none; letter-spacing:0; font-size:1.05rem; }
+
+/* ---------- Buttons: harte Schatten, springen beim Hover ---------- */
+.btn{
+  border-radius:12px;
+  font-family:var(--f-label); text-transform:uppercase; letter-spacing:.12em; font-size:.85rem;
+  box-shadow:4px 4px 0 rgba(24,20,10,.85);
+  border:2px solid var(--txt);
+}
+.btn:hover{ transform:translate(-1px,-2px) rotate(-.5deg); box-shadow:6px 6px 0 rgba(24,20,10,.85); }
+.btn:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 rgba(24,20,10,.85); }
+.btn--red{ background:var(--red); color:#fff; border-color:var(--txt); }
+.btn--red:hover{ background:var(--red-2); }
+.btn--header{ box-shadow:3px 3px 0 rgba(24,20,10,.6); min-height:40px; }
+.hero .btn--solid{ background:#f5f2ea; color:#17140d; }
+.hero__cta{ display:flex; gap:.9rem; flex-wrap:wrap; }
+.outro__cta{ display:flex; gap:1rem; align-items:center; flex-wrap:wrap; margin-top:1.9rem; }
+.outro__cta .btn{ margin-top:0; }
+.outro .btn--red{ border-color:#f5f2ea; box-shadow:4px 4px 0 rgba(0,0,0,.5); }
+
+/* ---------- Ticker: die Seite läuft ---------- */
+.ticker{
+  background:var(--txt); color:var(--bg);
+  overflow:hidden; white-space:nowrap;
+  padding:.55rem 0;
+  font-family:var(--f-label); font-weight:600;
+  text-transform:uppercase; letter-spacing:.22em; font-size:.78rem;
+}
+.ticker span{ display:inline-block; animation:tickermq 26s linear infinite; }
+.ticker--red{ background:var(--red); color:#fff; }
+@keyframes tickermq{ to{ transform:translateX(-50%); } }
+
+/* ---------- Sticker ---------- */
+.sticker{
+  display:inline-block;
+  font-family:var(--f-brush); font-size:1rem; line-height:1.2;
+  background:var(--amber-2); color:#17140d;
+  border:2px solid #17140d; border-radius:10px;
+  padding:.45rem .9rem;
+  transform:rotate(2.5deg);
+  box-shadow:4px 4px 0 rgba(24,20,10,.8);
+}
+.sticker--hero{
+  position:absolute; right:clamp(1rem,4vw,3.5rem); bottom:clamp(4.5rem,10vh,7rem);
+  z-index:3; transform:rotate(-4deg);
+  font-size:clamp(.95rem,2.4vw,1.15rem);
+}
+@media (max-width:699px){ .sticker--hero{ display:none; } }
+
+/* ---------- Release-Panel oben: schwarz, Player im Rampenlicht ---------- */
+.listen{ background:#17140d; border-color:rgba(255,255,255,.08); color:rgba(245,242,234,.8); }
+.listen__inner{ padding:var(--panel-pad); max-width:44rem; }
+.listen .eyebrow{ color:var(--amber-2); }
+.listen .h-brush{ color:#f5f2ea; margin:.3rem 0 .4rem; }
+.listen__line{ color:rgba(245,242,234,.7); margin-bottom:1.4rem; }
+.listen .player{ margin-top:0; background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.12); }
+.listen .player__title{ color:#f5f2ea; }
+.listen .player__label{ color:rgba(245,242,234,.55); }
+.listen .player__time{ color:rgba(245,242,234,.5); }
+.listen .player__note{ color:var(--amber-2); }
+.listen .player__seek::-webkit-slider-runnable-track{ background:rgba(255,255,255,.22); }
+.listen .player__seek::-moz-range-track{ background:rgba(255,255,255,.22); }
+.player__toggle{ background:var(--red); color:#fff; box-shadow:0 0 0 0 rgba(211,52,28,.5); }
+.player__toggle:hover{ background:var(--red-2); }
+.player.is-playing .player__toggle{ animation:playPulse 1.6s ease-out infinite; }
+@keyframes playPulse{
+  0%{ box-shadow:0 0 0 0 rgba(211,52,28,.45); }
+  100%{ box-shadow:0 0 0 16px rgba(211,52,28,0); }
+}
+.player.is-playing .player__label::before{ color:var(--red); }
+
+/* Equalizer neben dem Titel, nur während der Track läuft */
+.player__eq{ display:none; gap:3px; align-items:flex-end; height:16px; margin-left:.55rem; vertical-align:baseline; }
+.player.is-playing .player__eq{ display:inline-flex; }
+.player__eq i{ width:3px; border-radius:2px; background:var(--red); animation:eqBar .8s ease-in-out infinite alternate; }
+.player__eq i:nth-child(2){ animation-delay:.15s; }
+.player__eq i:nth-child(3){ animation-delay:.3s; }
+.player__eq i:nth-child(4){ animation-delay:.1s; }
+.player__eq i:nth-child(5){ animation-delay:.25s; }
+@keyframes eqBar{ from{ height:4px; } to{ height:16px; } }
+
+/* Link in 05 zurück zum Release */
+.listen-link{ margin-top:1.6rem; }
+.listen-link a{
+  font-family:var(--f-label); font-weight:600; text-transform:uppercase;
+  letter-spacing:.14em; font-size:.82rem;
+  color:var(--amber-2); text-decoration:none; border-bottom:2px solid var(--amber-2);
+  padding-bottom:.15rem;
+}
+.listen-link a:hover{ color:#fff; border-color:#fff; }
+
+/* ---------- Kleinigkeiten im neuen Ton ---------- */
+.stamp{
+  font-family:var(--f-brush); text-transform:none; letter-spacing:0; font-size:1rem;
+  border:2px solid var(--amber-2); color:var(--amber-2); border-radius:10px;
+  transform:rotate(-2deg);
+}
+.nav-soon small{ color:var(--red); }
+.mobile-nav__soon small{ color:var(--red); }
+.mobile-nav .btn--solid{ background:var(--red); color:#fff; border-color:var(--txt); }
+.eyebrow .num{ color:var(--red); }
+.split--night .eyebrow .num, .split--ink .eyebrow .num, .gate .eyebrow .num{ color:var(--red); }
+.timetable dt{ color:var(--red); }
+::selection{ background:var(--red); color:#fff; }
+:focus-visible{ outline-color:var(--red); }
+
+/* Reveals mit mehr Punch */
+.js .reveal{ transform:translateY(22px) scale(.985); }
+.js .reveal.is-in{ transform:none; }
+
+@media (prefers-reduced-motion:reduce){
+  .ticker span{ animation:none; }
+  .player.is-playing .player__toggle{ animation:none; }
+  .player__eq{ display:none !important; }
+  .btn:hover{ transform:none; }
+}
