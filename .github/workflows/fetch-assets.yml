@@ -1,8 +1,14 @@
 name: fetch-assets
 
 # Holt extern generierte Artworks in das Repo. Die Quell-URLs stehen in
-# assets-manifest.json auf dem Branch. Läuft nur auf manuellen Anstoß.
-on: workflow_dispatch
+# assets-manifest.json auf dem Branch. Läuft nur, wenn sich das Manifest
+# (oder dieser Workflow) ändert — der eigene Ergebnis-Commit triggert nichts.
+on:
+  push:
+    branches: [claude/website-homepage-mobile-m82pp5]
+    paths:
+      - assets-manifest.json
+      - .github/workflows/fetch-assets.yml
 
 permissions:
   contents: write
