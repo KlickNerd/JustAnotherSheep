@@ -1,0 +1,12 @@
+{
+  "files": [
+    {"path": "assets/originals/hero.tmp.png",     "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20260825_211856_a64c4af6-5f92-4f58-8c8c-06a2d89f9767.png"},
+    {"path": "assets/originals/welcome.tmp.png",  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20260825_211855_9f7e6960-d0ae-480f-b944-128af9e21d82.png"},
+    {"path": "assets/originals/flock.tmp.png",    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20260825_211855_877f6f2f-3962-4e8e-915e-acf73e7c004d.png"},
+    {"path": "assets/originals/sheep.tmp.png",    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20260825_211856_3f76def8-932c-4cb6-b6f1-b7d9f9854ab5.png"},
+    {"path": "assets/originals/records.tmp.png",  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20260825_211855_bf905878-ee81-4867-8fff-4b6e63e68366.png"},
+    {"path": "assets/originals/opengate.tmp.png", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20260825_211855_8f1c1760-e566-46a4-8e4c-0069070c1e99.png"},
+    {"path": "assets/originals/gate.tmp.png",     "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20260825_211855_4a9ecdcb-5573-4887-bd17-a6b0d8c4293c.png"},
+    {"path": "assets/originals/outro.tmp.png",    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20260825_211855_a1045b1a-175d-4807-92a4-e845b0d127bc.png"}
+  ]
+}

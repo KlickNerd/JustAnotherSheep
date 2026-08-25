@@ -1,0 +1,42 @@
+name: fetch-assets
+
+# Holt extern generierte Artworks in das Repo. Die Quell-URLs stehen in
+# assets-manifest.json auf dem Branch. Läuft nur auf manuellen Anstoß.
+on: workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and convert
+        run: |
+          python3 - <<'EOF'
+          import json, pathlib, urllib.request
+          manifest = json.load(open('assets-manifest.json'))
+          for item in manifest['files']:
+              path = pathlib.Path(item['path'])
+              path.parent.mkdir(parents=True, exist_ok=True)
+              tmp = path.with_suffix('.tmp.png')
+              urllib.request.urlretrieve(item['url'], tmp)
+              print('downloaded', item['path'], tmp.stat().st_size)
+          EOF
+          sudo apt-get install -y imagemagick >/dev/null 2>&1 || true
+          for f in assets/originals/*.tmp.png; do
+            out="${f%.tmp.png}.jpg"
+            convert "$f" -resize '1920x1920>' -quality 90 "$out"
+            rm "$f"
+            ls -la "$out"
+          done
+
+      - name: Commit to branch
+        run: |
+          git config user.name "asset-fetch"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/originals
+          git commit -m "Add generated artwork originals" || echo "nothing to commit"
+          git push
