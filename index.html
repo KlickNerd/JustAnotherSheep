@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Just Another Sheep — Same farm. Different sheep.</title>
-<meta name="description" content="Same farm. Different sheep. The story of Sheep, the farm, Sheep Records and everything waiting on the other side of the gate.">
+<meta name="description" content="Same farm. Different sheep. The farm says everything is fine. One black sheep stopped believing it — and started making noise.">
 <meta name="theme-color" content="#efe8d6">
 <meta name="color-scheme" content="light">
 
@@ -23,15 +23,15 @@
 
 <!-- Self-hosted fonts: no third party request, no cookie banner, faster on mobile -->
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-black-400-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/permanent-marker-400-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/oswald-600-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/permanent-marker-400-latin.woff2" crossorigin>
 <!-- Hero-Bild so früh wie möglich anstoßen. Ab 700 px muss der Preload dieselbe
      Auswahl treffen wie das srcset im <picture> — sonst lädt der Browser zwei
      Fassungen. Deshalb hier dasselbe srcset/sizes noch einmal. -->
 <link rel="preload" as="image" href="assets/img/hero-mobile.webp" media="(max-width: 699px)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/img/hero.jpg" media="(min-width: 700px)" fetchpriority="high"
-      imagesrcset="assets/img/hero-1200.webp 1200w, assets/img/hero.webp 1672w" imagesizes="100vw">
+      imagesrcset="assets/img/hero-1200.webp 1200w, assets/img/hero.webp 1920w" imagesizes="100vw">
 
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/styles.css">
@@ -52,15 +52,16 @@
 
     <nav class="nav-desktop" aria-label="Main">
       <ul>
-        <li><a href="#story">Story</a></li>
-        <li><a href="#characters">Characters</a></li>
-        <li><a href="#records">Sheep Records</a></li>
+        <li><a href="#welcome">The Farm</a></li>
+        <li><a href="#story">The Flock</a></li>
+        <li><a href="#characters">Sheep</a></li>
+        <li><a href="#records">Records</a></li>
         <li><a href="#paper">The Open Gate</a></li>
         <li><span class="nav-soon">$Sheep<small>soon</small></span></li>
       </ul>
     </nav>
 
-    <a class="btn btn--solid btn--header" href="https://x.com/" target="_blank" rel="noopener">Follow on X</a>
+    <a class="btn btn--solid btn--header" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
 
     <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
       <span></span><span></span><span></span>
@@ -71,66 +72,187 @@
 <div class="mobile-nav" id="mobileNav" hidden>
   <nav aria-label="Mobile">
     <ul>
-      <li><a href="#welcome"><span class="mobile-nav__num">02</span> Welcome</a></li>
-      <li><a href="#story"><span class="mobile-nav__num">03</span> Story</a></li>
-      <li><a href="#characters"><span class="mobile-nav__num">04</span> Characters</a></li>
-      <li><a href="#records"><span class="mobile-nav__num">05</span> Sheep Records</a></li>
-      <li><a href="#paper"><span class="mobile-nav__num">06</span> The Open Gate</a></li>
-      <li><a href="#gate"><span class="mobile-nav__num">07</span> The Other Side</a></li>
-      <li><span class="mobile-nav__soon"><span class="mobile-nav__num">08</span> $Sheep <small>soon</small></span></li>
+      <li><a href="#welcome"><span class="mobile-nav__num">01</span> The Farm</a></li>
+      <li><a href="#story"><span class="mobile-nav__num">02</span> The Flock</a></li>
+      <li><a href="#characters"><span class="mobile-nav__num">03</span> Sheep</a></li>
+      <li><a href="#records"><span class="mobile-nav__num">04</span> Sheep Records</a></li>
+      <li><a href="#paper"><span class="mobile-nav__num">05</span> The Open Gate</a></li>
+      <li><a href="#gate"><span class="mobile-nav__num">06</span> The Other Side</a></li>
+      <li><span class="mobile-nav__soon"><span class="mobile-nav__num">07</span> $Sheep <small>soon</small></span></li>
     </ul>
   </nav>
-  <a class="btn btn--solid btn--block" href="https://x.com/" target="_blank" rel="noopener">Follow on X</a>
+  <a class="btn btn--solid btn--block" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
   <p class="mobile-nav__note">Same farm. Different sheep.</p>
 </div>
 
 <main id="main">
 
-  <!-- ================= 01 / HERO ================= -->
+  <!-- ================= HERO ================= -->
   <section class="hero" id="top">
     <div class="hero__media">
       <picture>
-        <!-- Handy bekommt einen eigenen Hochkant-Ausschnitt: Sheep bildfüllend statt am Rand -->
+        <!-- Handy bekommt einen eigenen Hochkant-Ausschnitt -->
         <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/hero-mobile.webp">
         <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/hero-mobile.jpg">
-        <source type="image/webp" srcset="assets/img/hero-1200.webp 1200w, assets/img/hero.webp 1672w" sizes="100vw">
+        <source type="image/webp" srcset="assets/img/hero-1200.webp 1200w, assets/img/hero.webp 1920w" sizes="100vw">
         <img src="assets/img/hero.jpg"
-             srcset="assets/img/hero-1200.jpg 1200w, assets/img/hero.jpg 1672w" sizes="100vw"
-             alt="Sheep in a black jacket standing in front of the farm, the bell tower and the flock lined up behind him"
-             width="1672" height="941" fetchpriority="high" decoding="async"
+             srcset="assets/img/hero-1200.jpg 1200w, assets/img/hero.jpg 1920w" sizes="100vw"
+             alt="Sheep, a black sheep in a black t-shirt, leaning against the farm fence at sunset with the barn and bell tower behind him"
+             width="1920" height="1072" fetchpriority="high" decoding="async"
              onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
       </picture>
     </div>
     <div class="hero__scrim" aria-hidden="true"></div>
 
     <div class="hero__content wrap">
-      <p class="eyebrow eyebrow--light">Welcome to the farm</p>
+      <p class="hero__announce">Morning announcement &mdash; everything is fine<span class="handnote">&nbsp;is it?</span></p>
       <h1 class="hero__title">
         <span>Just Another</span>
         <span>Sheep</span>
       </h1>
       <p class="hero__tagline">Same farm. Different sheep.</p>
       <div class="hero__cta">
-        <a class="btn btn--red btn--lg js-play" href="#listen">&#9654;&ensp;Play &ldquo;Seven&rdquo;</a>
-        <a class="btn btn--solid btn--lg" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
+        <a class="btn btn--red btn--lg js-play" href="#records">&#9654;&ensp;Play &ldquo;Seven&rdquo;</a>
+        <a class="btn btn--ghost btn--lg" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
       </div>
     </div>
 
-    <span class="sticker sticker--hero" aria-hidden="true">Release 001 &mdash; out now</span>
-
-    <a class="hero__scroll" href="#story" aria-label="Scroll to the story">
+    <a class="hero__scroll" href="#welcome" aria-label="Scroll to the farm">
       <span class="hero__scroll-line" aria-hidden="true"></span>
     </a>
   </section>
 
-  <div class="ticker" aria-hidden="true"><span>Same farm &mdash; different sheep &#9733; Baaahn the system &#9733; Join the herd &#9733; Release 001 out now &#9733; Same farm &mdash; different sheep &#9733; Baaahn the system &#9733; Join the herd &#9733; Release 001 out now &#9733;&ensp;</span></div>
+  <!-- ================= 01 / WELCOME TO THE FARM ================= -->
+  <section class="section split" id="welcome">
+    <figure class="split__media reveal">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/welcome-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/welcome-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/welcome-1200.webp 1200w, assets/img/welcome.webp 1920w" sizes="(min-width: 1000px) 48vw, 100vw">
+        <img src="assets/img/welcome.jpg"
+             srcset="assets/img/welcome-1200.jpg 1200w, assets/img/welcome.jpg 1920w" sizes="(min-width: 1000px) 48vw, 100vw"
+             alt="The shepherd welcoming new arrivals at the farm gate, perfectly ordered rows of white sheep behind him — and Sheep watching from the edge, unconvinced"
+             width="1920" height="1072" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
+    </figure>
 
-  <!-- ================= RELEASE 001 — der Track gehört nach oben ================= -->
-  <section class="section listen" id="listen">
-    <div class="listen__inner">
-      <p class="eyebrow">Release 001 &middot; Sheep Records</p>
-      <h2 class="h-display h-brush">Seven.</h2>
-      <p class="listen__line">The farm&rsquo;s morning bell, flipped into a beat.</p>
+    <div class="split__text reveal">
+      <p class="eyebrow"><span class="num">01</span> / Welcome to the farm</p>
+      <h2 class="h-display">Everyone is welcome.</h2>
+
+      <div class="notice">
+        <p class="notice__no">Farm notice &numero; 01 &mdash; to all new arrivals</p>
+        <p>The shepherd greets every new arrival personally. Every question has an answer. Every day has a plan.</p>
+        <p>The gate is always open.<span class="handnote handnote--red">&nbsp;&mdash; from the outside.</span></p>
+      </div>
+
+      <p class="quote-hand">&ldquo;Interesting direction for a freedom gate.&rdquo;</p>
+      <p class="whisper">Sheep, on his way past the sign.</p>
+    </div>
+  </section>
+
+  <!-- ================= 02 / LIFE IN THE FLOCK ================= -->
+  <section class="section" id="story">
+    <figure class="band reveal">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/flock-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/flock-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/flock-1200.webp 1200w, assets/img/flock.webp 1920w" sizes="100vw">
+        <img src="assets/img/flock.jpg"
+             srcset="assets/img/flock-1200.jpg 1200w, assets/img/flock.jpg 1920w" sizes="100vw"
+             alt="Perfect rows of white sheep marching in step at dawn — one black sheep walking half a step out of line"
+             width="1920" height="1072" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
+    </figure>
+
+    <div class="section__body flock__grid">
+      <div class="flock__head reveal">
+        <p class="eyebrow"><span class="num">02</span> / Life in the flock</p>
+        <h2 class="h-display">A perfect day. Every day.</h2>
+        <p>The farm provides food, shelter and protection. Nobody gets lost. Nobody is left behind. Nobody has to worry about making the wrong choice.</p>
+        <p class="statement">Comfort is easy when every decision has already been made for you.</p>
+        <p class="whisper">Please enjoy your freedom between the fences.</p>
+      </div>
+
+      <div class="reveal">
+        <div class="notice">
+          <p class="notice__no">Daily schedule &mdash; approved by the shepherd</p>
+          <dl class="timetable" aria-label="The daily schedule">
+            <div class="timetable__row"><dt>07:00</dt><dd>The bell rings.</dd></div>
+            <div class="timetable__row"><dt>08:00</dt><dd>Breakfast begins.</dd></div>
+            <div class="timetable__row"><dt>09:00</dt><dd>Every sheep is exactly where it is supposed to be.</dd></div>
+            <div class="timetable__row"><dt>21:00</dt><dd>The gates close. For everyone&rsquo;s safety.</dd></div>
+          </dl>
+          <p>Evening count: 442 of 442. All accounted for.</p>
+          <p class="handnote handnote--red">One of them keeps looking at the fence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 03 / MEET SHEEP ================= -->
+  <section class="section night split split--reverse" id="characters">
+    <figure class="split__media reveal">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/sheep-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/sheep-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/sheep-1200.webp 1200w, assets/img/sheep.webp 1920w" sizes="(min-width: 1000px) 52vw, 100vw">
+        <img src="assets/img/sheep.jpg"
+             srcset="assets/img/sheep-1200.jpg 1200w, assets/img/sheep.jpg 1920w" sizes="(min-width: 1000px) 52vw, 100vw"
+             alt="Sheep sitting on a hay bale in his corner of the barn at dusk, lantern light, instruments hanging on the wall"
+             width="1920" height="1072" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
+    </figure>
+
+    <div class="split__text reveal">
+      <p class="eyebrow"><span class="num">03</span> / Meet Sheep</p>
+      <h2 class="h-display">Wool: black.</h2>
+
+      <div class="notice">
+        <p class="notice__no">Flock register &mdash; file &numero; 442</p>
+        <dl class="file">
+          <div class="file__row"><dt>Name</dt><dd>Sheep. It was never a question.</dd></div>
+          <div class="file__row"><dt>Wool</dt><dd>Black. Noted at birth.</dd></div>
+          <div class="file__row"><dt>Attendance</dt><dd>Adequate.</dd></div>
+          <div class="file__row"><dt>Anthem</dt><dd>Moves his lips.</dd></div>
+          <div class="file__row"><dt>Questions</dt><dd>Above average. Rising.</dd></div>
+          <div class="file__row"><dt>Status</dt><dd>Under observation.</dd></div>
+        </dl>
+      </div>
+
+      <p style="margin-top:1.4rem">He never planned a rebellion. He just ran out of patience for bad answers.</p>
+      <p class="whisper">Apparently, independent thinking is a personality defect.</p>
+    </div>
+  </section>
+
+  <!-- ================= 04 / SHEEP RECORDS ================= -->
+  <section class="section night split" id="records">
+    <figure class="split__media reveal">
+      <picture>
+        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/records-mobile.webp">
+        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/records-mobile.jpg">
+        <source type="image/webp" srcset="assets/img/records-1200.webp 1200w, assets/img/records.webp 1920w" sizes="(min-width: 1000px) 48vw, 100vw">
+        <img src="assets/img/records.jpg"
+             srcset="assets/img/records-1200.jpg 1200w, assets/img/records.jpg 1920w" sizes="(min-width: 1000px) 48vw, 100vw"
+             alt="Sheep at night in the west barn, wiring the farm's brass bell into a homemade beat machine"
+             width="1920" height="1072" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
+      </picture>
+    </figure>
+
+    <div class="split__text reveal">
+      <p class="eyebrow"><span class="num">04</span> / Sheep Records</p>
+      <h2 class="h-display">Unauthorized rhythm.</h2>
+
+      <div class="notice">
+        <p class="notice__no">Incident report &numero; 112 &mdash; west barn</p>
+        <p>At two in the morning, the west barn sounded like the morning bell. In a pattern that is not on any schedule. The investigation is ongoing.</p>
+      </div>
+
+      <p style="margin-top:1.4rem">The farm gave him the bell. He changed what it means.</p>
 
       <div class="player" data-src="assets/audio/seven.mp3" data-title="Seven">
         <div class="player__row">
@@ -148,160 +270,45 @@
         <p class="player__note" hidden>The first track is still at the mixing desk.</p>
         <noscript><audio controls preload="none" src="assets/audio/seven.mp3" style="width:100%;margin-top:.75rem"></audio></noscript>
       </div>
+      <p class="listen-line">&ldquo;Seven&rdquo; &mdash; the morning bell, flipped into a beat.</p>
+
+      <p class="tags">Music <span>&middot;</span> Videos <span>&middot;</span> Visuals <span>&middot;</span> Campaigns</p>
+      <p class="whisper">Independent by nature. Different by choice.</p>
     </div>
   </section>
 
-  <!-- ================= 02 / WELCOME TO THE FARM ================= -->
-  <section class="section split split--paper split--welcome" id="welcome">
-    <figure class="split__media reveal">
-      <picture>
-        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/welcome-mobile.webp">
-        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/welcome-mobile.jpg">
-        <source type="image/webp" srcset="assets/img/welcome-1200.webp 1200w, assets/img/welcome.webp 1662w" sizes="(min-width: 1000px) 55vw, 100vw">
-        <img src="assets/img/welcome.jpg"
-             srcset="assets/img/welcome-1200.jpg 1200w, assets/img/welcome.jpg 1662w" sizes="(min-width: 1000px) 55vw, 100vw"
-             alt="The shepherd holds the farm gate open in welcome while Sheep stands beside him"
-             width="1662" height="946" loading="lazy" decoding="async"
-             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
-      </picture>
-    </figure>
-
-    <div class="split__text reveal">
-      <p class="eyebrow"><span class="num">02</span> / Welcome to the farm</p>
-      <hr class="rule">
-      <h2 class="h-display h-display--green">Everyone is welcome.</h2>
-
-      <p>The shepherd greets every new arrival personally. He shows them the pastures, the barns and the feeding times, and he answers every question before it is asked.</p>
-      <p>Arriving is easy. That is the part everybody remembers.</p>
-
-      <p class="whisper">He also decides when the gate closes again.</p>
-    </div>
-  </section>
-
-  <!-- ================= 03 / LIFE IN THE FLOCK ================= -->
-  <section class="section section--cream flock" id="story">
-    <figure class="media media--wide reveal">
-      <picture>
-        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/flock-mobile.webp">
-        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/flock-mobile.jpg">
-        <source type="image/webp" srcset="assets/img/flock-1200.webp 1200w, assets/img/flock.webp 1672w" sizes="100vw">
-        <img src="assets/img/flock.jpg"
-             srcset="assets/img/flock-1200.jpg 1200w, assets/img/flock.jpg 1672w" sizes="100vw"
-             alt="The shepherd walking through the feeding barn between two long rows of sheep"
-             width="1672" height="585" loading="lazy" decoding="async"
-             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
-      </picture>
-    </figure>
-
-    <div class="wrap flock__grid">
-      <div class="flock__head reveal">
-        <p class="eyebrow"><span class="num">03</span> / Life in the flock</p>
-        <h2 class="h-display">A perfect day.<br>Every day.</h2>
-      </div>
-
-      <div class="flock__body reveal">
-        <dl class="timetable" aria-label="The daily schedule">
-          <div class="timetable__row"><dt>07:00</dt><dd>The bell rings.</dd></div>
-          <div class="timetable__row"><dt>08:00</dt><dd>Breakfast begins.</dd></div>
-          <div class="timetable__row"><dt>09:00</dt><dd>Every sheep is exactly where it is supposed to be.</dd></div>
-        </dl>
-        <p>The farm provides food, shelter and protection. Nobody gets lost. Nobody is left behind. Nobody has to worry about making the wrong choice.</p>
-        <p>The gates simply close once everyone is safely inside.</p>
-      </div>
-
-      <div class="flock__aside reveal">
-        <p class="statement">Comfort is easy when every decision has already been made for you.</p>
-        <p class="whisper">Please enjoy your freedom between the fences.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 04 / MEET SHEEP ================= -->
-  <section class="section split split--night split--wall split--whole tear" id="characters">
-    <figure class="split__media reveal">
-      <picture>
-        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/sheep-wall-mobile.webp">
-        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/sheep-wall-mobile.jpg">
-        <source type="image/webp" srcset="assets/img/sheep-wall-1000.webp 1000w, assets/img/sheep-wall.webp 1438w" sizes="(min-width: 1000px) 55vw, 100vw">
-        <img src="assets/img/sheep-wall.jpg"
-             srcset="assets/img/sheep-wall-1000.jpg 1000w, assets/img/sheep-wall.jpg 1438w" sizes="(min-width: 1000px) 55vw, 100vw"
-             alt="Sheep spraying BAAAAAHN THE SYSTEM on the wall of a barn at sunset"
-             width="1438" height="1094" loading="lazy" decoding="async"
-             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
-      </picture>
-    </figure>
-
-    <div class="split__text reveal">
-      <p class="eyebrow eyebrow--gold"><span class="num">04</span> / Meet Sheep</p>
-      <hr class="rule">
-      <h2 class="h-display h-display--light h-brush">Just Another<br>Sheep.</h2>
-      <p class="kicker">At least, that is what they called him.</p>
-
-      <p>Sheep grew up like everyone else on the farm: follow the bell, stay inside the lines and never ask too many questions.</p>
-      <p>For a while, that was comfortable enough. But Sheep has always noticed the little things. The locked gates. The watchful speakers. How every day looks suspiciously like the one before it.</p>
-      <p>He is not a hero. He does not have a master plan. He simply believes a life without choices is not much of a life.</p>
-      <p>So while the flock follows the schedule, Sheep has started writing things on walls.</p>
-
-      <p class="whisper whisper--gold">Apparently, independent thinking is a personality defect.</p>
-    </div>
-  </section>
-
-  <!-- ================= 05 / SHEEP RECORDS ================= -->
-  <section class="section split split--forest split--reverse split--studio" id="records">
-    <figure class="split__media reveal">
-      <picture>
-        <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/studio-mobile.webp">
-        <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/studio-mobile.jpg">
-        <source type="image/webp" srcset="assets/img/studio-1000.webp 1000w, assets/img/studio.webp 1536w" sizes="(min-width: 1000px) 55vw, 100vw">
-        <img src="assets/img/studio.jpg"
-             srcset="assets/img/studio-1000.jpg 1000w, assets/img/studio.jpg 1536w" sizes="(min-width: 1000px) 55vw, 100vw"
-             alt="Sheep leaning against the Sheep Records shed, the door open onto a small recording desk"
-             width="1536" height="1024" loading="lazy" decoding="async"
-             onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
-      </picture>
-    </figure>
-
-    <div class="split__text reveal">
-      <p class="eyebrow eyebrow--gold"><span class="num">05</span> / Sheep Records</p>
-      <hr class="rule">
-      <h2 class="h-display h-display--light h-brush">Ideas build<br>worlds.</h2>
-
-      <p>Between the bells, Sheep began building something of his own.</p>
-      <p>He founded Sheep Records and runs it in his spare time. It is an independent studio where ideas grow into music, films and visual worlds.</p>
-      <p>Together, we produce original releases, music videos, visual identities and campaigns. Sound, image and storytelling are developed as one, from the first idea to the finished world.</p>
-
-      <p class="listen-link"><a class="js-play" href="#listen">&#9654;&ensp;Hear what he built &mdash; Release 001</a></p>
-
-      <p class="tags">Music <span>·</span> Videos <span>·</span> Visuals <span>·</span> Campaigns</p>
-      <p class="whisper whisper--gold">Independent by nature. Different by choice.</p>
-    </div>
-  </section>
-
-  <!-- ================= 06 / THE OPEN GATE ================= -->
-  <section class="section split split--ink split--whole" id="paper">
+  <!-- ================= 05 / THE OPEN GATE ================= -->
+  <section class="section split split--reverse" id="paper">
     <figure class="split__media reveal">
       <picture>
         <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/opengate-mobile.webp">
         <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/opengate-mobile.jpg">
-        <source type="image/webp" srcset="assets/img/opengate-1000.webp 1000w, assets/img/opengate.webp 1057w" sizes="(min-width: 1000px) 55vw, 100vw">
+        <source type="image/webp" srcset="assets/img/opengate-1200.webp 1200w, assets/img/opengate.webp 1920w" sizes="(min-width: 1000px) 48vw, 100vw">
         <img src="assets/img/opengate.jpg"
-             srcset="assets/img/opengate-1000.jpg 1000w, assets/img/opengate.jpg 1057w" sizes="(min-width: 1000px) 55vw, 100vw"
-             alt="Ewe pulling a fresh copy of The Open Gate off a hand press in her archive room at night"
-             width="1057" height="916" loading="lazy" decoding="async"
+             srcset="assets/img/opengate-1200.jpg 1200w, assets/img/opengate.jpg 1920w" sizes="(min-width: 1000px) 48vw, 100vw"
+             alt="Ewe, a grey sheep with round glasses, printing The Open Gate on a hand press in a hidden cellar at night"
+             width="1920" height="1072" loading="lazy" decoding="async"
              onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
       </picture>
     </figure>
 
     <div class="split__text reveal">
-      <p class="eyebrow eyebrow--gold"><span class="num">06</span> / The Open Gate</p>
-      <hr class="rule">
-      <h2 class="h-display h-display--light">Truth travels hoof to hoof.</h2>
-      <p class="kicker">Vol. 01 · Farm edition · Printed before the morning bell</p>
+      <p class="eyebrow"><span class="num">05</span> / The Open Gate</p>
 
-      <p>Sheep is not the only one on the farm building something after hours.</p>
-      <p>Ewe listens. She asks precise questions, writes the answers down and notices the details the flock has learned to overlook.</p>
-      <p>At night she sets them in type. <em>The Open Gate</em> is an independent paper: she writes it, prints it and carries it across the farm before the bell rings.</p>
-      <p>It does not tell the flock what to think. It tells them what happened and trusts them with the rest.</p>
+      <div class="masthead">
+        <p class="masthead__title">The Open Gate</p>
+        <p class="masthead__meta">Vol. 01 &middot; Printed before the morning bell</p>
+      </div>
+
+      <div class="notice">
+        <p class="notice__no">Reminder to the flock</p>
+        <p>All news arrives at 07:00, by loudspeaker. There is no other news.</p>
+      </div>
+
+      <div class="paper-voice" style="margin-top:1.4rem">
+        <p>And yet, some mornings, a thin folded paper crosses the farm before the bell.</p>
+        <p>Ewe writes down what actually happened. She listens, checks twice, and notices the details the flock has learned to overlook. She prints at night &mdash; and trusts the flock with the rest.</p>
+      </div>
 
       <div class="clipping">
         <p class="clipping__label">From issue 01</p>
@@ -309,106 +316,81 @@
         <p class="clipping__body">For three minutes, the farm stopped following the bell. Here is what happened instead.</p>
       </div>
 
-      <p class="tags">Farm reports <span>·</span> Culture <span>·</span> Opinion <span>·</span> Letters</p>
-      <p class="stamp">Issue 01 — at the press</p>
-      <p class="whisper whisper--gold">Some stories travel better folded.</p>
+      <p class="stampmark">Issue 01 &mdash; at the press</p>
+      <p class="whisper">Some stories travel better folded.</p>
     </div>
   </section>
 
-  <!-- ================= 07 / THE OTHER SIDE ================= -->
-  <section class="section gate" id="gate">
-    <figure class="media media--wide reveal">
+  <!-- ================= 06 / THE OTHER SIDE ================= -->
+  <section class="section" id="gate">
+    <figure class="band reveal">
       <picture>
         <source media="(max-width: 699px)" type="image/webp" srcset="assets/img/gate-mobile.webp">
         <source media="(max-width: 699px)" type="image/jpeg" srcset="assets/img/gate-mobile.jpg">
-        <source type="image/webp" srcset="assets/img/gate-1200.webp 1200w, assets/img/gate.webp 1717w" sizes="100vw">
+        <source type="image/webp" srcset="assets/img/gate-1200.webp 1200w, assets/img/gate.webp 1920w" sizes="100vw">
         <img src="assets/img/gate.jpg"
-             srcset="assets/img/gate-1200.jpg 1200w, assets/img/gate.jpg 1717w" sizes="100vw"
-             alt="Sheep holding the farm gate open, looking out at the road and the SOLANGELES hills at golden hour"
-             width="1717" height="612" loading="lazy" decoding="async"
+             srcset="assets/img/gate-1200.jpg 1200w, assets/img/gate.jpg 1920w" sizes="100vw"
+             alt="The farm gate standing open at dawn, a dirt path leading into the hills, a faint city skyline on the far horizon"
+             width="1920" height="1072" loading="lazy" decoding="async"
              onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
       </picture>
     </figure>
 
-    <div class="gate__panel">
-      <div class="wrap gate__grid">
-        <div class="gate__head reveal">
-          <p class="eyebrow eyebrow--gold"><span class="num">07</span> / The other side</p>
-          <hr class="rule">
-          <h2 class="h-display h-display--light">The fence was never the horizon.</h2>
+    <div class="gate-panel">
+      <div class="gate-panel__grid">
+        <div class="reveal">
+          <p class="eyebrow"><span class="num">06</span> / The other side</p>
+          <h2 class="h-display">The fence was never the horizon.</h2>
+          <div class="notice">
+            <p class="notice__no">Posted at the gate</p>
+            <p>Beyond this point: uncertainty. Disorder. Mistakes without supervision.</p>
+            <p class="handnote handnote--red">&hellip;and the lights nobody mentions.</p>
+          </div>
         </div>
 
-        <div class="gate__col reveal">
-          <p>Sheep had spent his whole life being told what waited beyond the farm.</p>
-          <p>Uncertainty. Disorder. Mistakes without anyone there to correct them.</p>
-          <p>But when he looked toward <span class="sc">Solangeles</span>, he saw something the farm had never offered him.</p>
-          <p>A choice.</p>
-        </div>
-
-        <div class="gate__col reveal">
-          <p>The city promised no safety and no simple answers. It only proved that another way of living was possible.</p>
-          <p>For the first time, the unknown did not feel empty.</p>
-          <p>It felt open.</p>
-          <p class="statement statement--light">The gate was still closed.<br>Sheep was no longer certain that it should be.</p>
+        <div class="reveal">
+          <p>Nobody on the farm talks about the lights behind the hills. That is how every sheep knows they are real.</p>
+          <p>The city out there promises nothing. No safety, no schedule, no shepherd. It only proves that another way of living exists.</p>
+          <p class="statement">The gate was still closed.<br>Sheep was no longer certain that it should be.</p>
+          <p class="quote-hand">&ldquo;I&rsquo;m not lost. I just stopped following.&rdquo;<small>&mdash; found written on the fence post</small></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= OUTRO — bewusst ohne Nummer, das ist der
-       Abspann, keine weitere Station der Geschichte ================= -->
+  <!-- ================= OUTRO — The farm is still watching ================= -->
   <section class="outro" id="outro">
     <figure class="outro__media">
       <picture>
         <source media="(max-width: 999px)" type="image/webp" srcset="assets/img/outro-mobile.webp">
         <source media="(max-width: 999px)" type="image/jpeg" srcset="assets/img/outro-mobile.jpg">
-        <source type="image/webp" srcset="assets/img/outro-1200.webp 1200w, assets/img/outro.webp 1672w" sizes="100vw">
+        <source type="image/webp" srcset="assets/img/outro-1200.webp 1200w, assets/img/outro.webp 1920w" sizes="100vw">
         <img src="assets/img/outro.jpg"
-             srcset="assets/img/outro-1200.jpg 1200w, assets/img/outro.jpg 1672w" sizes="100vw"
-             alt="Sheep in sunglasses standing on the farm road while a guard dog watches him and the flock walks back towards the bell tower"
-             width="1672" height="941" loading="lazy" decoding="async"
+             srcset="assets/img/outro-1200.jpg 1200w, assets/img/outro.jpg 1920w" sizes="100vw"
+             alt="Night on the farm: the watchtower spotlight sweeps the empty pens while Sheep walks alone along the fence line, just outside the beam"
+             width="1920" height="1072" loading="lazy" decoding="async"
              onerror="this.onerror=null;this.src='assets/img/placeholder.svg';this.classList.add('is-placeholder')">
       </picture>
     </figure>
     <div class="outro__scrim" aria-hidden="true"></div>
 
     <div class="outro__content wrap reveal">
-      <p class="eyebrow eyebrow--gold">The farm is still watching.</p>
-      <h2 class="h-display h-display--light h-brush">The next bell won't sound the same.</h2>
+      <p class="eyebrow eyebrow--light">Final announcement of the day</p>
+      <h2 class="h-display">The farm is still watching.</h2>
 
-      <p>The fences still stand. The flock still follows. The farm still expects tomorrow to look exactly like today.</p>
-      <p>But one sheep has stopped waiting for permission.</p>
-      <p>He started making noise. Others have started listening.</p>
+      <p>The bell will ring again tomorrow at seven. The flock will answer.</p>
+      <p>But some nights there is a different rhythm coming from the west barn. And the herd that hears it is growing.</p>
 
-      <p class="statement statement--light">Tomorrow morning, the flock will hear it too.</p>
+      <p class="statement">The next bell won&rsquo;t sound the same.</p>
 
       <div class="outro__cta">
         <a class="btn btn--red btn--lg" href="https://x.com/" target="_blank" rel="noopener">Join the herd</a>
-        <span class="sticker">$SHEEP &mdash; soon</span>
+        <span class="soon-chip soon-chip--light">$SHEEP &mdash; soon</span>
       </div>
     </div>
   </section>
 
-  <!--
-  ================================================================
-  SECTIONS 08 – 10 GO HERE
-  ----------------------------------------------------------------
-  Copy one of the layouts above and change the id + content:
-
-    · full-bleed image + text columns  →  .section.gate      (07)
-    · image left / text right          →  .section.split.split--reverse (05)
-    · text left / image right          →  .section.split     (02, 04, 06)
-
-  Farbvarianten: .split--green, .split--cream, .split--ink, .section--cream
-
-  Colour variants: .split--cream / .split--green / .section--cream
-  The nav already links to #token for the $SHEEP section.
-  ================================================================
-  -->
-
 </main>
-
-<div class="ticker ticker--red" aria-hidden="true"><span>Join the herd &#9733; $SHEEP soon &#9733; The Open Gate &mdash; issue 01 at the press &#9733; Baaahn the system &#9733; Join the herd &#9733; $SHEEP soon &#9733; The Open Gate &mdash; issue 01 at the press &#9733; Baaahn the system &#9733;&ensp;</span></div>
 
 <footer class="site-footer">
   <div class="wrap site-footer__inner">
@@ -418,8 +400,8 @@
     </a>
 
     <nav class="site-footer__nav" aria-label="Footer">
-      <a href="#story">Story</a>
-      <a href="#characters">Characters</a>
+      <a href="#welcome">The Farm</a>
+      <a href="#characters">Sheep</a>
       <a href="#records">Sheep Records</a>
       <a href="#paper">The Open Gate</a>
       <a href="https://x.com/" target="_blank" rel="noopener">X</a>

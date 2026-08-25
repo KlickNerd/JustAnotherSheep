@@ -41,23 +41,27 @@ python3 -m http.server 8000
 
 ## Sektionen
 
-| Nr. | Abschnitt          | Anker         | Layout                              |
-|-----|--------------------|---------------|-------------------------------------|
-| 01  | Hero               | `#top`        | Vollbild-Bild mit Titel             |
-| 02  | Welcome to the farm| `#welcome`    | Text links / Bildkarte rechts       |
-| 03  | Life in the flock  | `#story`      | Bild-Band, Stundenplan, 3 Spalten   |
-| 04  | Meet Sheep         | `#characters` | Text links / Bildkarte rechts       |
-| 05  | Sheep Records      | `#records`    | Bildkarte links / Text + Player     |
-| 06  | The Open Gate      | `#paper`      | Text links / Bildkarte rechts       |
-| 07  | The other side     | `#gate`       | Bild oben, grünes Panel mit 2 Spalten |
-| —   | Abspann            | `#outro`      | Vollbild mit Text im Bild (ab 1000 px) |
+| Nr. | Abschnitt          | Anker         | Layout                                  |
+|-----|--------------------|---------------|-----------------------------------------|
+| —   | Hero               | `#top`        | Vollbild-Bild, Lautsprecher-Ansage      |
+| 01  | Welcome to the farm| `#welcome`    | Aushang-Karte links / Bild rechts       |
+| 02  | Life in the flock  | `#story`      | Bild-Band, Text + Stundenplan-Aushang   |
+| 03  | Meet Sheep         | `#characters` | Nacht-Panel, Personalakte, Bild links   |
+| 04  | Sheep Records      | `#records`    | Nacht-Panel, Vorfallsbericht + Player   |
+| 05  | The Open Gate      | `#paper`      | Zeitungs-Layout, Bild links             |
+| 06  | The other side     | `#gate`       | Bild-Band, Warnschild + Sheeps Zeile    |
+| —   | The farm is still watching | `#outro` | Vollbild-Nachtbild mit CTA          |
 
-**Design-Richtung „Cinema":** Ein durchgehender, kühler dunkler Grund
-(`--bg`), die Artworks liefern die Farbe. Bilder liegen als sanft gerundete
-Karten mit feiner Linie auf der Fläche, Buttons sind Pills, der Header eine
-Glasleiste. Akzentfarbe ist das Golden-Hour-Licht aus den Artworks
-(`--amber`) — sparsam für Kicker, Zeiten, Player und den Abspann-Button.
-Eine Schriftfamilie (Archivo 400/700), Überschriften in Groß-/Kleinschreibung.
+**Design-Richtung „Farm-Bulletin":** Die Seite spricht mit zwei Stimmen.
+Die Oberfläche ist die Farm selbst — freundliche Amtssprache, Aushänge,
+Stundenpläne, Zählungen, alles einen Tick zu ordentlich (Oswald versal,
+Papiertöne, Doppellinien-Rahmen). Dazwischen bricht Sheeps Handschrift
+durch (Permanent Marker): Randnotizen, durchgestrichene Amtszeilen, ein
+trockener Satz. Die Punchline kommt nie aus Erklärung, sondern aus dem
+Widerspruch — der Besucher entdeckt die Risse selbst. The Open Gate
+spricht als Zeitung (EB Garamond), Sheeps Territorium (Meet Sheep,
+Records, Outro) liegt in Nacht-Panels. Akzent ist ein Stempelrot
+(`--red`), sparsam wie ein Amtssiegel.
 
 ### Weitere Sektionen (08–10) ergänzen
 
