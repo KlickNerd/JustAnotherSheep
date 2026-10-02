@@ -1,0 +1,10 @@
+/.github/CODEOWNERS @LanceMeacham
+/src/data/characters.js @LanceMeacham
+/public/images/characters/ @LanceMeacham
+/public/images/brand/ @LanceMeacham
+/src/main.jsx @LanceMeacham
+/src/components/layout/ @LanceMeacham
+/src/components/navigation/ @LanceMeacham
+/src/styles.css @LanceMeacham
+/src/styles/ @LanceMeacham
+/README.md @LanceMeacham
