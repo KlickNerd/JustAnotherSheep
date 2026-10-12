@@ -1,7 +1,7 @@
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { characterImageUrl, characters } from './data/characters';
-import { arcs, episodeOneMemes, episodeTwoMemes, episodeThreeMemes, episodeFourMemes, episodeFiveMemes, episodeSixMemes, episodeSevenMemes, episodeEightMemes, episodeNineMemes, episodeTenMemes, episodeElevenMemes, episodeTwelveMemes, files } from './data/archive';
+import { arcs, episodeOneMemes, episodeTwoMemes, episodeThreeMemes, episodeFourMemes, episodeFiveMemes, episodeSixMemes, episodeSevenMemes, episodeEightMemes, episodeNineMemes, episodeTenMemes, episodeElevenMemes, episodeTwelveMemes, episodeThirteenMemes, files } from './data/archive';
 import { forumThreads, notebookEntries, peaceholdRecords } from './data/pages';
 import './styles.css';
 
@@ -88,6 +88,12 @@ const imageFolders = {
   'episode-012-frame-04.png': 'episodes',
   'episode-012-frame-05.png': 'episodes',
   'episode-012-frame-06.png': 'episodes',
+  'episode-013-frame-01.png': 'episodes',
+  'episode-013-frame-02.png': 'episodes',
+  'episode-013-frame-03.png': 'episodes',
+  'episode-013-frame-04.png': 'episodes',
+  'episode-013-frame-05.png': 'episodes',
+  'episode-013-frame-06.png': 'episodes',
 };
 
 const localImage = (image) => `/images/${imageFolders[image] ?? 'files'}/${image}`;
@@ -103,6 +109,7 @@ const episodeNineAudio = '/audio/episode-009-inside-the-lines.mp3';
 const episodeTenAudio = '/audio/episode-010-nothing-of-value.mp3';
 const episodeElevenAudio = '/audio/episode-011-keep-your-head-down.mp3';
 const episodeTwelveAudio = '/audio/episode-012-ownership-survives-the-edit.mp3';
+const episodeThirteenAudio = '/audio/episode-013-temporary-lives-here.mp3';
 
 const exploreLinks = [
   ['Start Here', '/start-here'],
@@ -122,6 +129,7 @@ const primaryLinks = [
   ['Episode 010 · Nothing of Value', '/episodes/010-nothing-of-value'],
   ['Episode 011 · Keep Your Head Down', '/episodes/011-keep-your-head-down'],
   ['Episode 012 · Ownership Survives the Edit', '/episodes/012-ownership-survives-the-edit'],
+  ['Episode 013 · Temporary Lives Here', '/episodes/013-temporary-lives-here'],
   ['The Black Sheep Files', '/files'],
   ['Watch', '/watch'],
   ["Black Sheep’s Notebook", '/notebook'],
@@ -267,6 +275,10 @@ function EpisodeTwelvePage() {
   return <main className="episode-page section-dark"><section className="episode-intro"><span className="eyebrow">Arc 02 · Episode 012</span><h1>Ownership Survives the Edit</h1><p>Peacehold calls discarded materials its property, even after they hit the trash. Black Sheep turns scrap into a guitar, and the town discovers that useless things become valuable when someone else makes them useful.</p><a href="#episode-012-story" className="text-link">See the story <span>↓</span></a></section><section className="episode-feature"><div><span className="eyebrow">Resident record · 012</span><h2>Nothing wastes resources like protecting their uselessness.</h2><p>The guitar was trash until it made music.</p><p>The six-frame visual story and accompanying song are now available.</p></div><img src={localImage('episode-012-frame-01.png')} alt="Peacehold guard claims ownership of discarded materials while Black Sheep plays a handmade guitar from the trash" /></section><section id="episode-012-story" className="episode-story-sequence" aria-labelledby="episode-012-story-title"><div className="episode-story-heading"><span className="eyebrow">The visual story · 6 frames</span><h2 id="episode-012-story-title">Ownership survives disposal.</h2></div><div className="episode-meme-grid">{episodeTwelveMemes.map(([image, title, caption], index) => <figure key={image}><img src={localImage(image)} alt={`${title}. ${caption}`} loading="lazy" /><figcaption><span>{String(index + 1).padStart(2, '0')} / 06</span><strong>{title}</strong><p>{caption}</p></figcaption></figure>)}</div></section><section className="episode-soundtrack"><div><span className="eyebrow">Episode 012 · Soundtrack</span><h2>Ownership Survives the Edit</h2><p>The full song accompanying this episode.</p></div><div className="audio-status"><audio controls preload="metadata" src={episodeTwelveAudio} aria-label="Play Ownership Survives the Edit, Episode 012 soundtrack">Audio playback is not supported in this browser.</audio></div></section><section className="episode-idea"><div><span className="eyebrow">The question underneath</span><h2>Who owns something once it has been discarded, repaired, and made useful?</h2><p>Value appears; ownership returns. Peacehold's rules protect the claim more carefully than they protect the resources.</p><SiteLink href="/episodes" className="text-link">Back to the episode archive <span>↗</span></SiteLink></div></section></main>;
 }
 
+function EpisodeThirteenPage() {
+  return <main className="episode-page section-dark"><section className="episode-intro"><span className="eyebrow">Arc 02 · Episode 013</span><h1>Temporary Lives Here</h1><p>Peacehold keeps extending its emergency restrictions, celebrating their anniversaries, and maintaining the signs better than the buildings. After enough generations, “temporary” stops describing the policy and starts describing the residents.</p><a href="#episode-013-story" className="text-link">See the story <span>↓</span></a></section><section className="episode-feature"><div><span className="eyebrow">Resident record · 013</span><h2>A permanent policy, 30 days at a time.</h2><p>Nothing lasts quite like an emergency with a maintenance budget.</p><p>The six-frame visual story and full song are now available.</p></div><img src={localImage('episode-013-frame-01.png')} alt="Black Sheep questions Peacehold's temporary emergency restrictions as an elderly sheep says the sign was already there when she was young" /></section><section id="episode-013-story" className="episode-story-sequence" aria-labelledby="episode-013-story-title"><div className="episode-story-heading"><span className="eyebrow">The visual story · 6 frames</span><h2 id="episode-013-story-title">When temporary becomes tradition.</h2></div><div className="episode-meme-grid">{episodeThirteenMemes.map(([image, title, caption], index) => <figure key={image}><img src={localImage(image)} alt={`${title}. ${caption}`} loading="lazy" /><figcaption><span>{String(index + 1).padStart(2, '0')} / 06</span><strong>{title}</strong><p>{caption}</p></figcaption></figure>)}</div></section><section className="episode-soundtrack"><div><span className="eyebrow">Episode 013 · Soundtrack</span><h2>Temporary Lives Here</h2><p>The full song accompanying this episode.</p></div><div className="audio-status"><audio controls preload="metadata" src={episodeThirteenAudio} aria-label="Play Temporary Lives Here, Episode 013 soundtrack">Audio playback is not supported in this browser.</audio></div></section><section className="episode-idea"><div><span className="eyebrow">The question underneath</span><h2>When does a temporary emergency become the permanent way of life?</h2><p>Repeated extensions make a policy feel ordinary while its emergency label stays intact.</p><SiteLink href="/episodes" className="text-link">Back to the episode archive <span>↗</span></SiteLink></div></section></main>;
+}
+
 function FilesPage() {
   const [episode, setEpisode] = useState('All episodes');
   const [arc, setArc] = useState('All arcs');
@@ -355,7 +367,7 @@ function App() {
   const [path, setPath] = useState(window.location.pathname.replace(/\/$/, '') || '/');
   const [menuOpen, setMenuOpen] = useState(false);
   window.onpopstate = () => setPath(window.location.pathname.replace(/\/$/, '') || '/');
-  const page = path === '/' ? <HomePage /> : path === '/meet-the-flock' ? <MeetTheFlockPage /> : path.startsWith('/meet-the-flock/') ? <CharacterDetailPage id={path.split('/').pop()} /> : path === '/start-here' ? <StartHerePage /> : path === '/about' ? <AboutPage /> : path === '/watch' ? <WatchPage /> : path === '/sounds' ? <SoundsPage /> : path === '/peacehold' ? <PeaceholdPage /> : path === '/open-field' ? <OpenFieldPage /> : path === '/open-field/thread' ? <ThreadPage /> : path === '/notebook' ? <NotebookPage /> : path.startsWith('/notebook/') ? <NotebookEntryPage slug={path.split('/').pop()} /> : path === '/episodes' ? <EpisodesPage /> : path === '/episodes/001-voluntary-assembly' ? <EpisodePage /> : path === '/episodes/002-fear-of-art' ? <EpisodeTwoPage /> : path === '/episodes/003-your-voice-matters' ? <EpisodeThreePage /> : path === '/episodes/004-consensus-is-not-a-compass' ? <EpisodeFourPage /> : path === '/episodes/005-safety-concerns' ? <EpisodeFivePage /> : path === '/episodes/006-open-gate-policy' ? <EpisodeSixPage /> : path === '/episodes/007-terms-and-conditions-apply' ? <EpisodeSevenPage /> : path === '/episodes/008-the-bell-department' ? <EpisodeEightPage /> : path === '/episodes/009-inside-the-lines' ? <EpisodeNinePage /> : path === '/episodes/010-nothing-of-value' ? <EpisodeTenPage /> : path === '/episodes/011-keep-your-head-down' ? <EpisodeElevenPage /> : path === '/episodes/012-ownership-survives-the-edit' ? <EpisodeTwelvePage /> : path === '/files' ? <FilesPage /> : <RouteSkeleton path={path} />;
+  const page = path === '/' ? <HomePage /> : path === '/meet-the-flock' ? <MeetTheFlockPage /> : path.startsWith('/meet-the-flock/') ? <CharacterDetailPage id={path.split('/').pop()} /> : path === '/start-here' ? <StartHerePage /> : path === '/about' ? <AboutPage /> : path === '/watch' ? <WatchPage /> : path === '/sounds' ? <SoundsPage /> : path === '/peacehold' ? <PeaceholdPage /> : path === '/open-field' ? <OpenFieldPage /> : path === '/open-field/thread' ? <ThreadPage /> : path === '/notebook' ? <NotebookPage /> : path.startsWith('/notebook/') ? <NotebookEntryPage slug={path.split('/').pop()} /> : path === '/episodes' ? <EpisodesPage /> : path === '/episodes/001-voluntary-assembly' ? <EpisodePage /> : path === '/episodes/002-fear-of-art' ? <EpisodeTwoPage /> : path === '/episodes/003-your-voice-matters' ? <EpisodeThreePage /> : path === '/episodes/004-consensus-is-not-a-compass' ? <EpisodeFourPage /> : path === '/episodes/005-safety-concerns' ? <EpisodeFivePage /> : path === '/episodes/006-open-gate-policy' ? <EpisodeSixPage /> : path === '/episodes/007-terms-and-conditions-apply' ? <EpisodeSevenPage /> : path === '/episodes/008-the-bell-department' ? <EpisodeEightPage /> : path === '/episodes/009-inside-the-lines' ? <EpisodeNinePage /> : path === '/episodes/010-nothing-of-value' ? <EpisodeTenPage /> : path === '/episodes/011-keep-your-head-down' ? <EpisodeElevenPage /> : path === '/episodes/012-ownership-survives-the-edit' ? <EpisodeTwelvePage /> : path === '/episodes/013-temporary-lives-here' ? <EpisodeThirteenPage /> : path === '/files' ? <FilesPage /> : <RouteSkeleton path={path} />;
   return <><Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />{page}</>;
 }
 

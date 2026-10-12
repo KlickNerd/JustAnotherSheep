@@ -1,6 +1,6 @@
 export const arcs = [
   ['01', '001–010', 'The Rules of Peacehold', 'The ordinary rules begin to contradict the words used to describe them.', 'Episodes 001–010 available'],
-  ['02', '011–020', 'The Daily Routine', 'Work, creativity, and cooperation all come with conditions.', 'Episodes 011–012 available'],
+  ['02', '011–020', 'The Daily Routine', 'Work, creativity, and cooperation all come with conditions.', 'Episodes 011–013 available'],
   ['03', '021–030', 'The Words We Use', 'The names for things change; the things themselves do not.', '10 episodes in this arc'],
   ['04', '031–040', 'The Lines We Draw', 'Black Sheep studies the boundaries that everyone else has learned to accept.', '10 episodes in this arc'],
   ['05', '041–050', 'The Record', 'Small discrepancies begin to form a larger pattern.', '10 episodes in this arc'],
@@ -132,4 +132,13 @@ export const episodeTwelveMemes = [
   ['episode-012-frame-04.png', 'Responsible resource management', 'Discarded materials must remain in their approved, useless condition.'],
   ['episode-012-frame-05.png', 'Locally sourced bureaucracy', 'Peacehold claims the guitar after Black Sheep makes it valuable.'],
   ['episode-012-frame-06.png', 'Ownership returns with value', 'When trash becomes useful, someone remembers owning the ingredients.'],
+];
+
+export const episodeThirteenMemes = [
+  ['episode-013-frame-01.png', 'Temporary, now entering its third generation', 'A curfew, movement limits, searches, and permits are still labeled temporary.'],
+  ['episode-013-frame-02.png', 'Still temporary after 18 repaintings', 'The sign gets more maintenance than the barn it supposedly protects.'],
+  ['episode-013-frame-03.png', 'Fifty years of temporary measures', 'Only successful emergencies get anniversary parties and commemorative merchandise.'],
+  ['episode-013-frame-04.png', 'A permanent policy, 30 days at a time', 'Repeated extensions can turn an emergency into the normal operating procedure.'],
+  ['episode-013-frame-05.png', 'The emergency becomes heritage', 'When temporary becomes tradition, nobody thinks to check the end date.'],
+  ['episode-013-frame-06.png', 'Temporary lives here', 'Eventually, temporary stops describing the policy and starts describing the residents.'],
 ];
