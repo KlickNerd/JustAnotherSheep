@@ -1,6 +1,6 @@
 export const arcs = [
   ['01', '001–010', 'The Rules of Peacehold', 'The ordinary rules begin to contradict the words used to describe them.', 'Episodes 001–010 available'],
-  ['02', '011–020', 'The Daily Routine', 'Work, creativity, and cooperation all come with conditions.', 'Episode 011 available'],
+  ['02', '011–020', 'The Daily Routine', 'Work, creativity, and cooperation all come with conditions.', 'Episodes 011–012 available'],
   ['03', '021–030', 'The Words We Use', 'The names for things change; the things themselves do not.', '10 episodes in this arc'],
   ['04', '031–040', 'The Lines We Draw', 'Black Sheep studies the boundaries that everyone else has learned to accept.', '10 episodes in this arc'],
   ['05', '041–050', 'The Record', 'Small discrepancies begin to form a larger pattern.', '10 episodes in this arc'],
@@ -123,4 +123,13 @@ export const episodeElevenMemes = [
   ['episode-011-frame-04.png', 'Full compliance', 'When rules contradict, the resident is still somehow wrong.'],
   ['episode-011-frame-05.png', 'Respectful attention', 'Respect apparently works best without eye contact.'],
   ['episode-011-frame-06.png', 'Taking the order literally', 'Sometimes the fastest way to expose authority is to take it literally.'],
+];
+
+export const episodeTwelveMemes = [
+  ['episode-012-frame-01.png', 'Ownership survives disposal', 'Materials still belong to Peacehold, even after they are thrown away.'],
+  ['episode-012-frame-02.png', 'Creativity is an asset-reclassification event', 'Reuse turns worthless scrap into a property dispute.'],
+  ['episode-012-frame-03.png', 'Improper use of garbage', 'The violation is turning waste into something useful.'],
+  ['episode-012-frame-04.png', 'Responsible resource management', 'Discarded materials must remain in their approved, useless condition.'],
+  ['episode-012-frame-05.png', 'Locally sourced bureaucracy', 'Peacehold claims the guitar after Black Sheep makes it valuable.'],
+  ['episode-012-frame-06.png', 'Ownership returns with value', 'When trash becomes useful, someone remembers owning the ingredients.'],
 ];
