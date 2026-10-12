@@ -1,6 +1,21 @@
 export const arcs = [
-  ['01', '001–010', 'The Rules of Peacehold', 'The ordinary rules begin to contradict the words used to describe them.', 'Episodes 001–010 available'],
-  ['02', '011–020', 'The Daily Routine', 'Work, creativity, and cooperation all come with conditions.', 'Episodes 011–013 available'],
+  ['01', '001–010', 'The Rules of Peacehold', 'The ordinary rules begin to contradict the words used to describe them.', 'Episodes 001–010 available', [
+    ['001', 'Voluntary Assembly', '/episodes/001-voluntary-assembly'],
+    ['002', 'Fear of Art', '/episodes/002-fear-of-art'],
+    ['003', 'Your Voice Matters', '/episodes/003-your-voice-matters'],
+    ['004', 'Consensus Is Not a Compass', '/episodes/004-consensus-is-not-a-compass'],
+    ['005', 'Safety Concerns', '/episodes/005-safety-concerns'],
+    ['006', 'Open Gate Policy', '/episodes/006-open-gate-policy'],
+    ['007', 'Terms and Conditions Apply', '/episodes/007-terms-and-conditions-apply'],
+    ['008', 'The Bell Department', '/episodes/008-the-bell-department'],
+    ['009', 'Inside the Lines', '/episodes/009-inside-the-lines'],
+    ['010', 'Nothing of Value', '/episodes/010-nothing-of-value'],
+  ]],
+  ['02', '011–020', 'The Daily Routine', 'Work, creativity, and cooperation all come with conditions.', 'Episodes 011–013 available', [
+    ['011', 'Keep Your Head Down', '/episodes/011-keep-your-head-down'],
+    ['012', 'Ownership Survives the Edit', '/episodes/012-ownership-survives-the-edit'],
+    ['013', 'Temporary Lives Here', '/episodes/013-temporary-lives-here'],
+  ]],
   ['03', '021–030', 'The Words We Use', 'The names for things change; the things themselves do not.', '10 episodes in this arc'],
   ['04', '031–040', 'The Lines We Draw', 'Black Sheep studies the boundaries that everyone else has learned to accept.', '10 episodes in this arc'],
   ['05', '041–050', 'The Record', 'Small discrepancies begin to form a larger pattern.', '10 episodes in this arc'],
