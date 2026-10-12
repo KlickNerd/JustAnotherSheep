@@ -1,7 +1,7 @@
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { characterImageUrl, characters } from './data/characters';
-import { arcs, episodeOneMemes, episodeTwoMemes, episodeThreeMemes, episodeFourMemes, episodeFiveMemes, episodeSixMemes, episodeSevenMemes, episodeEightMemes, episodeNineMemes, episodeTenMemes, episodeElevenMemes, files } from './data/archive';
+import { arcs, episodeOneMemes, episodeTwoMemes, episodeThreeMemes, episodeFourMemes, episodeFiveMemes, episodeSixMemes, episodeSevenMemes, episodeEightMemes, episodeNineMemes, episodeTenMemes, episodeElevenMemes, episodeTwelveMemes, files } from './data/archive';
 import { forumThreads, notebookEntries, peaceholdRecords } from './data/pages';
 import './styles.css';
 
@@ -82,6 +82,12 @@ const imageFolders = {
   'episode-011-frame-04.png': 'episodes',
   'episode-011-frame-05.png': 'episodes',
   'episode-011-frame-06.png': 'episodes',
+  'episode-012-frame-01.png': 'episodes',
+  'episode-012-frame-02.png': 'episodes',
+  'episode-012-frame-03.png': 'episodes',
+  'episode-012-frame-04.png': 'episodes',
+  'episode-012-frame-05.png': 'episodes',
+  'episode-012-frame-06.png': 'episodes',
 };
 
 const localImage = (image) => `/images/${imageFolders[image] ?? 'files'}/${image}`;
@@ -96,6 +102,7 @@ const episodeEightAudio = '/audio/episode-008-the-bell-department.mp3';
 const episodeNineAudio = '/audio/episode-009-inside-the-lines.mp3';
 const episodeTenAudio = '/audio/episode-010-nothing-of-value.mp3';
 const episodeElevenAudio = '/audio/episode-011-keep-your-head-down.mp3';
+const episodeTwelveAudio = '/audio/episode-012-ownership-survives-the-edit.mp3';
 
 const exploreLinks = [
   ['Start Here', '/start-here'],
@@ -114,6 +121,7 @@ const primaryLinks = [
   ['Episode 009 · Inside the Lines', '/episodes/009-inside-the-lines'],
   ['Episode 010 · Nothing of Value', '/episodes/010-nothing-of-value'],
   ['Episode 011 · Keep Your Head Down', '/episodes/011-keep-your-head-down'],
+  ['Episode 012 · Ownership Survives the Edit', '/episodes/012-ownership-survives-the-edit'],
   ['The Black Sheep Files', '/files'],
   ['Watch', '/watch'],
   ["Black Sheep’s Notebook", '/notebook'],
@@ -255,6 +263,10 @@ function EpisodeElevenPage() {
   return <main className="episode-page section-dark"><section className="episode-intro"><span className="eyebrow">Arc 02 · Episode 011</span><h1>Keep Your Head Down</h1><p>Peacehold issues new behavioral guidance about posture, attention, and obedience. The instructions contradict one another, but the resident is still expected to get them right. Black Sheep follows the order literally and gives it a reason.</p><a href="#episode-011-story" className="text-link">See the story <span>↓</span></a></section><section className="episode-feature"><div><span className="eyebrow">Resident record · 011</span><h2>Instructions work better when they accidentally make sense.</h2><p>Keep your head down. Keep your eyes forward. Questioning is weakness.</p><p>The six-frame visual story and accompanying song are now available.</p></div><img src={localImage('episode-011-frame-01.png')} alt="Black Sheep points out Peacehold's keep-your-head-down guidance while a guard bends to examine the sign" /></section><section id="episode-011-story" className="episode-story-sequence" aria-labelledby="episode-011-story-title"><div className="episode-story-heading"><span className="eyebrow">The visual story · 6 frames</span><h2 id="episode-011-story-title">Behavioral guidance, in practice.</h2></div><div className="episode-meme-grid">{episodeElevenMemes.map(([image, title, caption], index) => <figure key={image}><img src={localImage(image)} alt={`${title}. ${caption}`} loading="lazy" /><figcaption><span>{String(index + 1).padStart(2, '0')} / 06</span><strong>{title}</strong><p>{caption}</p></figcaption></figure>)}</div></section><section className="episode-soundtrack"><div><span className="eyebrow">Episode 011 · Soundtrack</span><h2>Keep Your Head Down</h2><p>The song accompanying this episode.</p></div><div className="audio-status"><audio controls preload="metadata" src={episodeElevenAudio} aria-label="Play Keep Your Head Down, Episode 011 soundtrack">Audio playback is not supported in this browser.</audio></div></section><section className="episode-idea"><div><span className="eyebrow">The question underneath</span><h2>What happens when every instruction is followed, but the rules cannot agree?</h2><p>Contradictory orders keep residents focused on compliance instead of asking who wrote the rules.</p><SiteLink href="/episodes" className="text-link">Back to the episode archive <span>↗</span></SiteLink></div></section></main>;
 }
 
+function EpisodeTwelvePage() {
+  return <main className="episode-page section-dark"><section className="episode-intro"><span className="eyebrow">Arc 02 · Episode 012</span><h1>Ownership Survives the Edit</h1><p>Peacehold calls discarded materials its property, even after they hit the trash. Black Sheep turns scrap into a guitar, and the town discovers that useless things become valuable when someone else makes them useful.</p><a href="#episode-012-story" className="text-link">See the story <span>↓</span></a></section><section className="episode-feature"><div><span className="eyebrow">Resident record · 012</span><h2>Nothing wastes resources like protecting their uselessness.</h2><p>The guitar was trash until it made music.</p><p>The six-frame visual story and accompanying song are now available.</p></div><img src={localImage('episode-012-frame-01.png')} alt="Peacehold guard claims ownership of discarded materials while Black Sheep plays a handmade guitar from the trash" /></section><section id="episode-012-story" className="episode-story-sequence" aria-labelledby="episode-012-story-title"><div className="episode-story-heading"><span className="eyebrow">The visual story · 6 frames</span><h2 id="episode-012-story-title">Ownership survives disposal.</h2></div><div className="episode-meme-grid">{episodeTwelveMemes.map(([image, title, caption], index) => <figure key={image}><img src={localImage(image)} alt={`${title}. ${caption}`} loading="lazy" /><figcaption><span>{String(index + 1).padStart(2, '0')} / 06</span><strong>{title}</strong><p>{caption}</p></figcaption></figure>)}</div></section><section className="episode-soundtrack"><div><span className="eyebrow">Episode 012 · Soundtrack</span><h2>Ownership Survives the Edit</h2><p>The full song accompanying this episode.</p></div><div className="audio-status"><audio controls preload="metadata" src={episodeTwelveAudio} aria-label="Play Ownership Survives the Edit, Episode 012 soundtrack">Audio playback is not supported in this browser.</audio></div></section><section className="episode-idea"><div><span className="eyebrow">The question underneath</span><h2>Who owns something once it has been discarded, repaired, and made useful?</h2><p>Value appears; ownership returns. Peacehold's rules protect the claim more carefully than they protect the resources.</p><SiteLink href="/episodes" className="text-link">Back to the episode archive <span>↗</span></SiteLink></div></section></main>;
+}
+
 function FilesPage() {
   const [episode, setEpisode] = useState('All episodes');
   const [arc, setArc] = useState('All arcs');
@@ -343,7 +355,7 @@ function App() {
   const [path, setPath] = useState(window.location.pathname.replace(/\/$/, '') || '/');
   const [menuOpen, setMenuOpen] = useState(false);
   window.onpopstate = () => setPath(window.location.pathname.replace(/\/$/, '') || '/');
-  const page = path === '/' ? <HomePage /> : path === '/meet-the-flock' ? <MeetTheFlockPage /> : path.startsWith('/meet-the-flock/') ? <CharacterDetailPage id={path.split('/').pop()} /> : path === '/start-here' ? <StartHerePage /> : path === '/about' ? <AboutPage /> : path === '/watch' ? <WatchPage /> : path === '/sounds' ? <SoundsPage /> : path === '/peacehold' ? <PeaceholdPage /> : path === '/open-field' ? <OpenFieldPage /> : path === '/open-field/thread' ? <ThreadPage /> : path === '/notebook' ? <NotebookPage /> : path.startsWith('/notebook/') ? <NotebookEntryPage slug={path.split('/').pop()} /> : path === '/episodes' ? <EpisodesPage /> : path === '/episodes/001-voluntary-assembly' ? <EpisodePage /> : path === '/episodes/002-fear-of-art' ? <EpisodeTwoPage /> : path === '/episodes/003-your-voice-matters' ? <EpisodeThreePage /> : path === '/episodes/004-consensus-is-not-a-compass' ? <EpisodeFourPage /> : path === '/episodes/005-safety-concerns' ? <EpisodeFivePage /> : path === '/episodes/006-open-gate-policy' ? <EpisodeSixPage /> : path === '/episodes/007-terms-and-conditions-apply' ? <EpisodeSevenPage /> : path === '/episodes/008-the-bell-department' ? <EpisodeEightPage /> : path === '/episodes/009-inside-the-lines' ? <EpisodeNinePage /> : path === '/episodes/010-nothing-of-value' ? <EpisodeTenPage /> : path === '/episodes/011-keep-your-head-down' ? <EpisodeElevenPage /> : path === '/files' ? <FilesPage /> : <RouteSkeleton path={path} />;
+  const page = path === '/' ? <HomePage /> : path === '/meet-the-flock' ? <MeetTheFlockPage /> : path.startsWith('/meet-the-flock/') ? <CharacterDetailPage id={path.split('/').pop()} /> : path === '/start-here' ? <StartHerePage /> : path === '/about' ? <AboutPage /> : path === '/watch' ? <WatchPage /> : path === '/sounds' ? <SoundsPage /> : path === '/peacehold' ? <PeaceholdPage /> : path === '/open-field' ? <OpenFieldPage /> : path === '/open-field/thread' ? <ThreadPage /> : path === '/notebook' ? <NotebookPage /> : path.startsWith('/notebook/') ? <NotebookEntryPage slug={path.split('/').pop()} /> : path === '/episodes' ? <EpisodesPage /> : path === '/episodes/001-voluntary-assembly' ? <EpisodePage /> : path === '/episodes/002-fear-of-art' ? <EpisodeTwoPage /> : path === '/episodes/003-your-voice-matters' ? <EpisodeThreePage /> : path === '/episodes/004-consensus-is-not-a-compass' ? <EpisodeFourPage /> : path === '/episodes/005-safety-concerns' ? <EpisodeFivePage /> : path === '/episodes/006-open-gate-policy' ? <EpisodeSixPage /> : path === '/episodes/007-terms-and-conditions-apply' ? <EpisodeSevenPage /> : path === '/episodes/008-the-bell-department' ? <EpisodeEightPage /> : path === '/episodes/009-inside-the-lines' ? <EpisodeNinePage /> : path === '/episodes/010-nothing-of-value' ? <EpisodeTenPage /> : path === '/episodes/011-keep-your-head-down' ? <EpisodeElevenPage /> : path === '/episodes/012-ownership-survives-the-edit' ? <EpisodeTwelvePage /> : path === '/files' ? <FilesPage /> : <RouteSkeleton path={path} />;
   return <><Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />{page}</>;
 }
 
