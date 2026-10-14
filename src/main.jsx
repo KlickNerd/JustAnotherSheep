@@ -322,37 +322,72 @@ function CharacterCard({ character, wide = false }) {
   </article>;
 }
 
+const promises = [
+  ['Safety', 'The fence keeps everything out.', 'Everything that matters stays in.'],
+  ['Order', 'Every day has a schedule. Every schedule has a reason.', 'Ask anyone.'],
+  ['Belonging', 'Nobody is alone here.', 'Nobody is ever alone here.'],
+];
+
+const notices = [
+  ['Notice \u2116 01', 'Morning assembly is voluntary.', 'Attendance is recorded.'],
+  ['Notice \u2116 07', 'The gate is open at all times.', 'During approved hours.'],
+  ['Notice \u2116 12', 'Questions are welcome at the Question Office.', 'The Question Office is currently closed.'],
+];
+
 function HomePage() {
   return <>
     <main>
+      {/* Akt 1 — die Broschüre */}
       <section className="hero">
         <div className="hero-image" />
         <div className="hero-content">
-          <p className="eyebrow">A story from Peacehold Farm</p>
+          <p className="eyebrow">Welcome to Peacehold Farm</p>
           <h1>Just<br />Another<br />Sheep.</h1>
           <p className="hero-deck">Everybody follows something.</p>
-          <div className="hero-actions"><SiteLink href="/episodes/001-voluntary-assembly">Start the story <span>↗</span></SiteLink><SiteLink href="/episodes/001-voluntary-assembly">Watch latest episode <span>↗</span></SiteLink></div>
+          <div className="hero-actions"><SiteLink href="/episodes/001-voluntary-assembly">Start the story <span>↗</span></SiteLink><a href="#welcome">Look around <span>↓</span></a></div>
         </div>
       </section>
-      <div className="ticker"><span>Attendance is completely voluntary ✦ You are free to attend willingly or unwillingly ✦</span><span>Attendance is completely voluntary ✦ You are free to attend willingly or unwillingly ✦</span></div>
+      <div className="ticker"><span>Another perfect day in Peacehold ✦ The bell rings for you ✦ Fresh grass, clear rules, no surprises ✦ </span><span>Another perfect day in Peacehold ✦ The bell rings for you ✦ Fresh grass, clear rules, no surprises ✦ </span></div>
 
-      <section className="welcome section-dark">
-        <div><span className="eyebrow">Welcome to Peacehold</span><h2>Everything is fine.<br />It says so on the sign.</h2></div>
-        <div className="welcome-copy"><p>Peacehold Farm has a rule for everything, a reassuring explanation for every rule, and a guard nearby in case you need help agreeing.</p><p>Black Sheep starts with the obvious questions. The answers reveal a world where language can be bent, choices can be staged, and “stability” has a very particular meaning.</p><p>Follow the satire one scene at a time. Each image stands on its own; together they tell a larger story about freedom, conformity, and the nerve to think for yourself.</p></div>
-        <div className="welcome-images"><img src={localImage("voluntary.webp")} alt="Black Sheep faces Peacehold guards beneath a notice about voluntary attendance" /><img src={localImage("gate.webp")} alt="Black Sheep studies the mechanism at Peacehold's main gate" /></div>
+      <section className="act1 welcome-acts" id="welcome">
+        <SectionHeading eyebrow="Welcome to Peacehold" title="A perfect place. Ask anyone.">Peacehold Farm has a plan for every day, an answer for every question, and a place for every resident. Visitors are welcome. Most of them stay.</SectionHeading>
+        <div className="promise-grid">{promises.map(([title, line, fine]) => <article key={title}><span className="eyebrow">{title}</span><h3>{line}</h3><p>{fine}</p></article>)}</div>
       </section>
 
-      <section className="trail section-ivory"><SectionHeading eyebrow="The latest from the archive" title="Follow the thread." >Watch, read, listen, and join the conversation. Each trail leads deeper into Peacehold.</SectionHeading><div className="trail-grid"><article className="feature-card"><img src={localImage("voluntary.webp")} alt="Black Sheep between Peacehold guards at assembly" /><span>Latest · Episode 001</span><h3>Voluntary Assembly</h3><p>Attendance is optional. The guards can show you both options.</p><SiteLink href="/episodes/001-voluntary-assembly">Start the story <span>→</span></SiteLink></article><div className="trail-stack"><article><span>Latest Black Sheep File</span><h3>Dangerous Questions</h3><SiteLink href="/files">Open file <span>→</span></SiteLink></article><article><span>Latest Notebook entry</span><h3>When Does “Voluntary” Stop Meaning Voluntary?</h3><SiteLink href="/notebook/when-does-voluntary-stop-meaning-voluntary">Read entry <span>→</span></SiteLink></article></div></div></section>
+      {/* Akt 2 — erste Risse */}
+      <section className="act2">
+        <SectionHeading eyebrow="Community guidelines" title="The rules of Peacehold.">Clear rules make a calm flock. Please read the notices. The notices are for your benefit.</SectionHeading>
+        <div className="notice-grid">{notices.map(([no, line, fine]) => <article key={no}><span>{no}</span><h3>{line}</h3><p>{fine}</p></article>)}</div>
+      </section>
+      <div className="ticker ticker-odd"><span>You are free to attend willingly or unwillingly ✦ Happiness reports are due Friday ✦ The horizon is closed for maintenance ✦ </span><span>You are free to attend willingly or unwillingly ✦ Happiness reports are due Friday ✦ The horizon is closed for maintenance ✦ </span></div>
 
-      <section className="dispatches section-dark"><SectionHeading eyebrow="From the story" title="Dispatches from Peacehold">A first look at the rules, the questions, and the people who keep this place running.</SectionHeading><div className="dispatch-grid">{dispatches.map(([image, eyebrow, title, copy]) => <SiteLink key={title} href="/files" className="dispatch-card"><img src={localImage(image)} alt={title} /><span>{eyebrow}</span><h3>{title}</h3><p>{copy}</p></SiteLink>)}</div><p className="section-note">Open a dispatch to see the full file.</p></section>
+      {/* Akt 3 — das schwarze Schaf */}
+      <section className="act3 pivot section-dark">
+        <div className="pivot-text">
+          <span className="eyebrow">Resident record · Classification: Difficult</span>
+          <h2>One resident started noticing.</h2>
+          <p>The schedules, the speeches, the small print on the notices. Black Sheep reads all of it. Then he asks the question the sign did not anticipate.</p>
+          <p>Peacehold has an answer for everything. He keeps finding the gaps between the answers.</p>
+          <SiteLink href="/episodes/001-voluntary-assembly" className="text-link">Episode 001 · Voluntary Assembly <span>↗</span></SiteLink>
+        </div>
+        <img src="/images/brand/sheet-deadpan.webp" alt="Black Sheep standing in a barn, calm and unimpressed" />
+      </section>
 
-      <section className="cast section-ivory"><SectionHeading eyebrow="The people of Peacehold" title="Meet the cast">Every good system needs its believers, its enforcers, and someone willing to ask the wrong question.</SectionHeading><div className="cast-grid">{characters.filter((character) => !character.collective).map((character) => <CharacterCard key={character.id} character={character} />)}</div><SiteLink href="/meet-the-flock" className="text-link">Meet the Flock <span>↗</span></SiteLink></section>
+      <section className="act3b section-dark">
+        <SectionHeading eyebrow="Follow him through Peacehold" title="Watch → Read → Listen → Discuss.">Each path shows a different side of the same story. Start anywhere.</SectionHeading>
+        <div className="path-grid">{[['01', 'Watch', 'The visual stories, six frames at a time.', '/episodes'], ['02', 'Read', 'Black Sheep\u2019s Notebook and the Files.', '/notebook'], ['03', 'Listen', 'One song per episode. The farm supplies the bells.', '/sounds'], ['04', 'Discuss', 'The Open Field, where questions are allowed.', '/open-field']].map(([number, title, copy, href]) => <SiteLink key={href} href={href}><span>{number}</span><h3>{title}</h3><p>{copy}</p></SiteLink>)}</div>
+      </section>
 
-      <section className="notebook section-ivory"><div><span className="eyebrow">Black Sheep’s Notebook · From beyond the gate</span><h2>Some thoughts don’t fit on the notice board.</h2><p>Notes, questions, observations, and inconvenient thoughts from beyond the gate.</p><SiteLink href="/notebook" className="text-link">Read the Notebook <span>↗</span></SiteLink></div><div className="notebook-entry"><span>From the Episode</span><h3>When Does “Voluntary” Stop Meaning Voluntary?</h3><p>A choice with consequences for saying no may be a decision in form only.</p><SiteLink href="/notebook/when-does-voluntary-stop-meaning-voluntary" className="text-link">Read entry <span>↗</span></SiteLink></div></section>
+      <section className="quote quote-solo section-dark"><div><span className="eyebrow">Just Another Sheep</span><blockquote>When the answer is already decided,<br /><em>ask a better question.</em></blockquote></div></section>
 
-      <section className="quote section-dark"><img src={localImage("gate.webp")} alt="Black Sheep studying the mechanism of Peacehold's main gate at night" /><div><span className="eyebrow">Just Another Sheep</span><blockquote>When the answer is already decided,<br /><em>ask a better question.</em></blockquote></div></section>
-      <section className="open-field section-red"><span className="eyebrow">The Open Field</span><h2>A question is better<br />when it travels.</h2><p>Where questions are allowed. Challenge ideas. Don’t attack people.</p><SiteLink href="/open-field" className="text-link">Join the discussion <span>↗</span></SiteLink></section>
-      <section className="join section-tan"><span className="eyebrow">Join the Flock</span><h2>Don’t miss the<br />next question.</h2><p>New episodes. New files. New questions.</p><form onSubmit={(event) => event.preventDefault()}><label htmlFor="email">Email address</label><div><input id="email" type="email" placeholder="Your email address" /><button type="submit">Join the Flock <span>↗</span></button></div></form><small>Signups are open. Email updates are not yet being sent.</small></section>
+      {/* Akt 4 — die Einladung */}
+      <section className="act4">
+        <span className="eyebrow">The Open Field</span>
+        <h2>You noticed too,<br />didn’t you?</h2>
+        <p>The small print. The closed office. The sheep who looked back. Questions are allowed here — challenge ideas, don’t attack people.</p>
+        <SiteLink href="/open-field" className="text-link">Join the discussion <span>↗</span></SiteLink>
+        <form onSubmit={(event) => event.preventDefault()}><label htmlFor="email">Email address</label><div><input id="email" type="email" placeholder="Your email address" /><button type="submit">Join the Flock <span>↗</span></button></div><small>New episodes. New files. New questions. Signups are open; email updates are not yet being sent.</small></form>
+      </section>
     </main>
     <Footer />
   </>;
