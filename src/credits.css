@@ -1,0 +1,49 @@
+/* ============================================================
+   Compliance Credits: Zähler, Karte, Anwesenheitsbonus.
+   Sieht aus wie eine freundliche Banking-App von Peacehold.
+   ============================================================ */
+
+.credits-pill-wrap { bottom: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; position: fixed; right: 16px; z-index: 33; }
+.credits-pill { align-items: center; background: #fffdf6; border: 1px solid rgba(31,27,20,.14); border-radius: 999px; box-shadow: 0 10px 24px -12px rgba(0,0,0,.45); color: #1f1b14; display: flex; font-family: 'DM Mono', monospace; font-size: .78rem; gap: 7px; letter-spacing: .04em; padding: 9px 15px 9px 12px; transition: transform .15s ease; }
+.credits-pill:hover { transform: translateY(-1px); }
+.credits-pill i { color: #c79a1e; font-style: normal; }
+.credits-pill strong { font-weight: 500; font-variant-numeric: tabular-nums; }
+.credits-pill span { color: rgba(31,27,20,.55); font-size: .66rem; }
+.credits-pill em { font-style: normal; }
+.credits-pill.is-debt strong { color: #a3392a; }
+.credits-pill-wrap.is-dark .credits-pill { background: #1b1712; border-color: rgba(240,233,220,.18); color: #f0e9dc; }
+.credits-pill-wrap.is-dark .credits-pill span { color: rgba(240,233,220,.55); }
+
+.credit-pop { animation: creditPop 2.6s ease both; background: #4f6b45; border-radius: 10px; box-shadow: 0 10px 24px -12px rgba(0,0,0,.45); color: #fff; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: .8rem; max-width: 260px; padding: 8px 12px; pointer-events: none; text-align: right; }
+.credit-pop strong { font-family: 'DM Mono', monospace; font-weight: 500; margin-right: 4px; }
+.credit-pop.is-fee { background: #a3392a; }
+@keyframes creditPop { 0% { opacity: 0; transform: translateY(12px) scale(.95); } 12%, 78% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-14px); } }
+
+.credit-card { aspect-ratio: 1.586; background: radial-gradient(circle at 85% 0%, rgba(255,255,255,.16), transparent 50%), linear-gradient(135deg, #3d5a35 0%, #4f6b45 45%, #2f4529 100%); border-radius: 22px; box-shadow: 0 34px 60px -30px rgba(20,30,15,.75), inset 0 1px 0 rgba(255,255,255,.18); color: #f6f1e5; display: flex; flex-direction: column; font-family: 'DM Mono', monospace; max-width: 430px; padding: clamp(18px, 3vw, 28px); position: relative; width: 100%; }
+.credit-card.is-golden { background: radial-gradient(circle at 85% 0%, rgba(255,255,255,.35), transparent 50%), linear-gradient(135deg, #b8860b 0%, #e6b422 45%, #8a6408 100%); color: #2b2310; }
+.credit-card-top { align-items: center; display: flex; justify-content: space-between; }
+.credit-card-top span { font-family: 'Libre Baskerville', serif; font-size: 1.05rem; font-weight: 700; }
+.credit-card-top i { background: linear-gradient(135deg, #f4dc8a, #c79a1e); border-radius: 6px; display: block; height: 30px; width: 40px; }
+.credit-card p { font-family: 'DM Mono', monospace !important; line-height: 1.2 !important; margin: 0; }
+.credit-card-label { font-size: .66rem; letter-spacing: .2em; margin-top: auto !important; opacity: .75; text-transform: uppercase; }
+.credit-card-balance { font-size: clamp(2rem, 4.4vw, 2.9rem); font-variant-numeric: tabular-nums; margin-top: 4px !important; }
+.credit-card-balance small { font-size: .9rem; opacity: .7; }
+.credit-card-balance.is-debt { color: #ffb4a8; }
+.credit-card-debt { font-size: .7rem; margin-top: 4px !important; opacity: .85; }
+.credit-card-bottom { display: flex; font-size: .68rem; justify-content: space-between; letter-spacing: .1em; margin-top: 14px; opacity: .8; text-transform: uppercase; }
+.credit-card-wrap { max-width: 430px; width: 100%; }
+.credit-card-print { color: rgba(31,27,20,.6); font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: .7rem; line-height: 1.5; list-style: none; margin: 10px 0 0; padding: 0 4px; }
+
+.daily-bonus { background: #fffdf6; border: 1px dashed rgba(79,107,69,.6); border-radius: 12px; color: #1f1b14; cursor: pointer; display: inline-block; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: .9rem; margin-top: 8px; padding: 12px 16px; text-align: left; }
+.daily-bonus strong { color: #4f6b45; font-family: 'DM Mono', monospace; font-weight: 500; margin-left: 6px; }
+.daily-bonus:hover { border-style: solid; }
+p.daily-bonus { cursor: default; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif !important; line-height: 1.45 !important; max-width: 420px; }
+
+@media (max-width: 760px) {
+  .credits-pill { font-size: .72rem; padding: 9px 13px 9px 11px; }
+  .credit-pop { max-width: 210px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .credit-pop { animation: none; }
+}
+.credit-card.is-golden .credit-card-balance.is-debt { color: #8d1f12; }

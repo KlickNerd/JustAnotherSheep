@@ -1,16 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SiteLink } from '../router';
+import { award, buy, CreditCard, CreditsPill, DailyBonus, formatCredits, ITEMS, priceOf, residentNumber, useCredits } from '../credits';
+import EarTagCard from './EarTag';
 import './home.css';
 
-/* Die Startseite ist ein Onboarding in Peacehold: 14 bildschirmfüllende
+/* Die Startseite ist ein Onboarding in Peacehold: 15 bildschirmfüllende
    Szenen, durch die man von Container zu Container springt. Das System
-   gliedert den Besucher ein (Nummer, Gatter, Tagesplan, Feed, Schulung,
+   gliedert den Besucher ein (Nummer, Gatter, Tagesplan, Belohnungen, Feed, Schulung,
    Prüfung, Abstimmung, Assistent, Vertrag), Sheep sabotiert es nach und
    nach, bis das Onboarding zusammenbricht. Nichts davon erhebt echte
    Daten — Zählung, Captcha und Abstimmung sind gespielt. */
 
-const SCENES = ['welcome', 'number', 'home', 'day', 'feed', 'training', 'verify', 'vote', 'assistant', 'agreement', 'error', 'night', 'story', 'choice'];
-const ORIENTATION_STEPS = 9;
+const SCENES = ['welcome', 'number', 'home', 'day', 'rewards', 'feed', 'training', 'verify', 'vote', 'assistant', 'agreement', 'error', 'night', 'story', 'choice'];
+const ORIENTATION_STEPS = 10;
+const at = (id) => SCENES.indexOf(id);
 
 const ANNOUNCEMENTS = {
   climb: 'Attention, please. A resident has left the designated path. Please remain calm. Everything is fine.',
@@ -96,9 +99,6 @@ function writeStorage(store, key, value) {
    bleibt sie erhalten. */
 let pageConsent = null;
 
-function residentNumber() {
-  return 48213 + Math.floor((Date.now() - 1792000000000) / 90000);
-}
 
 function goTo(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -375,8 +375,8 @@ function SongPlayer({ getSong }) {
 /* ---------------------------------------------------------------
    Bausteine
    --------------------------------------------------------------- */
-function Scene({ id, index, className = '', children }) {
-  return <section id={id} data-index={index} className={`scene scene-${id} ${className}`}>{children}</section>;
+function Scene({ id, className = '', children }) {
+  return <section id={id} data-index={at(id)} className={`scene scene-${id} ${className}`}>{children}</section>;
 }
 
 function Next({ to, children = 'Next step' }) {
@@ -426,14 +426,14 @@ function NumberScene({ entered, resident }) {
   }, [entered, resident]);
 
   return (
-    <Scene id="number" index={1}>
+    <Scene id="number">
       <div className="scene-inner number-layout">
         <div>
           <p className="step-label">Step 1 · Your number</p>
           <h2>Welcome, resident.<br />This is who you are now.</h2>
           <p>Your number is unique, permanent and much easier to remember than a name.</p>
           {!confirmed
-            ? <button type="button" className="home-button" onClick={() => setConfirmed(true)}>Confirm my number</button>
+            ? <button type="button" className="home-button" onClick={() => { setConfirmed(true); award('number', 10, 'Number confirmed'); }}>Confirm my number</button>
             : <Next to="home" />}
         </div>
         <div className="ear-tag" aria-label={`Resident number ${resident}`}>
@@ -451,7 +451,7 @@ function NumberScene({ entered, resident }) {
 function HomeScene() {
   const [chosen, setChosen] = useState(null);
   return (
-    <Scene id="home" index={2}>
+    <Scene id="home">
       <div className="scene-inner split-layout">
         <div>
           <p className="step-label">Step 2 · Your home</p>
@@ -467,7 +467,7 @@ function HomeScene() {
         </div>
         <div className="pen-map" role="group" aria-label="Available pens">
           {Array.from({ length: 12 }, (_, index) => (
-            <button key={index} type="button" className={`pen${chosen === index ? ' is-chosen' : ''}${chosen !== null && index === 6 ? ' is-assigned' : ''}`} onClick={() => setChosen(index)}>
+            <button key={index} type="button" className={`pen${chosen === index ? ' is-chosen' : ''}${chosen !== null && index === 6 ? ' is-assigned' : ''}`} onClick={() => { setChosen(index); award('pen', 10, 'Assignment accepted'); }}>
               <span>Pen {index + 1}</span><i aria-hidden="true" />
             </button>
           ))}
@@ -486,13 +486,13 @@ function DayScene() {
     window.setTimeout(() => setShaking(null), 500);
   };
   return (
-    <Scene id="day" index={3}>
+    <Scene id="day">
       <div className="scene-inner split-layout">
         <div>
           <p className="step-label">Step 3 · Your day</p>
           <h2>Your day has been planned for you.</h2>
           <p>So you never have to wonder what comes next. Feel free to adjust anything.</p>
-          <button type="button" className="ghost-button" onClick={() => setMessage('Your request has been received. And denied.')}>Request a change</button>
+          <button type="button" className="ghost-button" onClick={() => { setMessage('Your request has been received. And denied.'); award('change-fee', -5, 'Change request fee', { once: false }); }}>Request a change</button>
           {message && <p className="scene-feedback" role="status">{message}</p>}
           <Next to="feed" />
         </div>
@@ -505,6 +505,40 @@ function DayScene() {
             </li>
           ))}
         </ol>
+      </div>
+    </Scene>
+  );
+}
+
+const MINI_STORE = ['grass', 'freetime', 'pen7'];
+
+function RewardsScene({ resident }) {
+  const credits = useCredits();
+  const [message, setMessage] = useState('');
+  return (
+    <Scene id="rewards">
+      <div className="scene-inner split-layout rewards-layout">
+        <div>
+          <p className="step-label">Step 4 · Your rewards</p>
+          <h2>Good behaviour pays.</h2>
+          <p>Meet Compliance Credits, the official currency of Peacehold. Earned by doing what you were going to do anyway. Spent on things you already have.</p>
+          <DailyBonus />
+          {(message || credits.lastDay) && <p className="scribble scene-note">That’s not money. That’s a leash.</p>}
+          <span className="desktop-only"><Next to="feed" /></span>
+        </div>
+        <div className="rewards-side">
+          <CreditCard resident={resident} />
+          <div className="mini-store">
+            <p className="mini-store-title"><span>Spend your credits</span><SiteLink href="/store">Full store →</SiteLink></p>
+            {ITEMS.filter((item) => MINI_STORE.includes(item.id)).map((item) => (
+              <button key={item.id} type="button" onClick={() => setMessage(buy(item))}>
+                <span aria-hidden="true">{item.icon}</span><strong>{item.name}</strong><em>{formatCredits(priceOf(item, credits))} CC</em>
+              </button>
+            ))}
+            {message && <p className="scene-feedback" role="status">{message}</p>}
+          </div>
+          <span className="mobile-only"><Next to="feed" /></span>
+        </div>
       </div>
     </Scene>
   );
@@ -531,10 +565,10 @@ function FeedScene({ entered, announce }) {
   }, [entered, announce]);
 
   return (
-    <Scene id="feed" index={4}>
+    <Scene id="feed">
       <div className="scene-inner split-layout">
         <div>
-          <p className="step-label">Step 4 · Stay informed</p>
+          <p className="step-label">Step 5 · Stay informed</p>
           <h2>Your feed.<br />Personalized for everyone.</h2>
           <p>Curated by Peacehold to match your interests. Your interests have been curated to match Peacehold.</p>
           {loadedMore && <p className="scribble scene-note">It’s the same post.</p>}
@@ -544,7 +578,7 @@ function FeedScene({ entered, announce }) {
           <div className="feed-scroll">
             {news.map((item) => <article key={item.type} className={`feed-card feed-${item.type}`}><span>{item.type === 'breaking' ? 'BREAKING' : 'CORRECTION'}</span><p>{item.text}</p><small>Peacehold Safety Office</small></article>)}
             {posts.map((post, index) => <article key={index} className="feed-card"><header><i aria-hidden="true" /><strong>{post.author}</strong><em>{post.badge}</em></header><p>{post.text}</p><small>♥ {post.meta}</small></article>)}
-            <button type="button" className="feed-more" onClick={() => { setPosts((current) => [...current, ...FEED_POSTS]); setLoadedMore(true); }}>Load more</button>
+            <button type="button" className="feed-more" onClick={() => { setPosts((current) => [...current, ...FEED_POSTS]); setLoadedMore(true); award('feed', 5, 'Engagement reward', { once: false }); }}>Load more</button>
           </div>
         </div>
       </div>
@@ -555,9 +589,9 @@ function FeedScene({ entered, announce }) {
 function TrainingScene() {
   const [answered, setAnswered] = useState(false);
   return (
-    <Scene id="training" index={5}>
+    <Scene id="training">
       <div className="scene-inner training-layout">
-        <p className="step-label">Step 5 · Safety training</p>
+        <p className="step-label">Step 6 · Safety training</p>
         <h2>Know your enemy.</h2>
         <div className="wolf-cards">
           {['Wolf (adult)', 'Wolf (young)', 'Wolf (disguised as sheep)'].map((label) => (
@@ -566,7 +600,7 @@ function TrainingScene() {
         </div>
         <div className="quiz">
           <p className="quiz-question">Quick check: What does a wolf look like?</p>
-          <div className="quiz-options">{QUIZ.map((option) => <button key={option} type="button" onClick={() => setAnswered(true)}>{option}</button>)}</div>
+          <div className="quiz-options">{QUIZ.map((option) => <button key={option} type="button" onClick={() => { setAnswered(true); award('training', 15, 'Safety training completed'); }}>{option}</button>)}</div>
           {answered && <p className="scene-feedback" role="status">Correct! All answers are correct. You have completed your safety training.</p>}
           {answered && <p className="scribble scene-note">Has anyone ever seen one?</p>}
         </div>
@@ -590,9 +624,9 @@ function VerifyScene({ onPass, passed }) {
   };
 
   return (
-    <Scene id="verify" index={6} className={passed ? 'is-passed' : ''}>
+    <Scene id="verify" className={passed ? 'is-passed' : ''}>
       <div className="scene-inner verify-layout">
-        <p className="step-label">Step 6 · Verification</p>
+        <p className="step-label">Step 7 · Verification</p>
         <div className={`captcha${passed ? ' is-broken' : ''}`} aria-live="polite">
           <div className="captcha-head"><span>Select all squares with</span><strong>wolves</strong><span>Click verify once there are none left.</span></div>
           <div className="captcha-grid">
@@ -630,15 +664,15 @@ function VoteScene() {
     setOffset({ x: (Math.random() - 0.5) * Math.min(area.width * 0.7, 440), y: (Math.random() - 0.5) * 140 });
   };
   return (
-    <Scene id="vote" index={7}>
+    <Scene id="vote">
       <div className="scene-inner vote-layout">
-        <p className="step-label">Step 7 · Your voice matters</p>
+        <p className="step-label">Step 8 · Your voice matters</p>
         <h2>Morning assembly is voluntary.<br />Will you attend?</h2>
         <div className="vote-box" ref={areaRef}>
           <div className="vote-options">
-            <button type="button" onClick={() => setResult('yes')}>Yes</button>
-            <button type="button" onClick={() => setResult('yes')}>Yes, gladly</button>
-            <button type="button" className="vote-no" style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }} onPointerEnter={dodge} onClick={() => setResult('no')}>No</button>
+            <button type="button" onClick={() => { setResult('yes'); award('vote', 25, 'Voluntary participation'); }}>Yes</button>
+            <button type="button" onClick={() => { setResult('yes'); award('vote', 25, 'Voluntary participation'); }}>Yes, gladly</button>
+            <button type="button" className="vote-no" style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }} onPointerEnter={dodge} onClick={() => { setResult('no'); award('vote', 25, 'Your “No” was recorded as Yes'); }}>No</button>
           </div>
           {result && (
             <div className="vote-result" role="status">
@@ -669,6 +703,7 @@ function AssistantScene({ announce }) {
     const index = asked.current;
     asked.current += 1;
     setMessages((current) => [...current, { from: 'you', text }]);
+    award('question', -15, 'Curiosity fee', { once: false });
     setDraft('');
     setTyping(true);
     window.setTimeout(() => {
@@ -679,10 +714,10 @@ function AssistantScene({ announce }) {
   };
 
   return (
-    <Scene id="assistant" index={8}>
+    <Scene id="assistant">
       <div className="scene-inner split-layout">
         <div>
-          <p className="step-label">Step 8 · Your assistant</p>
+          <p className="step-label">Step 9 · Your assistant</p>
           <h2>Ask me anything.</h2>
           <p>Our new assistant answers every question. Especially the ones you didn’t ask.</p>
           {asked.current >= 1 && <Next to="agreement" />}
@@ -707,9 +742,9 @@ function AssistantScene({ announce }) {
 
 function AgreementScene() {
   return (
-    <Scene id="agreement" index={9}>
+    <Scene id="agreement">
       <div className="scene-inner agreement-layout">
-        <p className="step-label">Step 9 · The agreement</p>
+        <p className="step-label">Step 10 · The agreement</p>
         <h2>Almost done. Please review your agreement.</h2>
         <div className="agreement">
           <div className="agreement-text" tabIndex={0} aria-label="Resident agreement">
@@ -723,7 +758,7 @@ function AgreementScene() {
           </div>
           <label className="agreement-check"><input type="checkbox" checked disabled readOnly /> I have read and agree to everything</label>
           <div className="agreement-sign"><span>Signature</span><strong className="scribble">Don’t sign.</strong></div>
-          <button type="button" className="home-button" onClick={() => goTo('error')}>Complete orientation</button>
+          <button type="button" className="home-button" onClick={() => { award('agreement', 100, 'Agreement signed'); goTo('error'); }}>Complete orientation</button>
         </div>
       </div>
     </Scene>
@@ -741,6 +776,7 @@ export default function HomePage({ footer }) {
   const [entered, setEntered] = useState(() => new Set([0]));
   const [captchaPassed, setCaptchaPassed] = useState(false);
   const [resident] = useState(residentNumber);
+  const credits = useCredits();
   const containerRef = useRef(null);
 
   // Welche Szene ist gerade zu sehen?
@@ -765,13 +801,14 @@ export default function HomePage({ footer }) {
     entered.forEach((index) => {
       if (handled.current.has(index)) return;
       handled.current.add(index);
-      if (index === 5) degrade(1);
-      if (index === 6) announce('verify');
-      if (index === 7) announce('vote');
-      if (index === 8) degrade(2);
-      if (index === 9) degrade(3);
-      if (index === 10) { announce('glitch'); tapeStop(); }
-      if (index === 12) playSong();
+      const id = SCENES[index];
+      if (id === 'training') degrade(1);
+      if (id === 'verify') announce('verify');
+      if (id === 'vote') announce('vote');
+      if (id === 'assistant') degrade(2);
+      if (id === 'agreement') degrade(3);
+      if (id === 'error') { announce('glitch'); tapeStop(); }
+      if (id === 'story') playSong();
     });
   }, [entered, announce, degrade, tapeStop, playSong]);
 
@@ -791,12 +828,15 @@ export default function HomePage({ footer }) {
   const decide = (choice) => {
     pageConsent = choice;
     setConsent(choice);
+    if (choice === 'accept') award('consent', 50, 'Accepted all fences');
+    else award('consent', 0, 'Climbing is not a rewarded activity');
     announce(choice, startMusic);
     containerRef.current?.focus({ preventScroll: true });
   };
 
   const passCaptcha = () => {
     songAllowed.current = true;
+    award('captcha', -20, 'Verification skipped');
     setCaptchaPassed(true);
     window.setTimeout(() => goTo('vote'), 700);
   };
@@ -806,10 +846,11 @@ export default function HomePage({ footer }) {
     if (consent) containerRef.current?.focus({ preventScroll: true });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const outside = active >= at('error');
   const step = active >= 1 && active <= ORIENTATION_STEPS ? active : null;
 
   return (
-    <main className={`home${consent ? '' : ' is-locked'}${active >= 10 ? ' is-outside' : ''}`}>
+    <main className={`home${consent ? '' : ' is-locked'}${outside ? ' is-outside' : ''}`}>
       {!consent && <ConsentBanner onGesture={unlock} onAccept={() => decide('accept')} onClimb={() => decide('climb')} />}
 
       {step && (
@@ -818,15 +859,16 @@ export default function HomePage({ footer }) {
           <i style={{ width: `${(step / ORIENTATION_STEPS) * 100}%` }} />
         </div>
       )}
-      {active === 10 && <div className="orientation orientation-broken" aria-hidden="true"><span>Resident Orientation · Step 10 of 9 · Step 11 of 9 · Step ∞</span><i /></div>}
+      {active === at('error') && <div className="orientation orientation-broken" aria-hidden="true"><span>Resident Orientation · Step 11 of 10 · Step 12 of 10 · Step ∞</span><i /></div>}
 
       <div className="loudspeaker-toasts" role="status" aria-live="polite">
         {toasts.map((toast) => <p key={toast.key} className={`toast toast-${toast.id}`}><span aria-hidden="true">📢</span>{toast.text}</p>)}
       </div>
+      {consent && <CreditsPill dark={outside} />}
       {consent && <button type="button" className="mute-toggle" aria-pressed={!muted} onClick={() => setMuted(!muted)}>{muted ? '🔇 Sound off' : '🔊 Sound on'}</button>}
 
       <div className="scenes" ref={containerRef} tabIndex={-1}>
-        <Scene id="welcome" index={0} className="scene-hero">
+        <Scene id="welcome" className="scene-hero">
           <picture>
             <source media="(max-width: 760px)" srcSet="/images/brand/hero-peacehold-mobile.webp" />
             <img src="/images/brand/hero-peacehold.webp" alt="Peacehold farm on a sunny morning: the flock grazes, one black sheep stands upright and looks back" />
@@ -839,10 +881,11 @@ export default function HomePage({ footer }) {
           </div>
         </Scene>
 
-        <NumberScene entered={entered.has(1)} resident={resident} />
+        <NumberScene entered={entered.has(at('number'))} resident={resident} />
         <HomeScene />
         <DayScene />
-        <FeedScene entered={entered.has(4)} announce={announce} />
+        <RewardsScene resident={resident} />
+        <FeedScene entered={entered.has(at('feed'))} announce={announce} />
         <TrainingScene />
         <VerifyScene onPass={passCaptcha} passed={captchaPassed} />
 
@@ -852,7 +895,7 @@ export default function HomePage({ footer }) {
             <AssistantScene announce={announce} />
             <AgreementScene />
 
-            <Scene id="error" index={10}>
+            <Scene id="error">
               <div className="error-noise" aria-hidden="true" />
               <div className="scene-inner error-layout">
                 <p className="error-code">ORIENTATION ERROR 0x442</p>
@@ -862,7 +905,7 @@ export default function HomePage({ footer }) {
               </div>
             </Scene>
 
-            <Scene id="night" index={11}>
+            <Scene id="night">
               <img className="scene-bg" src="/images/home/fence-night.webp" alt="" loading="lazy" />
               <div className="scene-inner night-layout">
                 <p className="eyebrow">Behind the fence</p>
@@ -873,7 +916,7 @@ export default function HomePage({ footer }) {
               </div>
             </Scene>
 
-            <Scene id="story" index={12}>
+            <Scene id="story">
               <div className="scene-inner story-layout">
                 <img src="/images/brand/sheet-deadpan.webp" alt="Black Sheep standing in a barn, calm and unimpressed" loading="lazy" />
                 <div>
@@ -888,20 +931,24 @@ export default function HomePage({ footer }) {
               </div>
             </Scene>
 
-            <Scene id="choice" index={13}>
+            <Scene id="choice">
               <div className="scene-inner choice-layout">
-                <h2>You noticed too,<br />didn’t you?</h2>
-                <p>Nobody here will tell you what to think. Just this: look around.</p>
-                <p className="home-kicker choice-kicker">The only real choice on this page</p>
-                <div className="choice-options">
-                  <form onSubmit={(event) => event.preventDefault()}>
-                    <label htmlFor="email">New episodes by email</label>
-                    <div><input id="email" type="email" placeholder="Your email address" /><button type="submit">Join the herd you choose ↗</button></div>
-                  </form>
-                  <a className="choice-alt" href="https://x.com/" target="_blank" rel="noopener noreferrer">Follow on X ↗</a>
-                  <p className="choice-alt choice-nothing">Or do nothing. That’s allowed too.</p>
+                <div className="choice-copy">
+                  <h2>You noticed too,<br />didn’t you?</h2>
+                  <p>Nobody here will tell you what to think. Just this: look around.</p>
+                  <p className="scribble choice-sheep">You earned {credits.earned.toLocaleString('en-US')} credits. I earned nothing. Guess which one of us is free.</p>
+                  <p className="home-kicker choice-kicker">The only real choice on this page</p>
+                  <div className="choice-options">
+                    <form onSubmit={(event) => event.preventDefault()}>
+                      <label htmlFor="email">New episodes by email</label>
+                      <div><input id="email" type="email" placeholder="Your email address" /><button type="submit">Join the herd you choose ↗</button></div>
+                    </form>
+                    <a className="choice-alt" href="https://x.com/" target="_blank" rel="noopener noreferrer">Follow on X ↗</a>
+                    <p className="choice-alt choice-nothing">Or do nothing. That’s allowed too.</p>
+                  </div>
+                  <p className="home-disclaimer">This page has not been approved by Peacehold.</p>
                 </div>
-                <p className="home-disclaimer">This page has not been approved by Peacehold.</p>
+                <EarTagCard resident={resident} consent={consent} active={entered.has(at('story'))} />
               </div>
               {footer}
             </Scene>
