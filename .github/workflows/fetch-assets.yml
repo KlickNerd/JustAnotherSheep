@@ -1,0 +1,48 @@
+name: fetch-assets
+
+# Holt extern generierte Artworks in das Repo. Die Quell-URLs stehen in
+# assets-manifest.json. Läuft nur, wenn sich das Manifest (oder dieser
+# Workflow) auf dem Arbeits-Branch ändert — der eigene Ergebnis-Commit
+# triggert nichts.
+on:
+  push:
+    branches: [claude/website-homepage-mobile-m82pp5]
+    paths:
+      - assets-manifest.json
+      - .github/workflows/fetch-assets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and convert
+        run: |
+          python3 - <<'EOF'
+          import json, pathlib, urllib.request
+          manifest = json.load(open('assets-manifest.json'))
+          for item in manifest['files']:
+              path = pathlib.Path(item['path'])
+              path.parent.mkdir(parents=True, exist_ok=True)
+              urllib.request.urlretrieve(item['url'], path)
+              print('downloaded', item['path'], path.stat().st_size)
+          EOF
+          sudo apt-get install -y imagemagick >/dev/null 2>&1 || true
+          find . -name '*.tmp.png' -not -path './.git/*' | while read -r f; do
+            out="${f%.tmp.png}.jpg"
+            convert "$f" -resize '2048x2048>' -quality 90 "$out"
+            rm "$f"
+            ls -la "$out"
+          done
+
+      - name: Commit
+        run: |
+          git config user.name "asset-fetch"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Add fetched artwork" || echo "nothing to commit"
+          git push
