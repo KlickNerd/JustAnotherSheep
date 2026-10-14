@@ -90,6 +90,12 @@ function writeStorage(store, key, value) {
   try { window[store].setItem(key, value); } catch { /* privater Modus o. Ä. */ }
 }
 
+/* Die Entscheidung am Zaun gilt nur bis zum nächsten Neuladen: Handy-Browser
+   behalten den Sitzungsspeicher sogar nach dem Schließen, und erst der Klick
+   auf den Banner schaltet den Ton frei. Beim Wechsel zwischen Unterseiten
+   bleibt sie erhalten. */
+let pageConsent = null;
+
 function residentNumber() {
   return 48213 + Math.floor((Date.now() - 1792000000000) / 90000);
 }
@@ -705,7 +711,7 @@ function AgreementScene() {
    Seite
    --------------------------------------------------------------- */
 export default function HomePage({ footer }) {
-  const [consent, setConsent] = useState(() => readStorage('sessionStorage', 'jas-consent'));
+  const [consent, setConsent] = useState(() => pageConsent);
   const { muted, setMuted, toasts, announce, startMusic, unlock, primeSong, degrade, tapeStop, playSong, getSong } = useSoundSystem(Boolean(consent));
   const songAllowed = useRef(false);
   const [active, setActive] = useState(0);
@@ -760,7 +766,7 @@ export default function HomePage({ footer }) {
   }, [consent, unlock, primeSong]);
 
   const decide = (choice) => {
-    writeStorage('sessionStorage', 'jas-consent', choice);
+    pageConsent = choice;
     setConsent(choice);
     announce(choice, startMusic);
     containerRef.current?.focus({ preventScroll: true });
