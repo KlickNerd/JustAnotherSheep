@@ -1,3 +1,12 @@
 {
-  "files": []
+  "files": [
+    {
+      "path": "audio-src/test-speed-15.wav",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_211949_32ff37b4-4ab9-4568-b9ba-f5c7fc6d3724.wav"
+    },
+    {
+      "path": "audio-src/test-speed-30.wav",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_211949_587047e1-573d-490a-a4f7-32f53ced8fa8.wav"
+    }
+  ]
 }
