@@ -24,12 +24,21 @@ images in this folder as binding; any new artwork must match them.
 
 ## Black Sheep — character canon
 
+**Primary reference: the five-image character sheet (`sheet-01` … `sheet-05`).**
+Every new image of Sheep must match it. `ref-01-sheep-waking.webp` remains a
+style sample for scene rendering, not the character authority.
+
 - Anthropomorphic black sheep, young adult male, lean build.
-- Curly charcoal-black wool, droopy ears, tired half-lidded eyes,
-  dry unimpressed expression as the default.
-- Wardrobe: plain dark t-shirt, dark trousers, worn boots.
-- Props: chain necklace with a small angular pendant; black sunglasses
-  (usually resting somewhere nearby, worn only for effect).
+- Round curly charcoal-black wool cap with a wool mane down the neck,
+  droopy ears, flat muzzle, **warm brown eyes**, tired half-lidded gaze.
+- **Default expression: deadpan** (`sheet-05`). The faint smile
+  (`sheet-04`) is the exception for special moments.
+- Wardrobe (Farm Era): plain dark grey t-shirt, **brown work trousers**,
+  worn dark boots. Deliberately plain — "no unnecessary iconisation".
+- **No chain necklace in the Farm Era.** The chain with the angular
+  pendant is reserved: it appears later as a visible marker of Sheep's
+  next era, like the realistic Sheep reveal. Sunglasses are a rare prop,
+  not part of the daily look.
 - Attitude: calm, observant, never agitated. The joke lives in his face,
   not in his gestures.
 
@@ -45,10 +54,12 @@ images in this folder as binding; any new artwork must match them.
 
 > Detailed adult comic illustration, bold clean dark ink outlines, rich
 > hatched texture, muted earthy palette, naturalistic cinematic light.
-> Same character and exact same rendering style as the reference image:
-> anthropomorphic black sheep, curly charcoal wool, droopy ears, tired
-> half-lidded eyes, plain dark t-shirt, chain necklace with small angular
-> pendant. No photorealism, no plush or felt look, no readable text.
+> Same character and exact same rendering style as the character sheet:
+> anthropomorphic black sheep, round curly charcoal wool, wool mane down
+> the neck, droopy ears, warm brown tired half-lidded eyes, deadpan
+> expression, plain dark grey t-shirt, brown work trousers, worn boots.
+> No chain, no sunglasses. No photorealism, no plush or felt look,
+> no readable text.
 
 ## Production pipeline (agreed 2026-10-14)
 
