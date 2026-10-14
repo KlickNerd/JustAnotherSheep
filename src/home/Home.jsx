@@ -99,41 +99,119 @@ function goTo(id) {
 }
 
 /* ---------------------------------------------------------------
-   Tonanlage: Durchsagen (immer als Einblendung, als Ton nur nach
-   einem Klick und ohne Stummschaltung), die Peacehold-Musik als
-   leise Schleife mit Ducking, Leiern und Bandstopp, und Sheeps Song.
+   Tonanlage über die Web Audio API. Normale <audio>-Elemente
+   scheitern auf dem Handy: iOS blockiert jede Wiedergabe, die nicht
+   direkt aus einem Tippen kommt (also alle Durchsagen beim Scrollen),
+   ignoriert die Lautstärke (kein Ducking) und lässt mehrere Elemente
+   einander stören. Ein AudioContext wird einmal im ersten Klick
+   freigegeben und spielt danach alles selbst: Durchsagen, die leise
+   Peacehold-Schleife mit Ducking, Leiern und Bandstopp. Nur Sheeps
+   Song bleibt ein Audio-Element mit eigenem Abspielknopf.
    --------------------------------------------------------------- */
-function useSoundSystem() {
+const MUSIC_URL = '/audio/music/peacehold-loop.mp3';
+const SONG_URL = '/audio/episode-001-its-voluntary.mp3';
+const announcementUrl = (id) => `/audio/announcements/${id}.mp3`;
+
+function decode(ctx, data) {
+  return new Promise((resolve, reject) => ctx.decodeAudioData(data, resolve, reject));
+}
+
+function useSoundSystem(wantMusicFromStart) {
   const [muted, setMutedState] = useState(() => readStorage('localStorage', 'jas-muted') === '1');
   const [toasts, setToasts] = useState([]);
   const mutedRef = useRef(muted);
-  const voice = useRef(null);
-  const music = useRef(null);
+  const engine = useRef(null);
+  const musicSource = useRef(null);
+  const voiceSource = useRef(null);
   const song = useRef(null);
-  const musicWanted = useRef(false);
+  const songPrimed = useRef(false);
+  const musicWanted = useRef(wantMusicFromStart);
   const musicStopped = useRef(false);
+  const speaking = useRef(false);
   const degradeLevel = useRef(0);
   const wobble = useRef(null);
   const played = useRef(new Set());
 
-  const getMusic = () => {
-    if (!music.current) {
-      const audio = new Audio('/audio/music/peacehold-loop.mp3');
-      audio.loop = true;
-      audio.volume = MUSIC_VOLUME;
-      audio.preservesPitch = false;
-      audio.webkitPreservesPitch = false;
-      audio.mozPreservesPitch = false;
-      music.current = audio;
+  const load = useCallback((url) => {
+    const e = engine.current;
+    if (!e.buffers.has(url)) {
+      e.buffers.set(url, fetch(url).then((response) => response.arrayBuffer()).then((data) => decode(e.ctx, data)));
     }
-    return music.current;
-  };
-
-  const startMusic = useCallback(() => {
-    musicWanted.current = true;
-    if (mutedRef.current || musicStopped.current) return;
-    getMusic().play().catch(() => { /* noch kein Klick — wird beim nächsten nachgeholt */ });
+    return e.buffers.get(url);
   }, []);
+
+  const getSong = useCallback(() => {
+    if (!song.current) {
+      song.current = new Audio();
+      song.current.preload = 'none';
+      song.current.src = SONG_URL;
+    }
+    return song.current;
+  }, []);
+
+  const duck = useCallback((on) => {
+    const e = engine.current;
+    if (!e || !musicSource.current || musicStopped.current) return;
+    e.musicGain.gain.cancelScheduledValues(e.ctx.currentTime);
+    e.musicGain.gain.setTargetAtTime(on ? MUSIC_DUCKED : MUSIC_VOLUME, e.ctx.currentTime, on ? 0.12 : 0.4);
+  }, []);
+
+  const startMusic = useCallback(async () => {
+    musicWanted.current = true;
+    const e = engine.current;
+    if (!e || musicStopped.current || musicSource.current) return;
+    const buffer = await load(MUSIC_URL).catch(() => null);
+    if (!buffer || musicSource.current || musicStopped.current) return;
+    const source = e.ctx.createBufferSource();
+    source.buffer = buffer;
+    source.loop = true;
+    source.playbackRate.value = DEGRADE_RATES[degradeLevel.current];
+    source.connect(e.musicGain);
+    source.start();
+    musicSource.current = source;
+    const now = e.ctx.currentTime;
+    e.musicGain.gain.cancelScheduledValues(now);
+    e.musicGain.gain.setValueAtTime(0, now);
+    e.musicGain.gain.linearRampToValueAtTime(speaking.current ? MUSIC_DUCKED : MUSIC_VOLUME, now + 2.5);
+  }, [load]);
+
+  // Muss direkt in einem Klick/Tippen laufen: erst dann darf das Handy Ton abspielen
+  const unlock = useCallback(() => {
+    if (!engine.current) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch { /* nur Safari kennt das */ }
+      const ctx = new AudioContextClass();
+      const master = ctx.createGain();
+      master.gain.value = mutedRef.current ? 0 : 1;
+      master.connect(ctx.destination);
+      const musicGain = ctx.createGain();
+      musicGain.gain.value = 0;
+      musicGain.connect(master);
+      const voiceGain = ctx.createGain();
+      voiceGain.gain.value = 0.9;
+      voiceGain.connect(master);
+      engine.current = { ctx, master, musicGain, voiceGain, buffers: new Map() };
+      const blip = ctx.createBufferSource();
+      blip.buffer = ctx.createBuffer(1, 1, 22050);
+      blip.connect(ctx.destination);
+      blip.start(0);
+      load(MUSIC_URL).catch(() => {});
+      Object.keys(ANNOUNCEMENTS).forEach((id) => load(announcementUrl(id)).catch(() => {}));
+    }
+    const { ctx } = engine.current;
+    if (ctx.state !== 'running') ctx.resume().catch(() => {});
+    if (musicWanted.current) startMusic();
+  }, [load, startMusic]);
+
+  // Sheeps Song einmal in einem Tippen anstoßen, damit er später von selbst starten darf
+  const primeSong = useCallback(() => {
+    if (songPrimed.current) return;
+    songPrimed.current = true;
+    const audio = getSong();
+    audio.muted = true;
+    audio.play().then(() => { audio.pause(); audio.currentTime = 0; audio.muted = false; }).catch(() => { audio.muted = false; songPrimed.current = false; });
+  }, [getSong]);
 
   const announce = useCallback((id, onDone) => {
     if (played.current.has(id)) return;
@@ -142,34 +220,43 @@ function useSoundSystem() {
     setToasts((current) => [...current.slice(-1), { key, id, text: ANNOUNCEMENTS[id] }]);
     window.setTimeout(() => setToasts((current) => current.filter((toast) => toast.key !== key)), 8000);
 
-    if (mutedRef.current) { if (onDone) window.setTimeout(onDone, 2500); return; }
-    if (!voice.current) voice.current = new Audio();
-    const audio = voice.current;
-    audio.pause();
-    audio.src = `/audio/announcements/${id}.mp3`;
-    audio.volume = 0.9;
-    if (music.current) music.current.volume = MUSIC_DUCKED;
-    audio.onended = () => {
-      if (music.current && !musicStopped.current) music.current.volume = MUSIC_VOLUME;
+    const e = engine.current;
+    if (!e || mutedRef.current) { if (onDone) window.setTimeout(onDone, 2500); return; }
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      speaking.current = false;
+      duck(false);
       onDone?.();
     };
-    audio.play().catch(() => {
-      if (music.current) music.current.volume = MUSIC_VOLUME;
-      if (onDone) window.setTimeout(onDone, 2500);
-    });
-  }, []);
+    speaking.current = true;
+    duck(true);
+    load(announcementUrl(id)).then((buffer) => {
+      try { voiceSource.current?.stop(); } catch { /* lief schon nicht mehr */ }
+      const source = e.ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(e.voiceGain);
+      source.onended = finish;
+      source.start();
+      voiceSource.current = source;
+      window.setTimeout(finish, (buffer.duration + 1) * 1000);
+    }).catch(finish);
+  }, [duck, load]);
 
   const degrade = useCallback((level) => {
     if (level <= degradeLevel.current || musicStopped.current) return;
     degradeLevel.current = level;
-    const audio = getMusic();
-    audio.playbackRate = DEGRADE_RATES[level];
+    const e = engine.current;
+    if (e && musicSource.current) musicSource.current.playbackRate.setTargetAtTime(DEGRADE_RATES[level], e.ctx.currentTime, 0.8);
     if (level >= 2 && !wobble.current) {
       let phase = 0;
       wobble.current = window.setInterval(() => {
-        if (musicStopped.current) return;
+        const current = engine.current;
+        if (musicStopped.current || !current || !musicSource.current) return;
         phase += 0.5;
-        audio.playbackRate = DEGRADE_RATES[degradeLevel.current] + Math.sin(phase) * 0.012 * degradeLevel.current;
+        const rate = DEGRADE_RATES[degradeLevel.current] + Math.sin(phase) * 0.012 * degradeLevel.current;
+        musicSource.current.playbackRate.setTargetAtTime(rate, current.ctx.currentTime, 0.08);
       }, 180);
     }
   }, []);
@@ -178,45 +265,82 @@ function useSoundSystem() {
     if (musicStopped.current) return;
     musicStopped.current = true;
     window.clearInterval(wobble.current);
-    const audio = music.current;
-    if (!audio || audio.paused) return;
-    const from = audio.playbackRate;
-    const start = performance.now();
-    const step = (now) => {
-      const t = Math.min(1, (now - start) / 1600);
-      audio.playbackRate = Math.max(0.12, from * (1 - t * 0.9));
-      audio.volume = MUSIC_VOLUME * (1 - t);
-      if (t < 1) requestAnimationFrame(step); else audio.pause();
-    };
-    requestAnimationFrame(step);
+    const e = engine.current;
+    const source = musicSource.current;
+    if (!e || !source) return;
+    const now = e.ctx.currentTime;
+    source.playbackRate.cancelScheduledValues(now);
+    source.playbackRate.setValueAtTime(source.playbackRate.value, now);
+    source.playbackRate.exponentialRampToValueAtTime(0.08, now + 1.6);
+    e.musicGain.gain.cancelScheduledValues(now);
+    e.musicGain.gain.setValueAtTime(e.musicGain.gain.value, now);
+    e.musicGain.gain.linearRampToValueAtTime(0, now + 1.6);
+    source.stop(now + 1.7);
   }, []);
 
   const playSong = useCallback(() => {
-    if (mutedRef.current || !song.current) return;
-    song.current.volume = 0.8;
-    song.current.play().catch(() => {});
-  }, []);
+    if (mutedRef.current) return;
+    getSong().play().catch(() => { /* ohne vorheriges Tippen: der Abspielknopf bleibt sichtbar */ });
+  }, [getSong]);
 
   const setMuted = useCallback((value) => {
     mutedRef.current = value;
     setMutedState(value);
     writeStorage('localStorage', 'jas-muted', value ? '1' : '0');
-    if (value) {
-      voice.current?.pause();
-      music.current?.pause();
-      song.current?.pause();
-    } else if (musicWanted.current && !musicStopped.current) {
-      getMusic().play().catch(() => {});
-    }
+    const e = engine.current;
+    if (e) e.master.gain.setTargetAtTime(value ? 0 : 1, e.ctx.currentTime, 0.05);
+    if (value) song.current?.pause();
+  }, []);
+
+  // Tab im Hintergrund: Ton anhalten, beim Zurückkommen weiter
+  useEffect(() => {
+    const onVisibility = () => {
+      const e = engine.current;
+      if (!e) return;
+      if (document.hidden) e.ctx.suspend().catch(() => {});
+      else e.ctx.resume().catch(() => {});
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
   }, []);
 
   useEffect(() => () => {
     window.clearInterval(wobble.current);
-    voice.current?.pause();
-    music.current?.pause();
+    song.current?.pause();
+    engine.current?.ctx.close().catch(() => {});
   }, []);
 
-  return { muted, setMuted, toasts, announce, startMusic, degrade, tapeStop, playSong, song };
+  return { muted, setMuted, toasts, announce, startMusic, unlock, primeSong, degrade, tapeStop, playSong, getSong };
+}
+
+function SongPlayer({ getSong }) {
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const audio = getSong();
+    const sync = () => {
+      setPlaying(!audio.paused && !audio.muted);
+      setProgress(audio.duration ? audio.currentTime / audio.duration : 0);
+    };
+    const events = ['play', 'pause', 'ended', 'timeupdate', 'volumechange'];
+    events.forEach((name) => audio.addEventListener(name, sync));
+    sync();
+    return () => events.forEach((name) => audio.removeEventListener(name, sync));
+  }, [getSong]);
+  const toggle = () => {
+    const audio = getSong();
+    audio.muted = false;
+    if (audio.paused) audio.play().catch(() => {}); else audio.pause();
+  };
+  return (
+    <div className="story-track">
+      <span>{playing ? 'Now playing' : 'Listen'} · “It’s Voluntary”</span>
+      <div className="song-player">
+        <button type="button" onClick={toggle} aria-label={playing ? 'Pause song' : 'Play song'}>{playing ? '❚❚' : '▶'}</button>
+        <i aria-hidden="true"><b style={{ width: `${progress * 100}%` }} /></i>
+      </div>
+    </div>
+  );
 }
 
 /* ---------------------------------------------------------------
@@ -230,13 +354,13 @@ function Next({ to, children = 'Next step' }) {
   return <button type="button" className="scene-next" onClick={() => goTo(to)}>{children} <span aria-hidden="true">↓</span></button>;
 }
 
-function ConsentBanner({ onAccept, onClimb }) {
+function ConsentBanner({ onGesture, onAccept, onClimb }) {
   const [managing, setManaging] = useState(false);
   const [tearing, setTearing] = useState(false);
   const climb = () => { setTearing(true); window.setTimeout(onClimb, 650); };
   return (
     <div className="consent-backdrop">
-      <div className={`consent${tearing ? ' is-torn' : ''}`} role="dialog" aria-modal="true" aria-labelledby="consent-title">
+      <div className={`consent${tearing ? ' is-torn' : ''}`} onClickCapture={onGesture} role="dialog" aria-modal="true" aria-labelledby="consent-title">
         <p className="consent-brand">Peacehold · Privacy & Safety</p>
         <h2 id="consent-title">Peacehold uses fences to improve your experience.</h2>
         <p>We and our one trusted shepherd use fences, bells and loudspeakers to keep you safe, comfortable and exactly where you are. By continuing, you agree to everything.</p>
@@ -581,9 +705,9 @@ function AgreementScene() {
    Seite
    --------------------------------------------------------------- */
 export default function HomePage({ footer }) {
-  const sound = useSoundSystem();
-  const { muted, setMuted, toasts, announce, startMusic, degrade, tapeStop, playSong, song } = sound;
   const [consent, setConsent] = useState(() => readStorage('sessionStorage', 'jas-consent'));
+  const { muted, setMuted, toasts, announce, startMusic, unlock, primeSong, degrade, tapeStop, playSong, getSong } = useSoundSystem(Boolean(consent));
+  const songAllowed = useRef(false);
   const [active, setActive] = useState(0);
   const [entered, setEntered] = useState(() => new Set([0]));
   const [captchaPassed, setCaptchaPassed] = useState(false);
@@ -622,14 +746,18 @@ export default function HomePage({ footer }) {
     });
   }, [entered, announce, degrade, tapeStop, playSong]);
 
-  // Wer die Einwilligung schon in dieser Sitzung gegeben hat: Musik beim ersten Klick
+  // Jedes Tippen hält den Ton am Leben (Handy-Sperre, Anruf, Tab-Wechsel)
+  // und gibt nach dem Captcha auch Sheeps Song frei
   useEffect(() => {
     if (!consent) return undefined;
-    const resume = () => startMusic();
-    window.addEventListener('pointerdown', resume, { once: true });
-    window.addEventListener('keydown', resume, { once: true });
-    return () => { window.removeEventListener('pointerdown', resume); window.removeEventListener('keydown', resume); };
-  }, [consent, startMusic]);
+    const onGesture = () => {
+      unlock();
+      if (songAllowed.current) primeSong();
+    };
+    const events = ['click', 'touchend', 'keydown'];
+    events.forEach((name) => window.addEventListener(name, onGesture, { passive: true }));
+    return () => events.forEach((name) => window.removeEventListener(name, onGesture));
+  }, [consent, unlock, primeSong]);
 
   const decide = (choice) => {
     writeStorage('sessionStorage', 'jas-consent', choice);
@@ -639,6 +767,7 @@ export default function HomePage({ footer }) {
   };
 
   const passCaptcha = () => {
+    songAllowed.current = true;
     setCaptchaPassed(true);
     window.setTimeout(() => goTo('vote'), 700);
   };
@@ -652,7 +781,7 @@ export default function HomePage({ footer }) {
 
   return (
     <main className={`home${consent ? '' : ' is-locked'}${active >= 10 ? ' is-outside' : ''}`}>
-      {!consent && <ConsentBanner onAccept={() => decide('accept')} onClimb={() => decide('climb')} />}
+      {!consent && <ConsentBanner onGesture={unlock} onAccept={() => decide('accept')} onClimb={() => decide('climb')} />}
 
       {step && (
         <div className="orientation" aria-hidden="true">
@@ -724,7 +853,7 @@ export default function HomePage({ footer }) {
                   <p>Attendance is completely voluntary.</p>
                   <p className="story-personal">{consent === 'climb' ? 'You climbed over the fence in the first five seconds. He’d like you.' : 'You accepted all fences. Most do. He did too, for a long time.'}</p>
                   <SiteLink href="/episodes/001-voluntary-assembly" className="home-button home-button-light">Start with Episode 001 →</SiteLink>
-                  <div className="story-track"><span>Now playing · “It’s Voluntary”</span><audio ref={song} controls preload="none" src="/audio/episode-001-its-voluntary.mp3">Audio playback is not supported in this browser.</audio></div>
+                  <SongPlayer getSong={getSong} />
                   <Next to="choice">One more thing</Next>
                 </div>
               </div>

@@ -304,7 +304,11 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .story-personal { color: var(--tan) !important; font-family: 'Caveat', cursive !important; font-size: clamp(1.6rem, 2.4vw, 2.1rem); line-height: 1.2 !important; transform: rotate(-1.5deg); transform-origin: left; }
 .story-track { margin-top: 26px; max-width: 460px; }
 .story-track span { color: var(--tan); display: block; font-family: 'DM Mono', monospace; font-size: .68rem; letter-spacing: .12em; margin-bottom: 10px; text-transform: uppercase; }
-.story-track audio { width: 100%; }
+.song-player { align-items: center; display: flex; gap: 14px; }
+.song-player button { align-items: center; background: var(--ivory); border: 0; border-radius: 50%; color: var(--night); cursor: pointer; display: flex; flex: 0 0 46px; font-size: .9rem; height: 46px; justify-content: center; }
+.song-player button:hover { background: var(--tan); }
+.song-player i { background: rgba(240,233,220,.2); border-radius: 2px; flex: 1; height: 3px; overflow: hidden; }
+.song-player b { background: var(--tan); display: block; height: 100%; transition: width .25s linear; }
 
 /* ---------- 13 · Die eine echte Wahl ---------- */
 .scene-choice { align-items: stretch; background: var(--black); color: var(--ivory); flex-direction: column; justify-content: space-between; padding-bottom: 0; }
