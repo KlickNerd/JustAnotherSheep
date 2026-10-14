@@ -4,6 +4,8 @@ import { characterImageUrl, characters } from './data/characters';
 import { arcs, episodeOneMemes, episodeTwoMemes, episodeThreeMemes, episodeFourMemes, episodeFiveMemes, episodeSixMemes, episodeSevenMemes, episodeEightMemes, episodeNineMemes, episodeTenMemes, episodeElevenMemes, episodeTwelveMemes, episodeThirteenMemes, files } from './data/archive';
 import { forumThreads, notebookEntries, peaceholdRecords } from './data/pages';
 import './styles.css';
+import { SiteLink } from './router';
+import HomePage from './home/Home';
 
 const imageFolders = {
   'public-street.webp': 'brand',
@@ -144,15 +146,6 @@ const dispatches = [
   ['control.webp', 'A familiar routine', 'The hardware of control', 'Doris recognizes the pattern long before anyone calls it a pattern.'],
   ['fragile.webp', 'The dangerous question', 'How fragile is stable?', 'If one question can undo a system, what was holding it up?'],
 ];
-
-function routeTo(path) {
-  window.history.pushState({}, '', path);
-  window.dispatchEvent(new PopStateEvent('popstate'));
-}
-
-function SiteLink({ href, children, className = '', onClick }) {
-  return <a className={className} href={href} onClick={(event) => { event.preventDefault(); onClick?.(); routeTo(href); }}>{children}</a>;
-}
 
 function Header({ menuOpen, setMenuOpen, light }) {
   return (
@@ -322,101 +315,6 @@ function CharacterCard({ character, wide = false }) {
   </article>;
 }
 
-const promises = [
-  ['Safety', 'Strong fences and watchful care. You’ll never have to worry about the outside.', 'You’ll never have to think about it either.'],
-  ['Order', 'Every day planned, from the morning bell to lights out.', 'Changes to the plan are not part of the plan.'],
-  ['Belonging', 'Here, nobody is ever left alone.', 'Not even when they’d like to be.'],
-  ['Freedom', 'Our gate is always open.', 'Opening hours are posted inside the gate.'],
-];
-
-const safetyStats = [
-  ['12,847', 'Days without incident'],
-  ['14 km', 'Of fence, renewed every year'],
-  ['3', 'Night patrols, every night'],
-  ['0', 'Wolf sightings'],
-];
-
-const faq = [
-  ['Can I leave Peacehold?', 'The gate is always open. Why would you want to?', 'That’s not an answer.'],
-  ['Who decides the daily schedule?', 'The schedule has always been this way.', 'That’s not a who.'],
-  ['Is the morning assembly voluntary?', 'Completely voluntary. Attendance is recorded.', 'Voluntary for whom?'],
-  ['What’s beyond the hills?', 'Nothing of value.', 'Then why the fence?'],
-];
-
-function HomePage() {
-  return <>
-    <main className="home">
-      <section className="bro-hero">
-        <picture>
-          <source media="(max-width: 760px)" srcSet="/images/brand/hero-peacehold-mobile.webp" />
-          <img className="bro-hero-img" src="/images/brand/hero-peacehold.webp" alt="Peacehold farm on a sunny morning: the flock grazes, one black sheep stands upright and looks back" />
-        </picture>
-        <div className="bro-hero-content">
-          <p className="bro-kicker">Welcome to Peacehold.</p>
-          <h1>Just Another Sheep</h1>
-          <p className="bro-deck">A safe place. A simple life. Everything taken care of.</p>
-          <div className="bro-actions"><a href="#tour" className="bro-button">Take the tour ↓</a><SiteLink href="/episodes/001-voluntary-assembly" className="bro-quiet">or start the story →</SiteLink></div>
-        </div>
-      </section>
-
-      <section className="bro-section bro-promises" id="tour">
-        <div className="bro-split">
-          <div className="bro-intro">
-            <p className="bro-kicker">Life at Peacehold</p>
-            <h2>Everything you need. Nothing you have to decide.</h2>
-            <p>At Peacehold, we take care of everything — so you don’t have to.</p>
-          </div>
-          <img className="bro-photo" src="/images/home/shepherd.webp" alt="The shepherd smiles and welcomes visitors in front of the grazing flock" loading="lazy" />
-        </div>
-        <div className="bro-promise-grid">{promises.map(([title, line, fine]) => <article key={title}><h3>{title}.</h3><p>{line}</p><small>{fine}</small></article>)}</div>
-      </section>
-
-      <section className="bro-section bro-wolves">
-        <div className="bro-intro">
-          <p className="bro-kicker">Your safety is our priority</p>
-          <h2>Protected from the wolves. Every single day.</h2>
-        </div>
-        <img className="bro-wide" src="/images/home/fence.webp" alt="Peacehold's long white fence with a watchtower and a guard dog on patrol, empty meadows beyond" loading="lazy" />
-        <dl className="bro-stats">{safetyStats.map(([value, label]) => <div key={label}><dt>{value}</dt><dd>{label}</dd></div>)}</dl>
-        <p className="bro-claim">Thanks to our fence, no wolf has ever reached Peacehold.</p>
-      </section>
-
-      <section className="bro-section bro-faq">
-        <div className="bro-intro">
-          <p className="bro-kicker">Frequently asked questions</p>
-          <h2>We’re glad you asked.</h2>
-        </div>
-        <div className="faq-list">{faq.map(([question, answer, note], index) => <article key={question} className={`faq-item faq-${index + 1}`}><h3>{question}</h3><p>{answer}</p><span className="scribble">{note}</span></article>)}</div>
-        <p className="faq-end"><s>There are no further questions.</s><span className="scribble scribble-final">I have one.</span></p>
-      </section>
-
-      <section className="bro-break">
-        <div className="bro-break-inner">
-          <img src="/images/home/fence-night.webp" alt="Black Sheep alone at the fence at night, looking at faint lights beyond the hills" loading="lazy" />
-          <div className="bro-break-text">
-            <p className="eyebrow">Behind the brochure</p>
-            <h2>One resident stopped following.</h2>
-            <p>He didn’t plan a rebellion. He never wanted to be a hero. He just ran out of patience for bad answers.</p>
-            <blockquote>“I’m not lost. I just stopped following.”</blockquote>
-            <p>His story begins at a morning assembly. Attendance is completely voluntary.</p>
-            <SiteLink href="/episodes/001-voluntary-assembly" className="bro-button bro-button-dark">Start with Episode 001 →</SiteLink>
-            <div className="bro-track"><span>Episode 001 · Soundtrack · “It’s Voluntary”</span><audio controls preload="none" src={episodeOneAudio}>Audio playback is not supported in this browser.</audio></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bro-invite">
-        <h2>You noticed too,<br />didn’t you?</h2>
-        <p>The fine print. The answers that weren’t answers. The wolves nobody has ever seen. Once you notice, you can’t stop noticing.</p>
-        <p>Nobody here will tell you what to think. Just this: look around.</p>
-        <form onSubmit={(event) => event.preventDefault()}><label htmlFor="email">Email address</label><div><input id="email" type="email" placeholder="Your email address" /><button type="submit">Join the herd you choose ↗</button></div></form>
-        <p className="bro-disclaimer">This page has not been approved by Peacehold.</p>
-      </section>
-    </main>
-    <Footer />
-  </>;
-}
-
 function RouteSkeleton({ path }) {
   return <main className="route-skeleton section-ivory"><span className="eyebrow">Migration checkpoint</span><h1>{path === '/start-here' ? 'Start Here' : 'This route is next.'}</h1><p>The route is reserved in the source tree. Its published content will be migrated after homepage visual approval.</p><SiteLink href="/" className="text-link">Return home <span>↗</span></SiteLink></main>;
 }
@@ -431,7 +329,7 @@ function App() {
   const [path, setPath] = useState(window.location.pathname.replace(/\/$/, '') || '/');
   const [menuOpen, setMenuOpen] = useState(false);
   window.onpopstate = () => setPath(window.location.pathname.replace(/\/$/, '') || '/');
-  const page = path === '/' ? <HomePage /> : path === '/meet-the-flock' ? <MeetTheFlockPage /> : path.startsWith('/meet-the-flock/') ? <CharacterDetailPage id={path.split('/').pop()} /> : path === '/start-here' ? <StartHerePage /> : path === '/about' ? <AboutPage /> : path === '/watch' ? <WatchPage /> : path === '/sounds' ? <SoundsPage /> : path === '/peacehold' ? <PeaceholdPage /> : path === '/open-field' ? <OpenFieldPage /> : path === '/open-field/thread' ? <ThreadPage /> : path === '/notebook' ? <NotebookPage /> : path.startsWith('/notebook/') ? <NotebookEntryPage slug={path.split('/').pop()} /> : path === '/episodes' ? <EpisodesPage /> : path === '/episodes/001-voluntary-assembly' ? <EpisodePage /> : path === '/episodes/002-fear-of-art' ? <EpisodeTwoPage /> : path === '/episodes/003-your-voice-matters' ? <EpisodeThreePage /> : path === '/episodes/004-consensus-is-not-a-compass' ? <EpisodeFourPage /> : path === '/episodes/005-safety-concerns' ? <EpisodeFivePage /> : path === '/episodes/006-open-gate-policy' ? <EpisodeSixPage /> : path === '/episodes/007-terms-and-conditions-apply' ? <EpisodeSevenPage /> : path === '/episodes/008-the-bell-department' ? <EpisodeEightPage /> : path === '/episodes/009-inside-the-lines' ? <EpisodeNinePage /> : path === '/episodes/010-nothing-of-value' ? <EpisodeTenPage /> : path === '/episodes/011-keep-your-head-down' ? <EpisodeElevenPage /> : path === '/episodes/012-ownership-survives-the-edit' ? <EpisodeTwelvePage /> : path === '/episodes/013-temporary-lives-here' ? <EpisodeThirteenPage /> : path === '/files' || path === '/black-sheep-files' ? <FilesPage /> : <RouteSkeleton path={path} />;
+  const page = path === '/' ? <><HomePage /><Footer /></> : path === '/meet-the-flock' ? <MeetTheFlockPage /> : path.startsWith('/meet-the-flock/') ? <CharacterDetailPage id={path.split('/').pop()} /> : path === '/start-here' ? <StartHerePage /> : path === '/about' ? <AboutPage /> : path === '/watch' ? <WatchPage /> : path === '/sounds' ? <SoundsPage /> : path === '/peacehold' ? <PeaceholdPage /> : path === '/open-field' ? <OpenFieldPage /> : path === '/open-field/thread' ? <ThreadPage /> : path === '/notebook' ? <NotebookPage /> : path.startsWith('/notebook/') ? <NotebookEntryPage slug={path.split('/').pop()} /> : path === '/episodes' ? <EpisodesPage /> : path === '/episodes/001-voluntary-assembly' ? <EpisodePage /> : path === '/episodes/002-fear-of-art' ? <EpisodeTwoPage /> : path === '/episodes/003-your-voice-matters' ? <EpisodeThreePage /> : path === '/episodes/004-consensus-is-not-a-compass' ? <EpisodeFourPage /> : path === '/episodes/005-safety-concerns' ? <EpisodeFivePage /> : path === '/episodes/006-open-gate-policy' ? <EpisodeSixPage /> : path === '/episodes/007-terms-and-conditions-apply' ? <EpisodeSevenPage /> : path === '/episodes/008-the-bell-department' ? <EpisodeEightPage /> : path === '/episodes/009-inside-the-lines' ? <EpisodeNinePage /> : path === '/episodes/010-nothing-of-value' ? <EpisodeTenPage /> : path === '/episodes/011-keep-your-head-down' ? <EpisodeElevenPage /> : path === '/episodes/012-ownership-survives-the-edit' ? <EpisodeTwelvePage /> : path === '/episodes/013-temporary-lives-here' ? <EpisodeThirteenPage /> : path === '/files' || path === '/black-sheep-files' ? <FilesPage /> : <RouteSkeleton path={path} />;
   return <><Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} light={path === '/'} />{page}</>;
 }
 
