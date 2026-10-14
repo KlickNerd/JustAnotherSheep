@@ -48,9 +48,8 @@
 .consent-actions button { border-radius: 10px; cursor: pointer; font-family: var(--ui); font-size: .9rem; font-weight: 600; padding: 12px 18px; }
 .consent-secondary { background: #f1f1f1; border: 1px solid #ddd; color: #333; }
 .consent-primary { background: #2f6fde; border: 1px solid #2f6fde; color: #fff; }
-.consent-climb { background: none; border: 0; bottom: -46px; cursor: pointer; font-size: 2rem; left: 14px; padding: 4px 8px; position: absolute; transform: rotate(-4deg); transition: transform .15s ease; }
-.consent-climb:hover { transform: rotate(-4deg) scale(1.08); }
-.consent-backdrop { padding-bottom: 70px; }
+.consent-actions .consent-climb { background: none; border: 0; cursor: pointer; font-family: 'Caveat', cursive; font-size: 2.1rem; font-weight: 700; margin-right: auto; padding: 0 8px; transform: rotate(-5deg); transition: transform .15s ease; }
+.consent-actions .consent-climb:hover, .consent-actions .consent-climb:focus-visible { transform: rotate(-5deg) scale(1.1); }
 
 /* ---------- Lautsprecher ---------- */
 .loudspeaker-toasts { display: grid; gap: 10px; max-width: min(380px, calc(100vw - 32px)); position: fixed; right: 16px; top: 126px; z-index: 30; }
@@ -187,6 +186,7 @@ a.invite-alt { border-bottom: 1px solid currentColor; justify-self: start; paddi
   .consent { padding: 20px 18px 18px; }
   .consent-actions { justify-content: stretch; }
   .consent-actions button { flex: 1 1 100%; }
+  .consent-actions .consent-climb { order: 9; font-size: 2.2rem; margin: 4px 0 0; }
   .feed-scroll { height: 460px; }
 }
 @media (max-width: 460px) {

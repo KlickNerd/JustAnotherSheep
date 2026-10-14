@@ -74,7 +74,7 @@ function useLoudspeaker() {
     played.current.add(id);
     const key = `${id}-${Date.now()}`;
     setToasts((current) => [...current.slice(-2), { key, id, text: ANNOUNCEMENTS[id] }]);
-    window.setTimeout(() => setToasts((current) => current.filter((toast) => toast.key !== key)), 8500);
+    window.setTimeout(() => setToasts((current) => current.filter((toast) => toast.key !== key)), 11000);
     if (mutedRef.current) return;
     if (!audioRef.current) audioRef.current = new Audio();
     const audio = audioRef.current;
@@ -125,11 +125,11 @@ function ConsentBanner({ onAccept, onClimb }) {
           </ul>
         )}
         <div className="consent-actions">
+          <button type="button" className="scribble consent-climb" onClick={climb}>or climb over →</button>
           <button type="button" className="consent-secondary" onClick={() => (managing ? onAccept() : setManaging(true))}>{managing ? 'Save preferences' : 'Manage preferences'}</button>
           <button type="button" className="consent-secondary" onClick={onAccept}>Accept all fences</button>
           <button type="button" className="consent-primary" onClick={onAccept}>Accept all fences (recommended)</button>
         </div>
-        <button type="button" className="scribble consent-climb" onClick={climb}>or climb over →</button>
       </div>
     </div>
   );
