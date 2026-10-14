@@ -118,6 +118,29 @@ const MUSIC_URL = '/audio/music/peacehold-loop.mp3';
 const SONG_URL = '/audio/episode-001-its-voluntary.mp3';
 const announcementUrl = (id) => `/audio/announcements/${id}.mp3`;
 
+// Ein Zehntelsekunde Stille: damit wird Sheeps Song-Element im Tippen
+// freigeschaltet, ohne dass der Song selbst je zu früh anläuft
+let silentClip = null;
+function silentWav() {
+  if (silentClip) return silentClip;
+  const samples = 800;
+  const view = new DataView(new ArrayBuffer(44 + samples));
+  const text = (offset, value) => [...value].forEach((char, i) => view.setUint8(offset + i, char.charCodeAt(0)));
+  text(0, 'RIFF'); view.setUint32(4, 36 + samples, true); text(8, 'WAVE'); text(12, 'fmt ');
+  view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+  view.setUint32(24, 8000, true); view.setUint32(28, 8000, true); view.setUint16(32, 1, true); view.setUint16(34, 8, true);
+  text(36, 'data'); view.setUint32(40, samples, true);
+  for (let i = 0; i < samples; i += 1) view.setUint8(44 + i, 128);
+  silentClip = URL.createObjectURL(new Blob([view.buffer], { type: 'audio/wav' }));
+  return silentClip;
+}
+
+const isSong = (audio) => audio.src.endsWith(SONG_URL);
+function loadSong(audio) {
+  if (!isSong(audio)) audio.src = SONG_URL;
+  return audio;
+}
+
 function decode(ctx, data) {
   return new Promise((resolve, reject) => ctx.decodeAudioData(data, resolve, reject));
 }
@@ -150,7 +173,6 @@ function useSoundSystem(wantMusicFromStart) {
     if (!song.current) {
       song.current = new Audio();
       song.current.preload = 'none';
-      song.current.src = SONG_URL;
     }
     return song.current;
   }, []);
@@ -215,8 +237,9 @@ function useSoundSystem(wantMusicFromStart) {
     if (songPrimed.current) return;
     songPrimed.current = true;
     const audio = getSong();
-    audio.muted = true;
-    audio.play().then(() => { audio.pause(); audio.currentTime = 0; audio.muted = false; }).catch(() => { audio.muted = false; songPrimed.current = false; });
+    if (isSong(audio)) return;
+    audio.src = silentWav();
+    audio.play().catch(() => { songPrimed.current = false; });
   }, [getSong]);
 
   const announce = useCallback((id, onDone) => {
@@ -286,7 +309,7 @@ function useSoundSystem(wantMusicFromStart) {
 
   const playSong = useCallback(() => {
     if (mutedRef.current) return;
-    getSong().play().catch(() => { /* ohne vorheriges Tippen: der Abspielknopf bleibt sichtbar */ });
+    loadSong(getSong()).play().catch(() => { /* ohne vorheriges Tippen: der Abspielknopf bleibt sichtbar */ });
   }, [getSong]);
 
   const setMuted = useCallback((value) => {
@@ -325,8 +348,9 @@ function SongPlayer({ getSong }) {
   useEffect(() => {
     const audio = getSong();
     const sync = () => {
-      setPlaying(!audio.paused && !audio.muted);
-      setProgress(audio.duration ? audio.currentTime / audio.duration : 0);
+      const real = isSong(audio);
+      setPlaying(real && !audio.paused);
+      setProgress(real && audio.duration ? audio.currentTime / audio.duration : 0);
     };
     const events = ['play', 'pause', 'ended', 'timeupdate', 'volumechange'];
     events.forEach((name) => audio.addEventListener(name, sync));
@@ -335,8 +359,7 @@ function SongPlayer({ getSong }) {
   }, [getSong]);
   const toggle = () => {
     const audio = getSong();
-    audio.muted = false;
-    if (audio.paused) audio.play().catch(() => {}); else audio.pause();
+    if (!isSong(audio) || audio.paused) loadSong(audio).play().catch(() => {}); else audio.pause();
   };
   return (
     <div className="story-track">
