@@ -111,29 +111,32 @@ const episodeElevenAudio = '/audio/episode-011-keep-your-head-down.mp3';
 const episodeTwelveAudio = '/audio/episode-012-ownership-survives-the-edit.mp3';
 const episodeThirteenAudio = '/audio/episode-013-temporary-lives-here.mp3';
 
-const exploreLinks = [
-  ['Start Here', '/start-here'],
-  ['Sounds of Peacehold', '/sounds'],
-  ['Meet the Flock', '/meet-the-flock'],
-  ['Peacehold', '/peacehold'],
-  ['About', '/about'],
+const menuGroups = [
+  ['Story', [
+    ['Start Here', '/start-here'],
+    ['Episodes', '/episodes'],
+    ['Watch', '/watch'],
+    ['The Black Sheep Files', '/files'],
+  ]],
+  ['World', [
+    ['Peacehold', '/peacehold'],
+    ['Meet the Flock', '/meet-the-flock'],
+  ]],
+  ['Words & Sounds', [
+    ['Black Sheep’s Notebook', '/notebook'],
+    ['Sounds of Peacehold', '/sounds'],
+  ]],
+  ['Community', [
+    ['The Open Field', '/open-field'],
+    ['About', '/about'],
+  ]],
 ];
 
-const primaryLinks = [
+const headerQuickLinks = [
   ['Episodes', '/episodes'],
-  ['Episode 005 · Safety Concerns', '/episodes/005-safety-concerns'],
-  ['Episode 006 · Open Gate Policy', '/episodes/006-open-gate-policy'],
-  ['Episode 007 · Terms and Conditions Apply', '/episodes/007-terms-and-conditions-apply'],
-  ['Episode 008 · The Bell Department', '/episodes/008-the-bell-department'],
-  ['Episode 009 · Inside the Lines', '/episodes/009-inside-the-lines'],
-  ['Episode 010 · Nothing of Value', '/episodes/010-nothing-of-value'],
-  ['Episode 011 · Keep Your Head Down', '/episodes/011-keep-your-head-down'],
-  ['Episode 012 · Ownership Survives the Edit', '/episodes/012-ownership-survives-the-edit'],
-  ['Episode 013 · Temporary Lives Here', '/episodes/013-temporary-lives-here'],
-  ['The Black Sheep Files', '/files'],
-  ['Watch', '/watch'],
-  ["Black Sheep’s Notebook", '/notebook'],
-  ['The Open Field', '/open-field'],
+  ['Files', '/files'],
+  ['Notebook', '/notebook'],
+  ['Open Field', '/open-field'],
 ];
 
 const dispatches = [
@@ -155,22 +158,24 @@ function Header({ menuOpen, setMenuOpen }) {
   return (
     <header className="site-header">
       <SiteLink href="/" className="wordmark" onClick={() => setMenuOpen(false)}>JUST ANOTHER SHEEP</SiteLink>
+      <nav className="header-nav" aria-label="Primary">
+        {headerQuickLinks.map(([label, href]) => <SiteLink key={href} href={href}>{label}</SiteLink>)}
+        <SiteLink href="/start-here" className="header-cta">Start Here</SiteLink>
+      </nav>
       <button className="menu-trigger" type="button" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
         <span>{menuOpen ? 'Close' : 'Menu'}</span><i aria-hidden="true" />
       </button>
       {menuOpen && (
         <nav className="menu-panel" aria-label="Main navigation">
           <div className="menu-columns">
-            <div>
-              <span className="menu-label">Navigate</span>
-              {primaryLinks.map(([label, href]) => <SiteLink key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</SiteLink>)}
-            </div>
-            <div>
-              <span className="menu-label">Explore</span>
-              {exploreLinks.map(([label, href]) => <SiteLink key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</SiteLink>)}
-            </div>
+            {menuGroups.map(([group, links]) => (
+              <div key={group}>
+                <span className="menu-label">{group}</span>
+                {links.map(([label, href]) => <SiteLink key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</SiteLink>)}
+              </div>
+            ))}
           </div>
-          <SiteLink href="/start-here" className="menu-cta" onClick={() => setMenuOpen(false)}>Join the Flock <span>↗</span></SiteLink>
+          <SiteLink href="/episodes/001-voluntary-assembly" className="menu-cta" onClick={() => setMenuOpen(false)}>Start the story <span>↗</span></SiteLink>
         </nav>
       )}
     </header>
@@ -182,11 +187,11 @@ function SectionHeading({ eyebrow, title, children }) {
 }
 
 function StartHerePage() {
-  return <main className="subpage section-dark"><section className="subpage-hero"><div><span className="eyebrow">A way into the story</span><h1>You found the gate.</h1><p>You found the gate. Begin with one small contradiction, then follow Black Sheep through Peacehold.</p><SiteLink href="/episodes/001-voluntary-assembly" className="text-link">Start the story <span>↗</span></SiteLink></div><img src={localImage("public-street.webp")} alt="Realistic Black Sheep on a city street" /></section><section className="story-facts"><article><span className="eyebrow">Who is Black Sheep?</span><h3>The one who asks why.</h3><p>Resident classification: Difficult. Occupation: Asking questions. First appearance: Episode 001.</p></article><article><span className="eyebrow">What is Peacehold?</span><h3>A place with an answer for everything.</h3><p>Signs, rules, broadcasts, and reassuring explanations. The gaps between them tell another story.</p></article><article><span className="eyebrow">How it works</span><h3>100 episodes · 10 arcs.</h3><p>Each visual piece stands alone. Across episodes, the characters and consequences accumulate.</p></article></section><section className="path-through"><span className="eyebrow">A path through Peacehold</span><h2>Watch → Read → Listen → Discuss</h2><div className="path-grid">{[['01', 'Watch', 'Begin with the visual story.', '/watch'], ['02', 'Read', 'Follow the notes behind the questions.', '/notebook'], ['03', 'Listen', 'Hear the motifs as the score arrives.', '/sounds'], ['04', 'Discuss', 'Add your own reading of the story.', '/open-field']].map(([number, title, copy, href]) => <SiteLink key={href} href={href}><span>{number}</span><h3>{title}</h3><p>{copy}</p></SiteLink>)}</div></section></main>;
+  return <main className="subpage section-dark"><section className="subpage-hero"><div><span className="eyebrow">A way into the story</span><h1>You found the gate.</h1><p>You found the gate. Begin with one small contradiction, then follow Black Sheep through Peacehold.</p><SiteLink href="/episodes/001-voluntary-assembly" className="text-link">Start the story <span>↗</span></SiteLink></div><img src={localImage("voluntary.webp")} alt="Black Sheep at Peacehold's voluntary assembly, flanked by guards" /></section><section className="story-facts"><article><span className="eyebrow">Who is Black Sheep?</span><h3>The one who asks why.</h3><p>Resident classification: Difficult. Occupation: Asking questions. First appearance: Episode 001.</p></article><article><span className="eyebrow">What is Peacehold?</span><h3>A place with an answer for everything.</h3><p>Signs, rules, broadcasts, and reassuring explanations. The gaps between them tell another story.</p></article><article><span className="eyebrow">How it works</span><h3>100 episodes · 10 arcs.</h3><p>Each visual piece stands alone. Across episodes, the characters and consequences accumulate.</p></article></section><section className="path-through"><span className="eyebrow">A path through Peacehold</span><h2>Watch → Read → Listen → Discuss</h2><div className="path-grid">{[['01', 'Watch', 'Begin with the visual story.', '/watch'], ['02', 'Read', 'Follow the notes behind the questions.', '/notebook'], ['03', 'Listen', 'Hear the motifs as the score arrives.', '/sounds'], ['04', 'Discuss', 'Add your own reading of the story.', '/open-field']].map(([number, title, copy, href]) => <SiteLink key={href} href={href}><span>{number}</span><h3>{title}</h3><p>{copy}</p></SiteLink>)}</div></section></main>;
 }
 
 function AboutPage() {
-  return <main className="about-page section-dark"><section className="about-intro"><span className="eyebrow">About the project</span><h1>Just Another Sheep</h1><p>A story about a sheep who started asking questions.</p></section><section className="about-story"><div><h2>One story.<br />Many ways in.</h2><p>Just Another Sheep is a serialized satirical story told across 100 planned episodes and 10 arcs. Visual pieces, video, music, editorial notes, and conversation each reveal a different part of Black Sheep’s journey.</p><p>It invites people to notice contradictions, test claims, and reach their own conclusions.</p><SiteLink href="/start-here" className="text-link">Start here <span>↗</span></SiteLink></div><img src={localImage("public-street.webp")} alt="Realistic Black Sheep walking through the city" /></section></main>;
+  return <main className="about-page section-dark"><section className="about-intro"><span className="eyebrow">About the project</span><h1>Just Another Sheep</h1><p>A story about a sheep who started asking questions.</p></section><section className="about-story"><div><h2>One story.<br />Many ways in.</h2><p>Just Another Sheep is a serialized satirical story told across 100 planned episodes and 10 arcs. Visual pieces, video, music, editorial notes, and conversation each reveal a different part of Black Sheep’s journey.</p><p>It invites people to notice contradictions, test claims, and reach their own conclusions.</p><SiteLink href="/start-here" className="text-link">Start here <span>↗</span></SiteLink></div><img src={localImage("solangeles.webp")} alt="Black Sheep studying a map of SolAngeles in a hidden archive room" /></section></main>;
 }
 
 function WatchPage() {
@@ -213,14 +218,14 @@ function OpenFieldPage() {
   const categories = ['All discussions', 'Episode Discussions', 'Themes & Ideas', 'Questions Worth Asking', 'The Writers’ Room', 'Community'];
   const [activeCategory, setActiveCategory] = useState('All discussions');
   const threads = activeCategory === 'All discussions' ? forumThreads : forumThreads.filter(([category]) => category === activeCategory);
-  return <main className="open-field-page section-ivory"><section className="field-hero"><img src={localImage("public-street.webp")} alt="Black Sheep outside Peacehold" /><div><span className="eyebrow">Just Another Sheep · Community</span><h1>The Open Field</h1><p>Where questions are allowed.</p><p>Challenge ideas. Don’t attack people. You don’t have to agree. You do have to think.</p></div></section><section className="featured-thread"><SiteLink href="/open-field/thread/?id=episode-001-voluntary"><span className="eyebrow">Featured discussion · Episode 001</span><h2>When does “voluntary” stop meaning voluntary?</h2><p>If refusing an invitation has consequences, what kind of choice remains?</p><span className="text-link">Join the discussion</span></SiteLink><div><span className="eyebrow">Latest discussions</span>{forumThreads.slice(1, 3).map(([, title, , , id]) => <SiteLink key={id} href={`/open-field/thread/?id=${id}`}>{title}</SiteLink>)}<span className="eyebrow">Most active</span><SiteLink href="/open-field/thread/?id=episode-001-voluntary">Episode 001 · The assembly question</SiteLink></div></section><section className="forum-area"><aside><h2>Conversations</h2><div role="group" aria-label="Discussion categories">{categories.map((category) => <button key={category} type="button" className={activeCategory === category ? 'active' : ''} onClick={() => setActiveCategory(category)}>{category}</button>)}</div><p>Sign in to join the discussion. Older drafts remain on this device.</p></aside><div className="discussion-feed"><div className="feed-heading"><h2>{activeCategory}</h2><a href="#new-thread">Start a discussion</a></div>{threads.map(([category, title, copy, replies, id]) => <SiteLink key={id} href={`/open-field/thread/?id=${id}`} className="thread-card"><span>{category} · Story preview</span><h3>{title}</h3><p>{copy}</p><small>{replies}</small></SiteLink>)}<p>To share a discussion with everyone, <a href="/signin-with-chatgpt?return_to=%2Fopen-field%2F%23new-thread">sign in with ChatGPT</a>.</p><h2 id="new-thread">Start a discussion</h2><form onSubmit={(event) => event.preventDefault()}><label htmlFor="category">Category</label><select id="category" defaultValue="Episode Discussions">{categories.slice(1).map((category) => <option key={category}>{category}</option>)}</select><label htmlFor="question">Your question</label><input id="question" placeholder="What are you wondering about?" /><label htmlFor="thought">Your thought</label><textarea id="thought" placeholder="Give the conversation somewhere to begin." /><button type="submit">Post discussion</button></form></div></section></main>;
+  return <main className="open-field-page section-ivory"><section className="field-hero"><img src={localImage("questions.webp")} alt="The flock gathered as Peacehold blames questions instead of improving answers" /><div><span className="eyebrow">Just Another Sheep · Community</span><h1>The Open Field</h1><p>Where questions are allowed.</p><p>Challenge ideas. Don’t attack people. You don’t have to agree. You do have to think.</p></div></section><section className="featured-thread"><SiteLink href="/open-field/thread/?id=episode-001-voluntary"><span className="eyebrow">Featured discussion · Episode 001</span><h2>When does “voluntary” stop meaning voluntary?</h2><p>If refusing an invitation has consequences, what kind of choice remains?</p><span className="text-link">Join the discussion</span></SiteLink><div><span className="eyebrow">Latest discussions</span>{forumThreads.slice(1, 3).map(([, title, , , id]) => <SiteLink key={id} href={`/open-field/thread/?id=${id}`}>{title}</SiteLink>)}<span className="eyebrow">Most active</span><SiteLink href="/open-field/thread/?id=episode-001-voluntary">Episode 001 · The assembly question</SiteLink></div></section><section className="forum-area"><aside><h2>Conversations</h2><div role="group" aria-label="Discussion categories">{categories.map((category) => <button key={category} type="button" className={activeCategory === category ? 'active' : ''} onClick={() => setActiveCategory(category)}>{category}</button>)}</div><p>Sign in to join the discussion. Older drafts remain on this device.</p></aside><div className="discussion-feed"><div className="feed-heading"><h2>{activeCategory}</h2><a href="#new-thread">Start a discussion</a></div>{threads.map(([category, title, copy, replies, id]) => <SiteLink key={id} href={`/open-field/thread/?id=${id}`} className="thread-card"><span>{category} · Story preview</span><h3>{title}</h3><p>{copy}</p><small>{replies}</small></SiteLink>)}<p>To share a discussion with everyone, <a href="/signin-with-chatgpt?return_to=%2Fopen-field%2F%23new-thread">sign in with ChatGPT</a>.</p><h2 id="new-thread">Start a discussion</h2><form onSubmit={(event) => event.preventDefault()}><label htmlFor="category">Category</label><select id="category" defaultValue="Episode Discussions">{categories.slice(1).map((category) => <option key={category}>{category}</option>)}</select><label htmlFor="question">Your question</label><input id="question" placeholder="What are you wondering about?" /><label htmlFor="thought">Your thought</label><textarea id="thought" placeholder="Give the conversation somewhere to begin." /><button type="submit">Post discussion</button></form></div></section></main>;
 }
 
 function NotebookPage() {
   const categories = ['All notes', 'From the Episode', 'Questions Worth Asking', 'Field Notes', 'Behind Peacehold', 'The Long Read'];
   const [activeCategory, setActiveCategory] = useState('All notes');
   const entries = activeCategory === 'All notes' ? notebookEntries : notebookEntries.filter(([category]) => category === activeCategory);
-  return <main className="notebook-page section-ivory"><section className="notebook-hero"><div><span className="eyebrow">The official JAS blog</span><h1>Black Sheep’s Notebook</h1><p>Notes, questions, observations, and inconvenient thoughts.</p><span className="notebook-note">Notes and questions from beyond the gate.</span></div><img src={localImage("public-portrait.webp")} alt="Realistic Black Sheep portrait" /></section><section className="notebook-articles" aria-label="Notebook articles"><div className="category-filter" role="group" aria-label="Filter articles by category">{categories.map((category) => <button key={category} type="button" className={activeCategory === category ? 'active' : ''} onClick={() => setActiveCategory(category)}>{category}</button>)}</div><div className="entry-list">{entries.map(([category, title, copy, slug]) => <SiteLink key={slug} href={`/notebook/${slug}`}><span>{category}</span><h2>{title}</h2><p>{copy}</p><small>Read entry · 2 min</small></SiteLink>)}</div><p>{entries.length} entries</p></section></main>;
+  return <main className="notebook-page section-ivory"><section className="notebook-hero"><div><span className="eyebrow">The official JAS blog</span><h1>Black Sheep’s Notebook</h1><p>Notes, questions, observations, and inconvenient thoughts.</p><span className="notebook-note">Notes and questions from beyond the gate.</span></div><img src={localImage("why.webp")} alt="Black Sheep at a desk full of records, asking the only question left: why" /></section><section className="notebook-articles" aria-label="Notebook articles"><div className="category-filter" role="group" aria-label="Filter articles by category">{categories.map((category) => <button key={category} type="button" className={activeCategory === category ? 'active' : ''} onClick={() => setActiveCategory(category)}>{category}</button>)}</div><div className="entry-list">{entries.map(([category, title, copy, slug]) => <SiteLink key={slug} href={`/notebook/${slug}`}><span>{category}</span><h2>{title}</h2><p>{copy}</p><small>Read entry · 2 min</small></SiteLink>)}</div><p>{entries.length} entries</p></section></main>;
 }
 
 function EpisodesPage() {
@@ -345,7 +350,7 @@ function HomePage() {
 
       <section className="notebook section-ivory"><div><span className="eyebrow">Black Sheep’s Notebook · From beyond the gate</span><h2>Some thoughts don’t fit on the notice board.</h2><p>Notes, questions, observations, and inconvenient thoughts from beyond the gate.</p><SiteLink href="/notebook" className="text-link">Read the Notebook <span>↗</span></SiteLink></div><div className="notebook-entry"><span>From the Episode</span><h3>When Does “Voluntary” Stop Meaning Voluntary?</h3><p>A choice with consequences for saying no may be a decision in form only.</p><SiteLink href="/notebook/when-does-voluntary-stop-meaning-voluntary" className="text-link">Read entry <span>↗</span></SiteLink></div></section>
 
-      <section className="quote section-dark"><img src={localImage("public-portrait.webp")} alt="Photographic portrait of Black Sheep" /><div><span className="eyebrow">Just Another Sheep</span><blockquote>When the answer is already decided,<br /><em>ask a better question.</em></blockquote></div></section>
+      <section className="quote section-dark"><img src={localImage("gate.webp")} alt="Black Sheep studying the mechanism of Peacehold's main gate at night" /><div><span className="eyebrow">Just Another Sheep</span><blockquote>When the answer is already decided,<br /><em>ask a better question.</em></blockquote></div></section>
       <section className="open-field section-red"><span className="eyebrow">The Open Field</span><h2>A question is better<br />when it travels.</h2><p>Where questions are allowed. Challenge ideas. Don’t attack people.</p><SiteLink href="/open-field" className="text-link">Join the discussion <span>↗</span></SiteLink></section>
       <section className="join section-tan"><span className="eyebrow">Join the Flock</span><h2>Don’t miss the<br />next question.</h2><p>New episodes. New files. New questions.</p><form onSubmit={(event) => event.preventDefault()}><label htmlFor="email">Email address</label><div><input id="email" type="email" placeholder="Your email address" /><button type="submit">Join the Flock <span>↗</span></button></div></form><small>Signups are open. Email updates are not yet being sent.</small></section>
     </main>
