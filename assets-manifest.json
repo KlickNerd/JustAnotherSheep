@@ -1,8 +1,16 @@
 {
   "files": [
     {
-      "path": "docs/style-guide/candidates/hero-act1-test.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_190001_fd2bccfd-0996-4141-9835-f64002a0e4d0.png"
+      "path": "public/images/home/shepherd.tmp.png",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_202847_e0c604e5-ff7c-4377-a123-3e33127b1333.png"
+    },
+    {
+      "path": "public/images/home/fence.tmp.png",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_202851_126195c9-36e4-4919-9b7a-d33bac7bdcdd.png"
+    },
+    {
+      "path": "public/images/home/fence-night.tmp.png",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_202847_cb0367a4-4db5-4dac-9a0a-974aa9421139.png"
     }
   ]
 }
