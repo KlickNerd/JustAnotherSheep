@@ -1,0 +1,11 @@
+{
+  // Cloudflare Workers: liefert den Vite-Build als statische Seite aus.
+  // "single-page-application": unbekannte Pfade fallen auf index.html zurück,
+  // damit der client-seitige Router alle Routen bedienen kann.
+  "name": "justanothersheep",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
