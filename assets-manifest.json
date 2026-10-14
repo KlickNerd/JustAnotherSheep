@@ -1,36 +1,3 @@
 {
-  "files": [
-    {
-      "path": "audio-src/climb.wav",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_215540_48905c1f-a132-4ce6-85da-9fbc3ac87484.wav"
-    },
-    {
-      "path": "audio-src/accept.wav",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_215540_e46d79bd-836a-4f36-9e73-87cf3b86aa15.wav"
-    },
-    {
-      "path": "audio-src/wolf.wav",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_215540_6dfeeee9-b443-4bbc-ba2b-d9966155f6f6.wav"
-    },
-    {
-      "path": "audio-src/correction.wav",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_215540_def3d146-f49a-495a-98ac-bca66ae28afb.wav"
-    },
-    {
-      "path": "audio-src/verify.wav",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_215540_14ac6426-f905-4843-bd4e-072824eeb6fd.wav"
-    },
-    {
-      "path": "audio-src/vote.wav",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_215540_3e9563ca-9bb8-48ff-9f25-09c748db501d.wav"
-    },
-    {
-      "path": "audio-src/questions.wav",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_215540_b5fc168f-7de9-4c70-80fb-d479cd05777a.wav"
-    },
-    {
-      "path": "audio-src/glitch.wav",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261014_215540_d3534b77-6f4d-4fe9-a703-67ae996488d0.wav"
-    }
-  ]
+  "files": []
 }

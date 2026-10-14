@@ -2,18 +2,30 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { SiteLink } from '../router';
 import './home.css';
 
-/* Die Startseite ist das System: Cookie-Banner, Zählung, Feed, Captcha,
-   Abstimmung und Assistent wenden Peaceholds Kontrollmechanismen auf den
-   Besucher selbst an. Nichts davon erhebt echte Daten — alles ist gespielt. */
+/* Die Startseite ist ein Onboarding in Peacehold: 14 bildschirmfüllende
+   Szenen, durch die man von Container zu Container springt. Das System
+   gliedert den Besucher ein (Nummer, Gatter, Tagesplan, Feed, Schulung,
+   Prüfung, Abstimmung, Assistent, Vertrag), Sheep sabotiert es nach und
+   nach, bis das Onboarding zusammenbricht. Nichts davon erhebt echte
+   Daten — Zählung, Captcha und Abstimmung sind gespielt. */
+
+const SCENES = ['welcome', 'number', 'home', 'day', 'feed', 'training', 'verify', 'vote', 'assistant', 'agreement', 'error', 'night', 'story', 'choice'];
+const ORIENTATION_STEPS = 9;
 
 const ANNOUNCEMENTS = {
   climb: 'Attention, please. A resident has left the designated path. Please remain calm. Everything is fine.',
   accept: 'Thank you for your cooperation. You have been counted. Have a perfect day.',
   wolf: 'BREAKING: A wolf has been sighted near the eastern fence. Please stay inside.',
   correction: 'CORRECTION: No wolf was found. Please remain alert.',
+  verify: 'Unusual activity detected. Please verify that you are not a wolf.',
   vote: 'Reminder: Morning assembly is completely voluntary. Attendance will be recorded.',
   questions: 'Attention: A resident is asking questions. This is not a cause for concern.',
+  glitch: 'Every— every— everything is fine. Please remain— please remain— please remain calm.',
 };
+
+const MUSIC_VOLUME = 0.2;
+const MUSIC_DUCKED = 0.04;
+const DEGRADE_RATES = [1, 0.985, 0.955, 0.92];
 
 const FEED_POSTS = [
   { author: 'Peacehold News', badge: 'Official', text: 'Everything is fine.', meta: '12,847 likes' },
@@ -30,8 +42,32 @@ const PREFERENCES = [
   ['Wolves', 'Required for your motivation'],
 ];
 
-const ASSISTANT_SUGGESTIONS = ['Can I leave Peacehold?', 'Who rings the bell?', 'Are there really wolves?', 'Why?'];
+const SCHEDULE = [
+  ['06:00', 'Wake-up bell'],
+  ['06:15', 'Wool inspection'],
+  ['07:00', 'Morning assembly (voluntary)'],
+  ['08:00', 'Grazing, designated area'],
+  ['12:00', 'Approved lunch'],
+  ['13:00', 'Grazing, designated area'],
+  ['18:00', 'Evening count'],
+  ['21:00', 'Free time (5 min, supervised)'],
+  ['21:05', 'Lights out'],
+];
 
+const QUIZ = ['Dangerous', 'Very dangerous', 'Like anyone who asks questions'];
+
+const CLAUSES = [
+  ['§1', 'The resident agrees to be safe.'],
+  ['§2', 'Safety is defined by Peacehold.'],
+  ['§3', 'The gate is open at all times.', '§3a', 'The gate is closed at all times.', 'Which one?'],
+  ['§4', 'Questions may be submitted to the Question Office.', '§4a', 'The Question Office does not exist.'],
+  ['§5', 'The resident’s wool remains the property of the resident.', '§5a', 'The resident remains the property of Peacehold.', '!!'],
+  ['§6', 'Wolves are real.', '§6a', 'Evidence of wolves is classified for your safety.'],
+  ['§7', 'This agreement may change at any time without notice. It has already changed.'],
+  ['§8', 'By reading this, you have agreed to it.'],
+];
+
+const ASSISTANT_SUGGESTIONS = ['Can I leave Peacehold?', 'Who rings the bell?', 'Are there really wolves?', 'Why?'];
 const ASSISTANT_FALLBACKS = [
   'I’m sorry, that topic is outside the approved knowledge base. Here’s something you might enjoy instead: Everything is fine.',
   'That’s a great question! I’ve forwarded it to the appropriate office. The office is closed.',
@@ -54,59 +90,144 @@ function writeStorage(store, key, value) {
   try { window[store].setItem(key, value); } catch { /* privater Modus o. Ä. */ }
 }
 
-/* Ein Lautsprecher für die ganze Seite: Durchsage als Text-Einblendung
-   (immer) und als Ton (nur nach einem Klick und wenn nicht stummgeschaltet). */
-function useLoudspeaker() {
-  const [muted, setMuted] = useState(() => readStorage('localStorage', 'jas-muted') === '1');
+function residentNumber() {
+  return 48213 + Math.floor((Date.now() - 1792000000000) / 90000);
+}
+
+function goTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ---------------------------------------------------------------
+   Tonanlage: Durchsagen (immer als Einblendung, als Ton nur nach
+   einem Klick und ohne Stummschaltung), die Peacehold-Musik als
+   leise Schleife mit Ducking, Leiern und Bandstopp, und Sheeps Song.
+   --------------------------------------------------------------- */
+function useSoundSystem() {
+  const [muted, setMutedState] = useState(() => readStorage('localStorage', 'jas-muted') === '1');
   const [toasts, setToasts] = useState([]);
-  const audioRef = useRef(null);
   const mutedRef = useRef(muted);
+  const voice = useRef(null);
+  const music = useRef(null);
+  const song = useRef(null);
+  const musicWanted = useRef(false);
+  const musicStopped = useRef(false);
+  const degradeLevel = useRef(0);
+  const wobble = useRef(null);
   const played = useRef(new Set());
 
-  useEffect(() => {
-    mutedRef.current = muted;
-    writeStorage('localStorage', 'jas-muted', muted ? '1' : '0');
-    if (muted && audioRef.current) audioRef.current.pause();
-  }, [muted]);
+  const getMusic = () => {
+    if (!music.current) {
+      const audio = new Audio('/audio/music/peacehold-loop.mp3');
+      audio.loop = true;
+      audio.volume = MUSIC_VOLUME;
+      audio.preservesPitch = false;
+      audio.webkitPreservesPitch = false;
+      audio.mozPreservesPitch = false;
+      music.current = audio;
+    }
+    return music.current;
+  };
 
-  const announce = useCallback((id) => {
+  const startMusic = useCallback(() => {
+    musicWanted.current = true;
+    if (mutedRef.current || musicStopped.current) return;
+    getMusic().play().catch(() => { /* noch kein Klick — wird beim nächsten nachgeholt */ });
+  }, []);
+
+  const announce = useCallback((id, onDone) => {
     if (played.current.has(id)) return;
     played.current.add(id);
     const key = `${id}-${Date.now()}`;
-    setToasts((current) => [...current.slice(-2), { key, id, text: ANNOUNCEMENTS[id] }]);
-    window.setTimeout(() => setToasts((current) => current.filter((toast) => toast.key !== key)), 11000);
-    if (mutedRef.current) return;
-    if (!audioRef.current) audioRef.current = new Audio();
-    const audio = audioRef.current;
+    setToasts((current) => [...current.slice(-1), { key, id, text: ANNOUNCEMENTS[id] }]);
+    window.setTimeout(() => setToasts((current) => current.filter((toast) => toast.key !== key)), 8000);
+
+    if (mutedRef.current) { if (onDone) window.setTimeout(onDone, 2500); return; }
+    if (!voice.current) voice.current = new Audio();
+    const audio = voice.current;
     audio.pause();
     audio.src = `/audio/announcements/${id}.mp3`;
-    audio.volume = 0.85;
-    audio.play().catch(() => { /* Browser erlaubt noch keinen Ton — die Einblendung reicht */ });
+    audio.volume = 0.9;
+    if (music.current) music.current.volume = MUSIC_DUCKED;
+    audio.onended = () => {
+      if (music.current && !musicStopped.current) music.current.volume = MUSIC_VOLUME;
+      onDone?.();
+    };
+    audio.play().catch(() => {
+      if (music.current) music.current.volume = MUSIC_VOLUME;
+      if (onDone) window.setTimeout(onDone, 2500);
+    });
   }, []);
 
-  return { muted, setMuted, toasts, announce };
+  const degrade = useCallback((level) => {
+    if (level <= degradeLevel.current || musicStopped.current) return;
+    degradeLevel.current = level;
+    const audio = getMusic();
+    audio.playbackRate = DEGRADE_RATES[level];
+    if (level >= 2 && !wobble.current) {
+      let phase = 0;
+      wobble.current = window.setInterval(() => {
+        if (musicStopped.current) return;
+        phase += 0.5;
+        audio.playbackRate = DEGRADE_RATES[degradeLevel.current] + Math.sin(phase) * 0.012 * degradeLevel.current;
+      }, 180);
+    }
+  }, []);
+
+  const tapeStop = useCallback(() => {
+    if (musicStopped.current) return;
+    musicStopped.current = true;
+    window.clearInterval(wobble.current);
+    const audio = music.current;
+    if (!audio || audio.paused) return;
+    const from = audio.playbackRate;
+    const start = performance.now();
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / 1600);
+      audio.playbackRate = Math.max(0.12, from * (1 - t * 0.9));
+      audio.volume = MUSIC_VOLUME * (1 - t);
+      if (t < 1) requestAnimationFrame(step); else audio.pause();
+    };
+    requestAnimationFrame(step);
+  }, []);
+
+  const playSong = useCallback(() => {
+    if (mutedRef.current || !song.current) return;
+    song.current.volume = 0.8;
+    song.current.play().catch(() => {});
+  }, []);
+
+  const setMuted = useCallback((value) => {
+    mutedRef.current = value;
+    setMutedState(value);
+    writeStorage('localStorage', 'jas-muted', value ? '1' : '0');
+    if (value) {
+      voice.current?.pause();
+      music.current?.pause();
+      song.current?.pause();
+    } else if (musicWanted.current && !musicStopped.current) {
+      getMusic().play().catch(() => {});
+    }
+  }, []);
+
+  useEffect(() => () => {
+    window.clearInterval(wobble.current);
+    voice.current?.pause();
+    music.current?.pause();
+  }, []);
+
+  return { muted, setMuted, toasts, announce, startMusic, degrade, tapeStop, playSong, song };
 }
 
-/* Löst einen Callback einmal aus, sobald das Element sichtbar wird. */
-function useOnceVisible(ref, callback, threshold = 0.35) {
-  const callbackRef = useRef(callback);
-  callbackRef.current = callback;
-  useEffect(() => {
-    const element = ref.current;
-    if (!element || !('IntersectionObserver' in window)) return undefined;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        callbackRef.current();
-        observer.disconnect();
-      }
-    }, { threshold });
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [ref, threshold]);
+/* ---------------------------------------------------------------
+   Bausteine
+   --------------------------------------------------------------- */
+function Scene({ id, index, className = '', children }) {
+  return <section id={id} data-index={index} className={`scene scene-${id} ${className}`}>{children}</section>;
 }
 
-function residentNumber() {
-  return (48213 + Math.floor((Date.now() - 1792000000000) / 90000)).toLocaleString('en-US');
+function Next({ to, children = 'Next step' }) {
+  return <button type="button" className="scene-next" onClick={() => goTo(to)}>{children} <span aria-hidden="true">↓</span></button>;
 }
 
 function ConsentBanner({ onAccept, onClimb }) {
@@ -135,45 +256,177 @@ function ConsentBanner({ onAccept, onClimb }) {
   );
 }
 
-function Feed({ announce }) {
-  const ref = useRef(null);
-  const [posts, setPosts] = useState(FEED_POSTS);
-  const [news, setNews] = useState([]);
-  const [loadedMore, setLoadedMore] = useState(false);
-
-  useOnceVisible(ref, () => {
-    announce('wolf');
-    setNews([{ type: 'breaking', text: 'Wolf sighted near the eastern fence. Stay inside.' }]);
-    window.setTimeout(() => {
-      announce('correction');
-      setNews((current) => [{ type: 'correction', text: 'No wolf was found. Remain alert.' }, ...current]);
-    }, 9000);
-  });
+function NumberScene({ entered, resident }) {
+  const [shown, setShown] = useState(0);
+  const [confirmed, setConfirmed] = useState(false);
+  useEffect(() => {
+    if (!entered) return undefined;
+    let frame;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / 1800);
+      setShown(Math.round(resident * (1 - Math.pow(1 - t, 3))));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [entered, resident]);
 
   return (
-    <section className="home-section feed-section" id="feed" ref={ref}>
-      <div className="home-copy">
-        <p className="home-kicker">Recommended for you</p>
-        <h2>Your daily feed.<br />Personalized for everyone.</h2>
-        <p>Curated by Peacehold to match your interests. Your interests have been curated to match Peacehold.</p>
-        {loadedMore && <p className="scribble feed-note">It’s the same post.</p>}
-      </div>
-      <div className="feed-phone">
-        <div className="feed-scroll">
-          {news.map((item) => <article key={item.type} className={`feed-card feed-${item.type}`}><span>{item.type === 'breaking' ? 'BREAKING' : 'CORRECTION'}</span><p>{item.text}</p><small>Peacehold Safety Office</small></article>)}
-          {posts.map((post, index) => <article key={index} className="feed-card"><header><i aria-hidden="true" /><strong>{post.author}</strong><em>{post.badge}</em></header><p>{post.text}</p><small>♥ {post.meta}</small></article>)}
-          <button type="button" className="feed-more" onClick={() => { setPosts((current) => [...current, ...FEED_POSTS]); setLoadedMore(true); }}>Load more</button>
+    <Scene id="number" index={1}>
+      <div className="scene-inner number-layout">
+        <div>
+          <p className="step-label">Step 1 · Your number</p>
+          <h2>Welcome, resident.<br />This is who you are now.</h2>
+          <p>Your number is unique, permanent and much easier to remember than a name.</p>
+          {!confirmed
+            ? <button type="button" className="home-button" onClick={() => setConfirmed(true)}>Confirm my number</button>
+            : <Next to="home" />}
+        </div>
+        <div className="ear-tag" aria-label={`Resident number ${resident}`}>
+          <span className="ear-tag-hole" aria-hidden="true" />
+          <span className="ear-tag-label">Peacehold</span>
+          <strong>#{shown.toLocaleString('en-US')}</strong>
+          {confirmed && <span className="stamp">Confirmed</span>}
+          {confirmed && <span className="scribble ear-tag-note">You have a name.</span>}
         </div>
       </div>
-    </section>
+    </Scene>
   );
 }
 
-function Captcha() {
+function HomeScene() {
+  const [chosen, setChosen] = useState(null);
+  return (
+    <Scene id="home" index={2}>
+      <div className="scene-inner split-layout">
+        <div>
+          <p className="step-label">Step 2 · Your home</p>
+          <h2>Choose your pen.</h2>
+          <p>Every resident gets a home. Pick the one that feels like you.</p>
+          {chosen !== null && (
+            <div className="scene-feedback" role="status">
+              <p>You chose pen {chosen + 1}. <strong>You have been assigned pen 7.</strong></p>
+              <p>Pen 7 is identical to all other pens. Excellent choice.</p>
+            </div>
+          )}
+          {chosen !== null && <Next to="day" />}
+        </div>
+        <div className="pen-map" role="group" aria-label="Available pens">
+          {Array.from({ length: 12 }, (_, index) => (
+            <button key={index} type="button" className={`pen${chosen === index ? ' is-chosen' : ''}${chosen !== null && index === 6 ? ' is-assigned' : ''}`} onClick={() => setChosen(index)}>
+              <span>Pen {index + 1}</span><i aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+      </div>
+    </Scene>
+  );
+}
+
+function DayScene() {
+  const [shaking, setShaking] = useState(null);
+  const [message, setMessage] = useState('');
+  const tryChange = (index) => {
+    setShaking(index);
+    setMessage('Changes to the plan are not part of the plan.');
+    window.setTimeout(() => setShaking(null), 500);
+  };
+  return (
+    <Scene id="day" index={3}>
+      <div className="scene-inner split-layout">
+        <div>
+          <p className="step-label">Step 3 · Your day</p>
+          <h2>Your day has been planned for you.</h2>
+          <p>So you never have to wonder what comes next. Feel free to adjust anything.</p>
+          <button type="button" className="ghost-button" onClick={() => setMessage('Your request has been received. And denied.')}>Request a change</button>
+          {message && <p className="scene-feedback" role="status">{message}</p>}
+          <Next to="feed" />
+        </div>
+        <ol className="schedule">
+          {SCHEDULE.map(([time, label], index) => (
+            <li key={time}>
+              <button type="button" className={shaking === index ? 'is-shaking' : ''} onClick={() => tryChange(index)}>
+                <time>{time}</time><span>{label}</span><i aria-hidden="true">⋮⋮</i>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </Scene>
+  );
+}
+
+function FeedScene({ entered, announce }) {
+  const [posts, setPosts] = useState(FEED_POSTS);
+  const [news, setNews] = useState([]);
+  const [loadedMore, setLoadedMore] = useState(false);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (!entered || started.current) return undefined;
+    started.current = true;
+    const first = window.setTimeout(() => {
+      announce('wolf');
+      setNews([{ type: 'breaking', text: 'Wolf sighted near the eastern fence. Stay inside.' }]);
+    }, 900);
+    const second = window.setTimeout(() => {
+      announce('correction');
+      setNews((current) => [{ type: 'correction', text: 'No wolf was found. Remain alert.' }, ...current]);
+    }, 9000);
+    return () => { window.clearTimeout(first); window.clearTimeout(second); };
+  }, [entered, announce]);
+
+  return (
+    <Scene id="feed" index={4}>
+      <div className="scene-inner split-layout">
+        <div>
+          <p className="step-label">Step 4 · Stay informed</p>
+          <h2>Your feed.<br />Personalized for everyone.</h2>
+          <p>Curated by Peacehold to match your interests. Your interests have been curated to match Peacehold.</p>
+          {loadedMore && <p className="scribble scene-note">It’s the same post.</p>}
+          <Next to="training" />
+        </div>
+        <div className="feed-phone">
+          <div className="feed-scroll">
+            {news.map((item) => <article key={item.type} className={`feed-card feed-${item.type}`}><span>{item.type === 'breaking' ? 'BREAKING' : 'CORRECTION'}</span><p>{item.text}</p><small>Peacehold Safety Office</small></article>)}
+            {posts.map((post, index) => <article key={index} className="feed-card"><header><i aria-hidden="true" /><strong>{post.author}</strong><em>{post.badge}</em></header><p>{post.text}</p><small>♥ {post.meta}</small></article>)}
+            <button type="button" className="feed-more" onClick={() => { setPosts((current) => [...current, ...FEED_POSTS]); setLoadedMore(true); }}>Load more</button>
+          </div>
+        </div>
+      </div>
+    </Scene>
+  );
+}
+
+function TrainingScene() {
+  const [answered, setAnswered] = useState(false);
+  return (
+    <Scene id="training" index={5}>
+      <div className="scene-inner training-layout">
+        <p className="step-label">Step 5 · Safety training</p>
+        <h2>Know your enemy.</h2>
+        <div className="wolf-cards">
+          {['Wolf (adult)', 'Wolf (young)', 'Wolf (disguised as sheep)'].map((label) => (
+            <figure key={label}><div className="wolf-missing" aria-hidden="true"><span>?</span></div><figcaption><strong>{label}</strong><small>Image unavailable</small></figcaption></figure>
+          ))}
+        </div>
+        <div className="quiz">
+          <p className="quiz-question">Quick check: What does a wolf look like?</p>
+          <div className="quiz-options">{QUIZ.map((option) => <button key={option} type="button" onClick={() => setAnswered(true)}>{option}</button>)}</div>
+          {answered && <p className="scene-feedback" role="status">Correct! All answers are correct. You have completed your safety training.</p>}
+          {answered && <p className="scribble scene-note">Has anyone ever seen one?</p>}
+        </div>
+        <Next to="verify" />
+      </div>
+    </Scene>
+  );
+}
+
+function VerifyScene({ onPass, passed }) {
   const [selected, setSelected] = useState([]);
   const [attempts, setAttempts] = useState(0);
   const [message, setMessage] = useState('');
-  const passed = attempts >= 2;
   const image = attempts % 2 === 0 ? '/images/home/fence.webp' : '/images/brand/hero-peacehold.webp';
 
   const verify = () => {
@@ -184,23 +437,17 @@ function Captcha() {
   };
 
   return (
-    <section className="home-section captcha-section" id="verify">
-      <div className="home-copy">
-        <p className="home-kicker">Security check</p>
-        <h2>Before you continue, please verify that you are not a wolf.</h2>
-        <p>This helps us keep Peacehold safe from threats we have never seen.</p>
-        {passed && <p className="scribble captcha-note">There are no wolves.</p>}
-      </div>
-      <div className="captcha" aria-live="polite">
-        <div className="captcha-head"><span>Select all squares with</span><strong>wolves</strong><span>Click verify once there are none left.</span></div>
-        {passed ? (
-          <div className="captcha-passed"><strong>Fine.</strong><p>We’ll keep an eye on you.</p></div>
-        ) : (
+    <Scene id="verify" index={6} className={passed ? 'is-passed' : ''}>
+      <div className="scene-inner verify-layout">
+        <p className="step-label">Step 6 · Verification</p>
+        <div className={`captcha${passed ? ' is-broken' : ''}`} aria-live="polite">
+          <div className="captcha-head"><span>Select all squares with</span><strong>wolves</strong><span>Click verify once there are none left.</span></div>
           <div className="captcha-grid">
             {Array.from({ length: 9 }, (_, index) => (
               <button
                 key={`${attempts}-${index}`}
                 type="button"
+                disabled={passed}
                 aria-pressed={selected.includes(index)}
                 aria-label={`Square ${index + 1}`}
                 className={selected.includes(index) ? 'is-selected' : ''}
@@ -209,54 +456,52 @@ function Captcha() {
               />
             ))}
           </div>
-        )}
-        {!passed && <div className="captcha-foot"><span>{message}</span><button type="button" onClick={verify}>Verify</button></div>}
+          <div className="captcha-foot"><span>{message}</span><button type="button" onClick={verify} disabled={passed}>Verify</button></div>
+          {passed && <span className="scribble captcha-scrawl" aria-hidden="true">There are no wolves.</span>}
+        </div>
+        {!passed && attempts >= 2 && <button type="button" className="scribble sheep-skip" onClick={onPass}>There are no wolves. Skip it →</button>}
+        {!passed && <p className="locked-hint">🔒 Complete verification to continue</p>}
+        {passed && <Next to="vote" />}
       </div>
-    </section>
+    </Scene>
   );
 }
 
-function Vote({ announce }) {
-  const ref = useRef(null);
+function VoteScene() {
   const areaRef = useRef(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [result, setResult] = useState('');
-  useOnceVisible(ref, () => announce('vote'));
-
   const dodge = (event) => {
     if (event.pointerType !== 'mouse') return;
     const area = areaRef.current.getBoundingClientRect();
-    const x = (Math.random() - 0.5) * Math.min(area.width * 0.7, 420);
-    const y = (Math.random() - 0.5) * 120;
-    setOffset({ x, y });
+    setOffset({ x: (Math.random() - 0.5) * Math.min(area.width * 0.7, 440), y: (Math.random() - 0.5) * 140 });
   };
-
   return (
-    <section className="home-section vote-section" id="vote" ref={ref}>
-      <div className="home-copy">
-        <p className="home-kicker">Community decision</p>
-        <h2>Morning assembly is voluntary. Will you attend?</h2>
-        <p>Your voice matters. Please choose freely.</p>
-      </div>
-      <div className="vote-box" ref={areaRef}>
-        <div className="vote-options">
-          <button type="button" onClick={() => setResult('yes')}>Yes</button>
-          <button type="button" onClick={() => setResult('yes')}>Yes, gladly</button>
-          <button type="button" className="vote-no" style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }} onPointerEnter={dodge} onClick={() => setResult('no')}>No</button>
-        </div>
-        {result && (
-          <div className="vote-result" role="status">
-            {result === 'no' && <p className="vote-recorded">Your answer has been recorded as: <strong>Yes</strong>.</p>}
-            <p><strong>Results:</strong> Yes 100% · Yes, gladly 100% · No 0%</p>
-            <p>Turnout: 100%. Thank you for your voluntary participation.</p>
+    <Scene id="vote" index={7}>
+      <div className="scene-inner vote-layout">
+        <p className="step-label">Step 7 · Your voice matters</p>
+        <h2>Morning assembly is voluntary.<br />Will you attend?</h2>
+        <div className="vote-box" ref={areaRef}>
+          <div className="vote-options">
+            <button type="button" onClick={() => setResult('yes')}>Yes</button>
+            <button type="button" onClick={() => setResult('yes')}>Yes, gladly</button>
+            <button type="button" className="vote-no" style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }} onPointerEnter={dodge} onClick={() => setResult('no')}>No</button>
           </div>
-        )}
+          {result && (
+            <div className="vote-result" role="status">
+              {result === 'no' && <p className="vote-recorded">Your answer has been recorded as: <strong>Yes</strong>.</p>}
+              <p><strong>Results:</strong> Yes 100% · Yes, gladly 100% · No 0%</p>
+              <p>Turnout: 100%. Thank you for your voluntary participation.</p>
+            </div>
+          )}
+        </div>
+        {result && <Next to="assistant" />}
       </div>
-    </section>
+    </Scene>
   );
 }
 
-function Assistant({ announce }) {
+function AssistantScene({ announce }) {
   const [messages, setMessages] = useState([{ from: 'bot', text: 'Hello! I’m your Peacehold Assistant. I can answer any question. How can I help you comply today?' }]);
   const [draft, setDraft] = useState('');
   const [typing, setTyping] = useState(false);
@@ -281,114 +526,230 @@ function Assistant({ announce }) {
   };
 
   return (
-    <section className="home-section assistant-section" id="assistant">
-      <div className="home-copy">
-        <p className="home-kicker">Peacehold Assistant · powered by the Shepherd</p>
-        <h2>Ask me anything.</h2>
-        <p>Our new assistant answers every question. Especially the ones you didn’t ask.</p>
-      </div>
-      <div className="assistant">
-        <div className="assistant-log" ref={logRef} aria-live="polite">
-          {messages.map((message, index) => <p key={index} className={`bubble bubble-${message.from}`}>{message.text}</p>)}
-          {typing && <p className="bubble bubble-bot bubble-typing" aria-label="Assistant is typing"><i /><i /><i /></p>}
+    <Scene id="assistant" index={8}>
+      <div className="scene-inner split-layout">
+        <div>
+          <p className="step-label">Step 8 · Your assistant</p>
+          <h2>Ask me anything.</h2>
+          <p>Our new assistant answers every question. Especially the ones you didn’t ask.</p>
+          {asked.current >= 1 && <Next to="agreement" />}
         </div>
-        <div className="assistant-chips">{ASSISTANT_SUGGESTIONS.map((suggestion) => <button key={suggestion} type="button" onClick={() => ask(suggestion)}>{suggestion}</button>)}</div>
-        <form className="assistant-input" onSubmit={(event) => { event.preventDefault(); ask(draft); }}>
-          <label htmlFor="assistant-question" className="visually-hidden">Your question</label>
-          <input id="assistant-question" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Ask anything approved…" autoComplete="off" />
-          <button type="submit">Send</button>
-        </form>
+        <div className="assistant">
+          <div className="assistant-top"><img src="/images/home/shepherd.webp" alt="" /><span><strong>Peacehold Assistant</strong><small>powered by the Shepherd · always online</small></span></div>
+          <div className="assistant-log" ref={logRef} aria-live="polite">
+            {messages.map((message, index) => <p key={index} className={`bubble bubble-${message.from}`}>{message.text}</p>)}
+            {typing && <p className="bubble bubble-bot bubble-typing" aria-label="Assistant is typing"><i /><i /><i /></p>}
+          </div>
+          <div className="assistant-chips">{ASSISTANT_SUGGESTIONS.map((suggestion) => <button key={suggestion} type="button" onClick={() => ask(suggestion)}>{suggestion}</button>)}</div>
+          <form className="assistant-input" onSubmit={(event) => { event.preventDefault(); ask(draft); }}>
+            <label htmlFor="assistant-question" className="visually-hidden">Your question</label>
+            <input id="assistant-question" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Ask anything approved…" autoComplete="off" />
+            <button type="submit">Send</button>
+          </form>
+        </div>
       </div>
-    </section>
+    </Scene>
   );
 }
 
-export default function HomePage() {
-  const { muted, setMuted, toasts, announce } = useLoudspeaker();
-  const [consent, setConsent] = useState(() => readStorage('sessionStorage', 'jas-consent'));
-  const [resident] = useState(residentNumber);
-  const breakRef = useRef(null);
-  useOnceVisible(breakRef, () => announce('questions'), 0.25);
+function AgreementScene() {
+  return (
+    <Scene id="agreement" index={9}>
+      <div className="scene-inner agreement-layout">
+        <p className="step-label">Step 9 · The agreement</p>
+        <h2>Almost done. Please review your agreement.</h2>
+        <div className="agreement">
+          <div className="agreement-text" tabIndex={0} aria-label="Resident agreement">
+            <h3>Resident Agreement of Peacehold</h3>
+            {CLAUSES.map(([n1, t1, n2, t2, note]) => (
+              <p key={n1} className={note ? 'is-marked' : ''}>
+                <strong>{n1}</strong> {t1}{n2 && <><br /><strong>{n2}</strong> {t2}</>}
+                {note && <span className="scribble clause-note">{note}</span>}
+              </p>
+            ))}
+          </div>
+          <label className="agreement-check"><input type="checkbox" checked disabled readOnly /> I have read and agree to everything</label>
+          <div className="agreement-sign"><span>Signature</span><strong className="scribble">Don’t sign.</strong></div>
+          <button type="button" className="home-button" onClick={() => goTo('error')}>Complete orientation</button>
+        </div>
+      </div>
+    </Scene>
+  );
+}
 
+/* ---------------------------------------------------------------
+   Seite
+   --------------------------------------------------------------- */
+export default function HomePage({ footer }) {
+  const sound = useSoundSystem();
+  const { muted, setMuted, toasts, announce, startMusic, degrade, tapeStop, playSong, song } = sound;
+  const [consent, setConsent] = useState(() => readStorage('sessionStorage', 'jas-consent'));
+  const [active, setActive] = useState(0);
+  const [entered, setEntered] = useState(() => new Set([0]));
+  const [captchaPassed, setCaptchaPassed] = useState(false);
+  const [resident] = useState(residentNumber);
+  const containerRef = useRef(null);
+
+  // Welche Szene ist gerade zu sehen?
   useEffect(() => {
-    document.body.style.overflow = consent ? '' : 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, [consent]);
+    const root = containerRef.current;
+    if (!root || !('IntersectionObserver' in window)) return undefined;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const index = Number(entry.target.dataset.index);
+        setActive(index);
+        setEntered((current) => (current.has(index) ? current : new Set(current).add(index)));
+      });
+    }, { root, threshold: 0.55 });
+    root.querySelectorAll('.scene').forEach((scene) => observer.observe(scene));
+    return () => observer.disconnect();
+  }, [captchaPassed]);
+
+  // Was passiert, wenn eine Szene zum ersten Mal betreten wird
+  const handled = useRef(new Set());
+  useEffect(() => {
+    entered.forEach((index) => {
+      if (handled.current.has(index)) return;
+      handled.current.add(index);
+      if (index === 5) degrade(1);
+      if (index === 6) announce('verify');
+      if (index === 7) announce('vote');
+      if (index === 8) degrade(2);
+      if (index === 9) degrade(3);
+      if (index === 10) { announce('glitch'); tapeStop(); }
+      if (index === 12) playSong();
+    });
+  }, [entered, announce, degrade, tapeStop, playSong]);
+
+  // Wer die Einwilligung schon in dieser Sitzung gegeben hat: Musik beim ersten Klick
+  useEffect(() => {
+    if (!consent) return undefined;
+    const resume = () => startMusic();
+    window.addEventListener('pointerdown', resume, { once: true });
+    window.addEventListener('keydown', resume, { once: true });
+    return () => { window.removeEventListener('pointerdown', resume); window.removeEventListener('keydown', resume); };
+  }, [consent, startMusic]);
 
   const decide = (choice) => {
     writeStorage('sessionStorage', 'jas-consent', choice);
     setConsent(choice);
-    announce(choice);
+    announce(choice, startMusic);
+    containerRef.current?.focus({ preventScroll: true });
   };
 
+  const passCaptcha = () => {
+    setCaptchaPassed(true);
+    window.setTimeout(() => goTo('vote'), 700);
+  };
+
+  // Tastatur (Leertaste, Pfeile, Bild ab) soll sofort die Szenen bewegen
+  useEffect(() => {
+    if (consent) containerRef.current?.focus({ preventScroll: true });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const step = active >= 1 && active <= ORIENTATION_STEPS ? active : null;
+
   return (
-    <main className="home">
+    <main className={`home${consent ? '' : ' is-locked'}${active >= 10 ? ' is-outside' : ''}`}>
       {!consent && <ConsentBanner onAccept={() => decide('accept')} onClimb={() => decide('climb')} />}
+
+      {step && (
+        <div className="orientation" aria-hidden="true">
+          <span>Resident Orientation · Step {step} of {ORIENTATION_STEPS}</span>
+          <i style={{ width: `${(step / ORIENTATION_STEPS) * 100}%` }} />
+        </div>
+      )}
+      {active === 10 && <div className="orientation orientation-broken" aria-hidden="true"><span>Resident Orientation · Step 10 of 9 · Step 11 of 9 · Step ∞</span><i /></div>}
 
       <div className="loudspeaker-toasts" role="status" aria-live="polite">
         {toasts.map((toast) => <p key={toast.key} className={`toast toast-${toast.id}`}><span aria-hidden="true">📢</span>{toast.text}</p>)}
       </div>
-      {consent && <button type="button" className="mute-toggle" aria-pressed={!muted} onClick={() => setMuted(!muted)}>{muted ? '🔇 Loudspeaker off' : '🔊 Loudspeaker on'}</button>}
+      {consent && <button type="button" className="mute-toggle" aria-pressed={!muted} onClick={() => setMuted(!muted)}>{muted ? '🔇 Sound off' : '🔊 Sound on'}</button>}
 
-      <section className="home-hero">
-        <picture>
-          <source media="(max-width: 760px)" srcSet="/images/brand/hero-peacehold-mobile.webp" />
-          <img src="/images/brand/hero-peacehold.webp" alt="Peacehold farm on a sunny morning: the flock grazes, one black sheep stands upright and looks back" />
-        </picture>
-        <div className="home-hero-content">
-          <p className="home-kicker">Welcome to Peacehold.</p>
-          <h1>Just Another Sheep</h1>
-          <p className="home-deck">A safe place. A simple life. Everything taken care of.</p>
-          <a href="#feed" className="home-button">Take the tour ↓</a>
-          {consent && <p className="resident-badge">You are resident <strong>#{resident}</strong>. You have been counted.</p>}
-        </div>
-      </section>
-
-      <Feed announce={announce} />
-      <Captcha />
-      <Vote announce={announce} />
-      <Assistant announce={announce} />
-
-      <section className="home-break" id="behind-the-fence" ref={breakRef}>
-        <div className="break-recap">
-          <p className="eyebrow">Behind the fence</p>
-          <h2>Did you notice?<br />None of that was a choice.</h2>
-          <ul>
-            <li>You were counted before you said a word.</li>
-            <li>You were shown the same post until it felt true.</li>
-            <li>You had to prove you weren’t a threat — from a threat nobody has seen.</li>
-            <li>You could vote for anything, as long as it was yes.</li>
-            <li>Your questions were answered. None of them were answered.</li>
-          </ul>
-          <p className="break-personal">{consent === 'climb' ? 'You climbed over the fence in the first five seconds. He’d like you.' : 'You accepted all fences. Most do. He did too, for a long time.'}</p>
-        </div>
-        <div className="break-story">
-          <img src="/images/home/fence-night.webp" alt="Black Sheep alone at the fence at night, looking at faint lights beyond the hills" loading="lazy" />
-          <div>
-            <h3>One resident stopped following.</h3>
-            <p>He didn’t plan a rebellion. He never wanted to be a hero. He just ran out of patience for bad answers.</p>
-            <blockquote className="scribble">“I’m not lost. I just stopped following.”</blockquote>
-            <p>His story begins at a morning assembly. Attendance is completely voluntary.</p>
-            <SiteLink href="/episodes/001-voluntary-assembly" className="home-button home-button-light">Start with Episode 001 →</SiteLink>
-            <div className="break-track"><span>Episode 001 · Soundtrack · “It’s Voluntary”</span><audio controls preload="none" src="/audio/episode-001-its-voluntary.mp3">Audio playback is not supported in this browser.</audio></div>
+      <div className="scenes" ref={containerRef} tabIndex={-1}>
+        <Scene id="welcome" index={0} className="scene-hero">
+          <picture>
+            <source media="(max-width: 760px)" srcSet="/images/brand/hero-peacehold-mobile.webp" />
+            <img src="/images/brand/hero-peacehold.webp" alt="Peacehold farm on a sunny morning: the flock grazes, one black sheep stands upright and looks back" />
+          </picture>
+          <div className="hero-copy">
+            <p className="home-kicker">Welcome to Peacehold.</p>
+            <h1>Just Another Sheep</h1>
+            <p className="home-deck">A safe place. A simple life. Everything taken care of.</p>
+            <button type="button" className="home-button" onClick={() => goTo('number')}>Begin your orientation ↓</button>
           </div>
-        </div>
-      </section>
+        </Scene>
 
-      <section className="home-invite">
-        <h2>You noticed too,<br />didn’t you?</h2>
-        <p>Nobody here will tell you what to think. Just this: look around.</p>
-        <p className="home-kicker invite-kicker">The only real choice on this page</p>
-        <div className="invite-choices">
-          <form onSubmit={(event) => event.preventDefault()}>
-            <label htmlFor="email">New episodes by email</label>
-            <div><input id="email" type="email" placeholder="Your email address" /><button type="submit">Join the herd you choose ↗</button></div>
-          </form>
-          <a className="invite-alt" href="https://x.com/" target="_blank" rel="noopener noreferrer">Follow on X ↗</a>
-          <p className="invite-alt invite-nothing">Or do nothing. That’s allowed too.</p>
-        </div>
-        <p className="home-disclaimer">This page has not been approved by Peacehold.</p>
-      </section>
+        <NumberScene entered={entered.has(1)} resident={resident} />
+        <HomeScene />
+        <DayScene />
+        <FeedScene entered={entered.has(4)} announce={announce} />
+        <TrainingScene />
+        <VerifyScene onPass={passCaptcha} passed={captchaPassed} />
+
+        {captchaPassed && (
+          <>
+            <VoteScene />
+            <AssistantScene announce={announce} />
+            <AgreementScene />
+
+            <Scene id="error" index={10}>
+              <div className="error-noise" aria-hidden="true" />
+              <div className="scene-inner error-layout">
+                <p className="error-code">ORIENTATION ERROR 0x442</p>
+                <h2 className="glitch" data-text="Resident not compliant.">Resident not compliant.</h2>
+                <p className="error-line">Every— every— everything is fine.</p>
+                <button type="button" className="scribble sheep-gap" onClick={() => goTo('night')}>There’s a gap in the fence →</button>
+              </div>
+            </Scene>
+
+            <Scene id="night" index={11}>
+              <img className="scene-bg" src="/images/home/fence-night.webp" alt="" loading="lazy" />
+              <div className="scene-inner night-layout">
+                <p className="eyebrow">Behind the fence</p>
+                <h2>One resident stopped following.</h2>
+                <p>He didn’t plan a rebellion. He never wanted to be a hero. He just ran out of patience for bad answers.</p>
+                <blockquote className="scribble">“I’m not lost. I just stopped following.”</blockquote>
+                <Next to="story">Follow the story</Next>
+              </div>
+            </Scene>
+
+            <Scene id="story" index={12}>
+              <div className="scene-inner story-layout">
+                <img src="/images/brand/sheet-deadpan.webp" alt="Black Sheep standing in a barn, calm and unimpressed" loading="lazy" />
+                <div>
+                  <p className="eyebrow">Episode 001 · Voluntary Assembly</p>
+                  <h2>His story begins at a morning assembly.</h2>
+                  <p>Attendance is completely voluntary.</p>
+                  <p className="story-personal">{consent === 'climb' ? 'You climbed over the fence in the first five seconds. He’d like you.' : 'You accepted all fences. Most do. He did too, for a long time.'}</p>
+                  <SiteLink href="/episodes/001-voluntary-assembly" className="home-button home-button-light">Start with Episode 001 →</SiteLink>
+                  <div className="story-track"><span>Now playing · “It’s Voluntary”</span><audio ref={song} controls preload="none" src="/audio/episode-001-its-voluntary.mp3">Audio playback is not supported in this browser.</audio></div>
+                  <Next to="choice">One more thing</Next>
+                </div>
+              </div>
+            </Scene>
+
+            <Scene id="choice" index={13}>
+              <div className="scene-inner choice-layout">
+                <h2>You noticed too,<br />didn’t you?</h2>
+                <p>Nobody here will tell you what to think. Just this: look around.</p>
+                <p className="home-kicker choice-kicker">The only real choice on this page</p>
+                <div className="choice-options">
+                  <form onSubmit={(event) => event.preventDefault()}>
+                    <label htmlFor="email">New episodes by email</label>
+                    <div><input id="email" type="email" placeholder="Your email address" /><button type="submit">Join the herd you choose ↗</button></div>
+                  </form>
+                  <a className="choice-alt" href="https://x.com/" target="_blank" rel="noopener noreferrer">Follow on X ↗</a>
+                  <p className="choice-alt choice-nothing">Or do nothing. That’s allowed too.</p>
+                </div>
+                <p className="home-disclaimer">This page has not been approved by Peacehold.</p>
+              </div>
+              {footer}
+            </Scene>
+          </>
+        )}
+      </div>
     </main>
   );
 }
