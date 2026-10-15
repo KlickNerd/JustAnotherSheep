@@ -34,7 +34,7 @@ function tagShape(ctx, x, y, w, h) {
   ctx.closePath();
 }
 
-async function drawCard({ resident, climbed, golden, earned }) {
+async function drawCard({ resident, climbed, golden, balance }) {
   await Promise.all(FONTS.map((font) => document.fonts.load(font).catch(() => null)));
   const canvas = document.createElement('canvas');
   canvas.width = W;
@@ -127,10 +127,11 @@ async function drawCard({ resident, climbed, golden, earned }) {
   ctx.fillStyle = climbed ? '#b69b77' : 'rgba(31,27,20,.65)';
   ctx.fillText(climbed ? 'I’m not lost.' : 'Everything is fine.', W / 2, 1180);
 
-  ctx.font = '400 24px "DM Mono"';
-  spaced(ctx, '4px');
-  ctx.fillStyle = climbed ? 'rgba(240,233,220,.5)' : 'rgba(31,27,20,.5)';
-  ctx.fillText(`COMPLIANCE CREDITS EARNED: ${earned.toLocaleString('en-US')}`, W / 2, 1232);
+  ctx.font = '400 22px "DM Mono"';
+  spaced(ctx, '3px');
+  ctx.fillStyle = balance < 0 ? '#a3392a' : (climbed ? 'rgba(240,233,220,.5)' : 'rgba(31,27,20,.5)');
+  const amount = `${balance < 0 ? '−' : ''}${Math.abs(balance).toLocaleString('en-US')} CC`;
+  ctx.fillText(climbed ? `BALANCE: ${amount} · VOID` : `BALANCE: ${amount} · PROPERTY OF PEACEHOLD UNTIL REPAID`, W / 2, 1232, W - 100);
 
   ctx.textAlign = 'left';
   ctx.fillStyle = ink;
@@ -154,7 +155,7 @@ export default function EarTagCard({ resident, consent, active }) {
   useEffect(() => {
     if (!active || !resident) return undefined;
     let cancelled = false;
-    drawCard({ resident, climbed, golden, earned: credits.earned }).then((canvas) => {
+    drawCard({ resident, climbed, golden, balance: credits.balance }).then((canvas) => {
       if (cancelled) return;
       canvas.toBlob((blob) => {
         if (cancelled || !blob) return;
@@ -165,7 +166,7 @@ export default function EarTagCard({ resident, consent, active }) {
       }, 'image/png');
     });
     return () => { cancelled = true; };
-  }, [active, resident, climbed, golden, credits.earned]);
+  }, [active, resident, climbed, golden, credits.balance]);
 
   const fileName = `peacehold-resident-${resident}.png`;
   const text = climbed ? `I’m Resident #${resident.toLocaleString('en-US')}. I stopped following.` : `I’m Resident #${resident.toLocaleString('en-US')} of Peacehold. Everything is fine.`;

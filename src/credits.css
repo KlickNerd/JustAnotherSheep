@@ -40,6 +40,7 @@
 p.daily-bonus { cursor: default; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif !important; line-height: 1.45 !important; max-width: 420px; }
 
 @media (max-width: 760px) {
+  .credit-notice { left: 16px; max-width: none; position: fixed; right: 16px; top: 112px; }
   .credits-pill { font-size: .72rem; padding: 9px 13px 9px 11px; }
   .credit-pop { max-width: 210px; }
 }
@@ -47,3 +48,11 @@ p.daily-bonus { cursor: default; font-family: system-ui, -apple-system, 'Segoe U
   .credit-pop { animation: none; }
 }
 .credit-card.is-golden .credit-card-balance.is-debt { color: #8d1f12; }
+
+.credit-notice { animation: creditPop 7s ease both; background: #fffdf6; border: 1px solid rgba(31,27,20,.12); border-left: 4px solid #c79a1e; border-radius: 12px; box-shadow: 0 16px 34px -16px rgba(0,0,0,.5); color: #1f1b14; display: grid; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; gap: 2px; max-width: 280px; padding: 12px 14px; }
+.credit-notice strong { font-size: .9rem; }
+.credit-notice span { color: rgba(31,27,20,.7); font-size: .8rem; line-height: 1.4; }
+.credit-interest { animation: flickerNote 3s steps(1) infinite; background: #a3392a; border-radius: 999px; color: #fff; font-family: 'DM Mono', monospace; font-size: .62rem; letter-spacing: .06em; padding: 4px 10px; }
+@keyframes flickerNote { 0%, 90% { opacity: 1; } 95% { opacity: .55; } }
+.credits-pill-wrap.is-void .credits-pill strong { text-decoration: line-through; text-decoration-color: #a3392a; text-decoration-thickness: 2px; }
+.credits-pill-wrap.is-void .credits-pill span::after { color: #a3392a; content: " · void"; }

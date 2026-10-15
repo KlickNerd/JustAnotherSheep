@@ -13,13 +13,13 @@ const DAY = 86400000;
 const listeners = new Set();
 
 function fresh() {
-  return { balance: 0, earned: 0, once: {}, streak: 0, lastDay: null, owned: {}, resident: null, event: null };
+  return { balance: 0, earned: 0, once: {}, streak: 0, lastDay: null, owned: {}, resident: null, event: null, notice: null };
 }
 
 function load() {
   try {
     const stored = JSON.parse(window.localStorage.getItem(KEY));
-    return stored ? { ...fresh(), ...stored, event: null } : fresh();
+    return stored ? { ...fresh(), ...stored, event: null, notice: null } : fresh();
   } catch {
     return fresh();
   }
@@ -31,7 +31,7 @@ let eventId = 0;
 function save(next) {
   state = next;
   try {
-    const { event, ...persisted } = next; // eslint-disable-line no-unused-vars
+    const { event, notice, ...persisted } = next; // eslint-disable-line no-unused-vars
     window.localStorage.setItem(KEY, JSON.stringify(persisted));
   } catch { /* privater Modus o. Ä. */ }
   listeners.forEach((listener) => listener());
@@ -46,18 +46,42 @@ export function useCredits() {
   return useSyncExternalStore(subscribe, () => state);
 }
 
+/* Wer zum ersten Mal ins Minus rutscht, bekommt freundlich einen Kredit */
+function withCreditLine(next) {
+  if (next.balance >= 0 || state.balance < 0 || next.once.creditLine) return next;
+  eventId += 1;
+  return {
+    ...next,
+    once: { ...next.once, creditLine: true },
+    notice: { id: eventId, title: 'Buy now, graze later.', text: 'Your Peacehold credit line has been approved. No action needed.' },
+  };
+}
+
 /* Gutschrift oder Gebühr. Einmalige Anlässe zählen pro Besucher nur einmal. */
 export function award(key, amount, label, { once = true } = {}) {
   if (once && state.once[key]) return false;
   eventId += 1;
-  save({
+  save(withCreditLine({
     ...state,
     balance: state.balance + amount,
     earned: state.earned + Math.max(0, amount),
     once: once ? { ...state.once, [key]: true } : state.once,
     event: { id: eventId, amount, label },
-  });
+  }));
   return true;
+}
+
+/* Zinsen laufen leise mit, ohne jedes Mal einzublenden */
+export function accrueInterest(amount = 1) {
+  if (state.balance >= 0) return;
+  save({ ...state, balance: state.balance - amount, interest: (state.interest || 0) + amount });
+}
+
+/* Am Ausgang reicht es nie: Wer im Plus ist, zahlt sein Guthaben plus eins */
+export function chargeExit() {
+  if (state.once.exit) return;
+  if (state.balance >= 0) award('exit', -(state.balance + 1), 'Exit fee (your balance + 1)');
+  else award('exit', -25, 'Exit processing fee');
 }
 
 /* Die Nummer ist, wie Peacehold verspricht, dauerhaft */
@@ -136,24 +160,38 @@ export function formatCredits(value) {
 }
 
 /* Der Zähler unten rechts mit den aufsteigenden Gutschriften */
-export function CreditsPill({ dark = false }) {
+export function CreditsPill({ dark = false, interest = false, voided = false }) {
   const credits = useCredits();
   const [pop, setPop] = useState(null);
+  const [notice, setNotice] = useState(null);
   useEffect(() => {
     if (!credits.event) return undefined;
     setPop(credits.event);
     const timer = window.setTimeout(() => setPop(null), 2600);
     return () => window.clearTimeout(timer);
   }, [credits.event]);
+  useEffect(() => {
+    if (!credits.notice) return undefined;
+    setNotice(credits.notice);
+    const timer = window.setTimeout(() => setNotice(null), 7000);
+    return () => window.clearTimeout(timer);
+  }, [credits.notice]);
 
   return (
-    <div className={`credits-pill-wrap${dark ? ' is-dark' : ''}`}>
+    <div className={`credits-pill-wrap${dark ? ' is-dark' : ''}${voided ? ' is-void' : ''}`}>
+      {notice && (
+        <div key={notice.id} className="credit-notice" role="status">
+          <strong>{notice.title}</strong>
+          <span>{notice.text}</span>
+        </div>
+      )}
+      {interest && credits.balance < 0 && !voided && <span className="credit-interest" aria-hidden="true">Interest −1 CC every 3 s</span>}
       {pop && (
         <span key={pop.id} className={`credit-pop${pop.amount < 0 ? ' is-fee' : ''}`} role="status">
           <strong>{pop.amount >= 0 ? '+' : ''}{formatCredits(pop.amount)}</strong> {pop.label}
         </span>
       )}
-      <SiteLink href="/store" className={`credits-pill${credits.balance < 0 ? ' is-debt' : ''}`} aria-label={`Compliance Credits: ${credits.balance}. Open the Peacehold Store`}>
+      <SiteLink href="/store" className={`credits-pill${credits.balance < 0 ? ' is-debt' : ''}`} title={voided ? 'Void' : undefined} aria-label={`Compliance Credits: ${credits.balance}. Open the Peacehold Store`}>
         <i aria-hidden="true">◉</i>
         <strong>{formatCredits(credits.balance)}</strong>
         <span>CC</span>
@@ -179,6 +217,7 @@ export function CreditCard({ resident }) {
         <li>Issued by the Shepherd. Backed by the Shepherd.</li>
         <li>Spendable on approved items only.</li>
         <li>May be frozen at any time, for your safety.</li>
+        <li>Welcome gifts are subject to repayment.</li>
       </ul>
     </div>
   );

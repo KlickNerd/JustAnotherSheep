@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SiteLink } from '../router';
-import { award, buy, CreditCard, CreditsPill, DailyBonus, formatCredits, ITEMS, priceOf, residentNumber, useCredits } from '../credits';
+import { accrueInterest, award, buy, chargeExit, CreditCard, CreditsPill, formatCredits, ITEMS, priceOf, residentNumber, useCredits } from '../credits';
 import EarTagCard from './EarTag';
 import './home.css';
 
@@ -11,7 +11,7 @@ import './home.css';
    nach, bis das Onboarding zusammenbricht. Nichts davon erhebt echte
    Daten — Zählung, Captcha und Abstimmung sind gespielt. */
 
-const SCENES = ['welcome', 'number', 'home', 'day', 'rewards', 'feed', 'training', 'verify', 'vote', 'assistant', 'agreement', 'error', 'night', 'story', 'choice'];
+const SCENES = ['welcome', 'number', 'rewards', 'home', 'day', 'feed', 'training', 'verify', 'vote', 'assistant', 'agreement', 'error', 'night', 'story', 'choice'];
 const ORIENTATION_STEPS = 10;
 const at = (id) => SCENES.indexOf(id);
 
@@ -525,7 +525,7 @@ function NumberScene({ entered, resident, sfx }) {
             </div>
           )}
           {(choice === 'confirmed' || name) && <p className="scribble scene-note">You have a name.</p>}
-          {(choice === 'confirmed' || name.replace(/ /g, '').length >= 3) && <Next to="home" />}
+          {(choice === 'confirmed' || name.replace(/ /g, '').length >= 3) && <Next to="rewards" />}
         </div>
 
         <div className="registration">
@@ -594,7 +594,7 @@ function HomeScene({ sfx }) {
   const book = (pen) => {
     if (booked !== null) return;
     setBooked(pen);
-    award('pen', 10, 'Assignment accepted');
+    award('rent', -40, 'Rent · Pen 7 · first month');
     window.setTimeout(() => {
       setScribbled(true);
       LISTINGS.forEach((_, index) => window.setTimeout(() => sfx('scratch'), index * 320));
@@ -606,7 +606,7 @@ function HomeScene({ sfx }) {
       <div className="scene-inner listings-layout">
         <div className="listings-top">
           <div className="listings-copy">
-            <p className="step-label">Step 2 · Your home</p>
+            <p className="step-label">Step 3 · Your home</p>
             <h2>Find your perfect pen.</h2>
             <p className="listings-lead">Every resident gets a home. Browse our hand-picked listings and book the one that feels like you.</p>
           </div>
@@ -614,7 +614,7 @@ function HomeScene({ sfx }) {
             <div className="booking-confirm" role="status">
               <p className="booking-head"><span aria-hidden="true">✉</span> Booking confirmed</p>
               <p>You booked <strong>Pen {booked}</strong>. You have been assigned <strong>Pen 7</strong>.</p>
-              <p className="booking-small">Pen 7 is identical to your choice. Check-in: now. Check-out: —</p>
+              <p className="booking-small">Pen 7 is identical to your choice. First month’s rent (40 CC) has been charged automatically. Check-out: —</p>
             </div>
           )}
           {scribbled && (
@@ -676,7 +676,7 @@ function DayScene() {
     <Scene id="day">
       <div className="scene-inner split-layout">
         <div>
-          <p className="step-label">Step 3 · Your day</p>
+          <p className="step-label">Step 4 · Your day</p>
           <h2>Your day has been planned for you.</h2>
           <p>So you never have to wonder what comes next. Feel free to adjust anything.</p>
           <button type="button" className="ghost-button" onClick={() => { setMessage('Your request has been received. And denied.'); award('change-fee', -5, 'Change request fee', { once: false }); }}>Request a change</button>
@@ -699,19 +699,31 @@ function DayScene() {
 
 const MINI_STORE = ['grass', 'freetime', 'pen7'];
 
-function RewardsScene({ resident }) {
+function RewardsScene({ resident, climbed }) {
   const credits = useCredits();
   const [message, setMessage] = useState('');
+  const claimed = Boolean(credits.once.welcome || credits.once['fence-damage']);
+  const claim = () => {
+    if (climbed) {
+      award('fence-damage', -50, 'Fence damage fee');
+      setMessage('Welcome gift revoked. Unauthorized entry detected. A fence damage fee has been charged.');
+    } else {
+      award('welcome', 50, 'Welcome gift');
+      setMessage('Your welcome gift has been credited. Enjoy it responsibly.');
+    }
+  };
   return (
-    <Scene id="rewards">
+    <Scene id="rewards" className={claimed ? 'is-claimed' : ''}>
       <div className="scene-inner split-layout rewards-layout">
         <div>
-          <p className="step-label">Step 4 · Your rewards</p>
-          <h2>Good behaviour pays.</h2>
-          <p>Meet Compliance Credits, the official currency of Peacehold. Earned by doing what you were going to do anyway. Spent on things you already have.</p>
-          <DailyBonus />
-          {(message || credits.lastDay) && <p className="scribble scene-note">That’s not money. That’s a leash.</p>}
-          <span className="desktop-only"><Next to="feed" /></span>
+          <p className="step-label">Step 2 · Your welcome gift</p>
+          <h2>A little something to get you started.</h2>
+          <p>Every new resident receives 50 Compliance Credits, the official currency of Peacehold. Spend them on anything you need. Everything you need costs something.</p>
+          {!claimed
+            ? <button type="button" className="home-button gift-button" onClick={claim}><span aria-hidden="true">🎁</span> Claim my welcome gift</button>
+            : <p className="scene-feedback" role="status">{message || 'Your welcome gift has already been credited.'}</p>}
+          {claimed && <p className="scribble scene-note">That’s not money. That’s a leash.</p>}
+          <span className="desktop-only"><Next to="home" /></span>
         </div>
         <div className="rewards-side">
           <CreditCard resident={resident} />
@@ -722,9 +734,8 @@ function RewardsScene({ resident }) {
                 <span aria-hidden="true">{item.icon}</span><strong>{item.name}</strong><em>{formatCredits(priceOf(item, credits))} CC</em>
               </button>
             ))}
-            {message && <p className="scene-feedback" role="status">{message}</p>}
           </div>
-          <span className="mobile-only"><Next to="feed" /></span>
+          <span className="mobile-only"><Next to="home" /></span>
         </div>
       </div>
     </Scene>
@@ -765,7 +776,7 @@ function FeedScene({ entered, announce }) {
           <div className="feed-scroll">
             {news.map((item) => <article key={item.type} className={`feed-card feed-${item.type}`}><span>{item.type === 'breaking' ? 'BREAKING' : 'CORRECTION'}</span><p>{item.text}</p><small>Peacehold Safety Office</small></article>)}
             {posts.map((post, index) => <article key={index} className="feed-card"><header><i aria-hidden="true" /><strong>{post.author}</strong><em>{post.badge}</em></header><p>{post.text}</p><small>♥ {post.meta}</small></article>)}
-            <button type="button" className="feed-more" onClick={() => { setPosts((current) => [...current, ...FEED_POSTS]); setLoadedMore(true); award('feed', 5, 'Engagement reward', { once: false }); }}>Load more</button>
+            <button type="button" className="feed-more" onClick={() => { setPosts((current) => [...current, ...FEED_POSTS]); setLoadedMore(true); award('feed', 2, 'Engagement reward', { once: false }); }}>Load more</button>
           </div>
         </div>
       </div>
@@ -787,7 +798,7 @@ function TrainingScene() {
         </div>
         <div className="quiz">
           <p className="quiz-question">Quick check: What does a wolf look like?</p>
-          <div className="quiz-options">{QUIZ.map((option) => <button key={option} type="button" onClick={() => { setAnswered(true); award('training', 15, 'Safety training completed'); }}>{option}</button>)}</div>
+          <div className="quiz-options">{QUIZ.map((option) => <button key={option} type="button" onClick={() => { setAnswered(true); award('training', 5, 'Certificate of safety'); }}>{option}</button>)}</div>
           {answered && <p className="scene-feedback" role="status">Correct! All answers are correct. You have completed your safety training.</p>}
           {answered && <p className="scribble scene-note">Has anyone ever seen one?</p>}
         </div>
@@ -857,9 +868,9 @@ function VoteScene() {
         <h2>Morning assembly is voluntary.<br />Will you attend?</h2>
         <div className="vote-box" ref={areaRef}>
           <div className="vote-options">
-            <button type="button" onClick={() => { setResult('yes'); award('vote', 25, 'Voluntary participation'); }}>Yes</button>
-            <button type="button" onClick={() => { setResult('yes'); award('vote', 25, 'Voluntary participation'); }}>Yes, gladly</button>
-            <button type="button" className="vote-no" style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }} onPointerEnter={dodge} onClick={() => { setResult('no'); award('vote', 25, 'Your “No” was recorded as Yes'); }}>No</button>
+            <button type="button" onClick={() => { setResult('yes'); award('vote', -5, 'Processing fee · participation is free'); }}>Yes</button>
+            <button type="button" onClick={() => { setResult('yes'); award('vote', -5, 'Processing fee · participation is free'); }}>Yes, gladly</button>
+            <button type="button" className="vote-no" style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }} onPointerEnter={dodge} onClick={() => { setResult('no'); award('vote', -5, 'Processing fee · your “No” was recorded as Yes'); }}>No</button>
           </div>
           {result && (
             <div className="vote-result" role="status">
@@ -945,7 +956,7 @@ function AgreementScene() {
           </div>
           <label className="agreement-check"><input type="checkbox" checked disabled readOnly /> I have read and agree to everything</label>
           <div className="agreement-sign"><span>Signature</span><strong className="scribble">Don’t sign.</strong></div>
-          <button type="button" className="home-button" onClick={() => { award('agreement', 100, 'Agreement signed'); goTo('error'); }}>Complete orientation</button>
+          <button type="button" className="home-button" onClick={() => { award('agreement', -25, 'Signing fee'); goTo('error'); }}>Complete orientation</button>
         </div>
       </div>
     </Scene>
@@ -962,6 +973,8 @@ export default function HomePage({ footer }) {
   const [active, setActive] = useState(0);
   const [entered, setEntered] = useState(() => new Set([0]));
   const [captchaPassed, setCaptchaPassed] = useState(false);
+  const [exitState, setExitState] = useState('closed'); // closed → denied → torn
+  const freed = exitState === 'torn';
   const [resident] = useState(residentNumber);
   const credits = useCredits();
   const containerRef = useRef(null);
@@ -980,7 +993,7 @@ export default function HomePage({ footer }) {
     }, { root, threshold: 0.55 });
     root.querySelectorAll('.scene').forEach((scene) => observer.observe(scene));
     return () => observer.disconnect();
-  }, [captchaPassed]);
+  }, [captchaPassed, freed]);
 
   // Was passiert, wenn eine Szene zum ersten Mal betreten wird
   const handled = useRef(new Set());
@@ -989,6 +1002,10 @@ export default function HomePage({ footer }) {
       if (handled.current.has(index)) return;
       handled.current.add(index);
       const id = SCENES[index];
+      if (id === 'day') award('activities', -15, 'Mandatory activities fee');
+      if (id === 'feed') award('feed-sub', -10, 'Stay informed Premium · renews automatically');
+      if (id === 'training') award('course', -20, 'Course fee');
+      if (id === 'verify') award('verify-fee', -10, 'Verification fee');
       if (id === 'training') degrade(1);
       if (id === 'verify') announce('verify');
       if (id === 'vote') announce('vote');
@@ -1015,15 +1032,13 @@ export default function HomePage({ footer }) {
   const decide = (choice) => {
     pageConsent = choice;
     setConsent(choice);
-    if (choice === 'accept') award('consent', 50, 'Accepted all fences');
-    else award('consent', 0, 'Climbing is not a rewarded activity');
     announce(choice, startMusic);
     containerRef.current?.focus({ preventScroll: true });
   };
 
   const passCaptcha = () => {
     songAllowed.current = true;
-    award('captcha', -20, 'Verification skipped');
+    award('captcha', -10, 'Unverified resident surcharge');
     setCaptchaPassed(true);
     window.setTimeout(() => goTo('vote'), 700);
   };
@@ -1034,6 +1049,25 @@ export default function HomePage({ footer }) {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const outside = active >= at('error');
+
+  // Zinsen: Schulden wachsen auch, wenn man nichts tut, bis Sheep die Karte zerreißt
+  const accruing = Boolean(consent) && !freed && credits.balance < 0;
+  useEffect(() => {
+    if (!accruing) return undefined;
+    const timer = window.setInterval(() => accrueInterest(1), 3000);
+    return () => window.clearInterval(timer);
+  }, [accruing]);
+
+  const tryExit = () => {
+    chargeExit();
+    setExitState('denied');
+    sfx('clack');
+  };
+  const tearCard = () => {
+    setExitState('torn');
+    sfx('scratch');
+    window.setTimeout(() => goTo('night'), 1500);
+  };
   const step = active >= 1 && active <= ORIENTATION_STEPS ? active : null;
 
   return (
@@ -1051,7 +1085,7 @@ export default function HomePage({ footer }) {
       <div className="loudspeaker-toasts" role="status" aria-live="polite">
         {toasts.map((toast) => <p key={toast.key} className={`toast toast-${toast.id}`}><span aria-hidden="true">📢</span>{toast.text}</p>)}
       </div>
-      {consent && <CreditsPill dark={outside} />}
+      {consent && <CreditsPill dark={outside} interest={accruing} voided={freed} />}
       {consent && <button type="button" className="mute-toggle" aria-pressed={!muted} onClick={() => setMuted(!muted)}>{muted ? '🔇 Sound off' : '🔊 Sound on'}</button>}
 
       <div className="scenes" ref={containerRef} tabIndex={-1}>
@@ -1069,9 +1103,9 @@ export default function HomePage({ footer }) {
         </Scene>
 
         <NumberScene entered={entered.has(at('number'))} resident={resident} sfx={sfx} />
+        <RewardsScene resident={resident} climbed={consent === 'climb'} />
         <HomeScene sfx={sfx} />
         <DayScene />
-        <RewardsScene resident={resident} />
         <FeedScene entered={entered.has(at('feed'))} announce={announce} />
         <TrainingScene />
         <VerifyScene onPass={passCaptcha} passed={captchaPassed} />
@@ -1082,16 +1116,33 @@ export default function HomePage({ footer }) {
             <AssistantScene announce={announce} />
             <AgreementScene />
 
-            <Scene id="error">
+            <Scene id="error" className={exitState !== 'closed' ? 'has-exit' : ''}>
               <div className="error-noise" aria-hidden="true" />
               <div className="scene-inner error-layout">
                 <p className="error-code">ORIENTATION ERROR 0x442</p>
                 <h2 className="glitch" data-text="Resident not compliant.">Resident not compliant.</h2>
                 <p className="error-line">Every— every— everything is fine.</p>
-                <button type="button" className="scribble sheep-gap" onClick={() => goTo('night')}>There’s a gap in the fence →</button>
+                {exitState === 'closed' && <button type="button" className="scribble sheep-gap" onClick={tryExit}>There’s a gap in the fence →</button>}
+                {exitState !== 'closed' && (
+                  <div className={`exit-check${freed ? ' is-torn' : ''}`}>
+                    <div className="exit-denied" role="alert">
+                      <p className="exit-head">Exit denied</p>
+                      <p>Exit requires a balance of <strong>0 CC</strong>. Your balance: <strong className="exit-balance">{formatCredits(credits.balance)} CC</strong>.</p>
+                      <p className="exit-small">Please remain a resident until your debt is settled. The gate is open at all times.</p>
+                    </div>
+                    <div className="exit-card" aria-hidden="true">
+                      <div className="exit-half exit-left"><CreditCard resident={resident} /></div>
+                      <div className="exit-half exit-right"><CreditCard resident={resident} /></div>
+                    </div>
+                    <p className="scribble exit-sheep">They don’t need a lock. They have your balance.</p>
+                    {!freed && <button type="button" className="scribble sheep-gap" onClick={tearCard}>You can’t owe them something they made up →</button>}
+                  </div>
+                )}
               </div>
             </Scene>
 
+            {freed && (
+            <>
             <Scene id="night">
               <img className="scene-bg" src="/images/home/fence-night.webp" alt="" loading="lazy" />
               <div className="scene-inner night-layout">
@@ -1123,7 +1174,7 @@ export default function HomePage({ footer }) {
                 <div className="choice-copy">
                   <h2>You noticed too,<br />didn’t you?</h2>
                   <p>Nobody here will tell you what to think. Just this: look around.</p>
-                  <p className="scribble choice-sheep">You earned {credits.earned.toLocaleString('en-US')} credits. I earned nothing. Guess which one of us is free.</p>
+                  <p className="scribble choice-sheep">{credits.balance < 0 ? `They say you owe them ${formatCredits(-credits.balance)} credits. I owe them nothing. Guess which one of us is free.` : `You have ${formatCredits(credits.balance)} credits. I have none. Guess which one of us is free.`}</p>
                   <p className="home-kicker choice-kicker">The only real choice on this page</p>
                   <div className="choice-options">
                     <form onSubmit={(event) => event.preventDefault()}>
@@ -1139,6 +1190,8 @@ export default function HomePage({ footer }) {
               </div>
               {footer}
             </Scene>
+            </>
+            )}
           </>
         )}
       </div>
