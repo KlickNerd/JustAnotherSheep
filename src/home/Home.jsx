@@ -326,17 +326,18 @@ function useSoundSystem(wantMusicFromStart) {
         osc.stop(now + offset + 1.2);
       });
     } else {
-      const length = Math.floor(ctx.sampleRate * (kind === 'clack' ? 0.09 : 0.025));
+      const length = Math.floor(ctx.sampleRate * ({ clack: 0.09, scratch: 0.32 }[kind] || 0.025));
       const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
       const data = buffer.getChannelData(0);
-      for (let i = 0; i < length; i += 1) data[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 3;
+      const shape = kind === 'scratch' ? (i) => Math.sin(Math.PI * i / length) * (0.6 + 0.4 * Math.sin(i / 900)) : (i) => (1 - i / length) ** 3;
+      for (let i = 0; i < length; i += 1) data[i] = (Math.random() * 2 - 1) * shape(i);
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       const filter = ctx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.value = kind === 'clack' ? 1800 : 3200;
+      filter.frequency.value = { clack: 1800, scratch: 4200 }[kind] || 3200;
       const gain = ctx.createGain();
-      gain.gain.value = kind === 'clack' ? 0.9 : 0.25;
+      gain.gain.value = { clack: 0.9, scratch: 0.18 }[kind] || 0.25;
       source.connect(filter).connect(gain).connect(e.master);
       source.start(now);
     }
@@ -566,29 +567,97 @@ function NumberScene({ entered, resident, sfx }) {
   );
 }
 
-function HomeScene() {
-  const [chosen, setChosen] = useState(null);
+const LISTINGS = [
+  { pen: 3, title: 'Cozy pen with fence view', meta: '2 m² · straw included', badge: 'Guest favourite' },
+  { pen: 7, title: 'Spacious pen with fence view', meta: '2 m² · fully fenced', badge: 'Recommended' },
+  { pen: 11, title: 'Quiet pen near the bell', meta: '2 m² · bell rings hourly', badge: null },
+  { pen: 12, title: 'Sunny pen with fence view', meta: '2 m² · sun 11:00–11:20', badge: 'Rare find' },
+  { pen: 5, title: 'Charming starter pen', meta: '2 m² · your forever home', badge: null },
+  { pen: 9, title: 'Minimalist pen, fence view', meta: '2 m² · nothing to distract you', badge: 'New' },
+];
+
+// Ein von Hand gezogener Kreis um den Zaun, bei jeder Karte ein wenig anders
+function fenceCircle(index) {
+  const j = (n) => ((index * 37 + n * 13) % 7) - 3;
+  return `M${9 + j(1)},${41 + j(2)} C${12 + j(3)},${27 + j(4)} ${50 + j(5)},${25 + j(6)} ${90 + j(7)},${29 + j(8)} `
+    + `C${99 + j(9) / 2},${32 + j(1)} ${99 + j(2) / 2},${57 + j(3)} ${88 + j(4)},${61 + j(5)} `
+    + `C${60 + j(6)},${67 + j(7) / 2} ${20 + j(8)},${66 + j(9) / 2} ${8 + j(1)},${59 + j(2)} `
+    + `C${1 + j(3) / 2},${54 + j(4)} ${3 + j(5) / 2},${38 + j(6)} ${16 + j(7)},${33 + j(8)}`;
+}
+
+function HomeScene({ sfx }) {
+  const [booked, setBooked] = useState(null);
+  const [scribbled, setScribbled] = useState(false);
+  const [liked, setLiked] = useState([]);
+  const [notice, setNotice] = useState('');
+
+  const book = (pen) => {
+    if (booked !== null) return;
+    setBooked(pen);
+    award('pen', 10, 'Assignment accepted');
+    window.setTimeout(() => {
+      setScribbled(true);
+      LISTINGS.forEach((_, index) => window.setTimeout(() => sfx('scratch'), index * 320));
+    }, 1300);
+  };
+
   return (
-    <Scene id="home">
-      <div className="scene-inner split-layout">
-        <div>
-          <p className="step-label">Step 2 · Your home</p>
-          <h2>Choose your pen.</h2>
-          <p>Every resident gets a home. Pick the one that feels like you.</p>
-          {chosen !== null && (
-            <div className="scene-feedback" role="status">
-              <p>You chose pen {chosen + 1}. <strong>You have been assigned pen 7.</strong></p>
-              <p>Pen 7 is identical to all other pens. Excellent choice.</p>
+    <Scene id="home" className={`${booked !== null ? 'is-booked' : ''}${scribbled ? ' is-scribbled' : ''}`}>
+      <div className="scene-inner listings-layout">
+        <div className="listings-top">
+          <div className="listings-copy">
+            <p className="step-label">Step 2 · Your home</p>
+            <h2>Find your perfect pen.</h2>
+            <p className="listings-lead">Every resident gets a home. Browse our hand-picked listings and book the one that feels like you.</p>
+          </div>
+          {booked !== null && (
+            <div className="booking-confirm" role="status">
+              <p className="booking-head"><span aria-hidden="true">✉</span> Booking confirmed</p>
+              <p>You booked <strong>Pen {booked}</strong>. You have been assigned <strong>Pen 7</strong>.</p>
+              <p className="booking-small">Pen 7 is identical to your choice. Check-in: now. Check-out: —</p>
             </div>
           )}
-          {chosen !== null && <Next to="day" />}
+          {scribbled && (
+            <div className="listings-sheep">
+              <p className="scribble">They all face the fence.</p>
+              <Next to="day" />
+            </div>
+          )}
         </div>
-        <div className="pen-map" role="group" aria-label="Available pens">
-          {Array.from({ length: 12 }, (_, index) => (
-            <button key={index} type="button" className={`pen${chosen === index ? ' is-chosen' : ''}${chosen !== null && index === 6 ? ' is-assigned' : ''}`} onClick={() => { setChosen(index); award('pen', 10, 'Assignment accepted'); }}>
-              <span>Pen {index + 1}</span><i aria-hidden="true" />
-            </button>
-          ))}
+
+        <div className="portal">
+          <div className="portal-search" aria-hidden="true">
+            <span><b>Where</b>Peacehold</span><span><b>When</b>Forever</span><span><b>Who</b>1 resident</span><i>⌕</i>
+          </div>
+          <div className="portal-filters">
+            <button type="button" className="chip is-active" aria-pressed="true">Fence <span className="chip-view">view</span> ✓</button>
+            <button type="button" className="chip" onClick={() => setNotice('0 pens near the gate. Showing pens near the fence instead.')}>Near the gate</button>
+            <button type="button" className="chip" disabled title="Not available in Peacehold">Sea view</button>
+            <span className="portal-count">{notice || `${LISTINGS.length} results · all results are Pen 7`}</span>
+          </div>
+          <div className="listing-row">
+            {LISTINGS.map((listing, index) => (
+              <article key={listing.pen} className={`listing${booked === listing.pen ? ' is-booked' : ''}${booked !== null && listing.pen === 7 ? ' is-assigned' : ''}`}>
+                <div className="listing-photo">
+                  <img src="/images/home/pen.webp" alt="" loading="lazy" />
+                  {listing.badge && <span className="listing-badge">{listing.badge}</span>}
+                  <button type="button" className={`listing-heart${liked.includes(listing.pen) ? ' is-liked' : ''}`} aria-label={`Save pen ${listing.pen}`} onClick={() => setLiked((current) => (current.includes(listing.pen) ? current.filter((pen) => pen !== listing.pen) : [...current, listing.pen]))}>♥</button>
+                  <svg className="fence-circle" viewBox="0 0 100 75" preserveAspectRatio="none" aria-hidden="true">
+                    <path d={fenceCircle(index)} pathLength="1" style={{ animationDelay: `${index * 0.32}s` }} />
+                  </svg>
+                </div>
+                <div className="listing-body">
+                  <p className="listing-rating"><span>Pen {listing.pen}</span><span>★ 5.0 <small>(48,213)</small></span></p>
+                  <h3>{listing.title}</h3>
+                  <p className="listing-meta">{listing.meta}</p>
+                  <div className="listing-foot">
+                    <p><strong>Free*</strong> <small>*your wool</small></p>
+                    <button type="button" onClick={() => book(listing.pen)} disabled={booked !== null}>{booked === listing.pen ? 'Booked' : 'Book'}</button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </Scene>
@@ -1000,7 +1069,7 @@ export default function HomePage({ footer }) {
         </Scene>
 
         <NumberScene entered={entered.has(at('number'))} resident={resident} sfx={sfx} />
-        <HomeScene />
+        <HomeScene sfx={sfx} />
         <DayScene />
         <RewardsScene resident={resident} />
         <FeedScene entered={entered.has(at('feed'))} announce={announce} />
