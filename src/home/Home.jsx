@@ -31,19 +31,19 @@ const MUSIC_DUCKED = 0.04;
 const DEGRADE_RATES = [1, 0.985, 0.955, 0.92];
 
 const ACCOUNTS = [
-  { id: 'news', name: 'Peacehold News', color: '#e5484d' },
-  { id: 'wooly', name: 'Wooly', color: '#30a46c' },
-  { id: 'shepherd', name: 'The Shepherd', color: '#3b82f6', shepherd: true },
-  { id: 'trending', name: 'Trending', color: '#f76b15' },
-  { id: 'friends', name: 'Your friends', color: '#8e4ec6' },
+  { id: 'news', name: 'Peacehold News', image: '/images/home/story-meadow.webp' },
+  { id: 'wooly', name: 'Wooly', image: '/images/home/story-selfie.webp' },
+  { id: 'shepherd', name: 'The Shepherd', image: '/images/home/story-tower.webp' },
+  { id: 'trending', name: 'Trending', image: '/images/home/story-crowd.webp' },
+  { id: 'friends', name: 'Your friends', image: '/images/home/story-friends.webp' },
 ];
 const STORIES = [
-  { account: 'news', bg: 'linear-gradient(165deg, #ff7a6b, #e5484d)', text: 'Everything is fine.', font: 'serif', meta: '12,847 views' },
-  { account: 'wooly', bg: 'linear-gradient(165deg, #6ad9a3, #2c9a64)', text: 'Everything is fine! 🌾', font: 'hand', meta: 'Lovely day for it' },
-  { account: 'sponsored', bg: 'linear-gradient(165deg, #fbefd2, #e7c98d)', text: 'Feel safe. Stay inside.', font: 'serif', meta: 'Sponsored · Peacehold Fences', ad: true },
-  { account: 'shepherd', bg: 'linear-gradient(165deg, #78aefc, #2f6fde)', text: 'Everything is fine. Thank you for not asking.', font: 'sans', meta: 'Pinned' },
-  { account: 'trending', bg: 'linear-gradient(165deg, #ffab6b, #ef5f12)', text: '#EverythingIsFine', font: 'sans', meta: 'Trending for 35 years' },
-  { account: 'friends', bg: 'linear-gradient(165deg, #c39bf0, #7e3fbf)', text: 'Everyone you know thinks everything is fine.', font: 'hand', meta: 'Liked by everyone you know' },
+  { account: 'news', image: '/images/home/story-meadow.webp', text: 'Everything is fine.', font: 'serif', place: 'top', meta: '12,847 views' },
+  { account: 'wooly', image: '/images/home/story-selfie.webp', text: 'Everything is fine! 🌾', font: 'hand', place: 'top', meta: 'Lovely day for it' },
+  { account: 'sponsored', image: '/images/home/story-fence-ad.webp', text: 'Feel safe. Stay inside.', font: 'serif', place: 'top', meta: 'Sponsored · Peacehold Fences', ad: true },
+  { account: 'shepherd', image: '/images/home/story-tower.webp', text: 'Everything is fine. Thank you for not asking.', font: 'sans', place: 'bottom', meta: 'Pinned' },
+  { account: 'trending', image: '/images/home/story-crowd.webp', text: '#EverythingIsFine', font: 'sans', place: 'top', meta: 'Trending for 35 years' },
+  { account: 'friends', image: '/images/home/story-friends.webp', text: 'Everyone you know thinks everything is fine.', font: 'hand', place: 'top', meta: 'Liked by everyone you know' },
 ];
 const STORY_TIME = 4000;
 
@@ -892,27 +892,6 @@ function RewardsScene({ resident, climbed }) {
   );
 }
 
-function SheepAvatar({ color, shepherd }) {
-  return (
-    <svg viewBox="0 0 40 40" aria-hidden="true">
-      <circle cx="20" cy="20" r="20" fill={color} />
-      {shepherd ? (
-        <g>
-          <path d="M9 19 Q20 8 31 19 Z" fill="#3a2a1a" />
-          <rect x="7" y="18" width="26" height="3" rx="1.5" fill="#3a2a1a" />
-          <ellipse cx="20" cy="27" rx="7" ry="6" fill="#f2d7b5" />
-        </g>
-      ) : (
-        <g>
-          {[[13, 15], [20, 12], [27, 15], [11, 22], [29, 22], [15, 28], [25, 28]].map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r="6" fill="#fff" />)}
-          <ellipse cx="20" cy="22" rx="6" ry="7.5" fill="#2b2620" />
-          <circle cx="17.5" cy="21" r="1" fill="#fff" /><circle cx="22.5" cy="21" r="1" fill="#fff" />
-        </g>
-      )}
-    </svg>
-  );
-}
-
 function FeedScene({ entered, active, announce, sfx }) {
   const [index, setIndex] = useState(0);
   const [round, setRound] = useState(0);
@@ -990,6 +969,9 @@ function FeedScene({ entered, active, announce, sfx }) {
 
   return (
     <Scene id="feed" className={sheep ? 'is-scribbled' : ''}>
+      <picture className="scene-picture" aria-hidden="true">
+        <img src="/images/home/feed-green.webp" alt="" loading="lazy" />
+      </picture>
       <div className="scene-inner split-layout feed-layout">
         <div className="feed-copy">
           <p className="step-label">Step 5 · Stay informed</p>
@@ -1002,7 +984,7 @@ function FeedScene({ entered, active, announce, sfx }) {
             <div className="story-avatars">
               {ACCOUNTS.map((item) => (
                 <span key={item.id} className={`story-avatar${item.id === story.account ? ' is-active' : ''}`}>
-                  <SheepAvatar color={item.color} shepherd={item.shepherd} />
+                  <img src={item.image} alt="" loading="lazy" />
                   <small>{item.name}</small>
                 </span>
               ))}
@@ -1012,7 +994,8 @@ function FeedScene({ entered, active, announce, sfx }) {
               {sheep && <span className="scribble story-sheep">Five faces. One voice.</span>}
             </div>
 
-            <div className={`story${special ? ` is-${special}` : ''}`} style={{ background: special ? undefined : story.bg }} onClick={tap} role="button" tabIndex={0} aria-label="Next story" onKeyDown={(event) => { if (event.key === 'ArrowRight' || event.key === 'Enter') go(1); if (event.key === 'ArrowLeft') go(-1); }}>
+            <div className={`story${special ? ` is-${special}` : ''}${story.ad ? ' is-ad' : ''}`} onClick={tap} role="button" tabIndex={0} aria-label="Next story" onKeyDown={(event) => { if (event.key === 'ArrowRight' || event.key === 'Enter') go(1); if (event.key === 'ArrowLeft') go(-1); }}>
+              {STORIES.map((item, n) => <img key={item.image} className={`story-image${n === index ? ' is-shown' : ''}`} src={item.image} alt="" loading="lazy" />)}
               <div className="story-bars" aria-hidden="true">
                 {STORIES.map((item, n) => <i key={`${n}-${round}`} className={n < index ? 'is-done' : n === index ? `is-current${special || replying ? ' is-paused' : ''}` : ''} />)}
               </div>
@@ -1025,11 +1008,11 @@ function FeedScene({ entered, active, announce, sfx }) {
               {!special && (
                 <>
                   <div className="story-head">
-                    {story.ad ? <span className="story-ad">Ad</span> : <SheepAvatar color={account.color} shepherd={account.shepherd} />}
+                    {story.ad ? <span className="story-ad">Ad</span> : <img src={account.image} alt="" />}
                     <strong>{story.ad ? 'Peacehold Fences' : account.name}</strong><span className="story-check" aria-label="verified">✓</span>
                     <button type="button" className="story-mute" onClick={notInterested}>Not interested</button>
                   </div>
-                  <p key={`${index}-${round}`} className={`story-text story-${story.font}${story.ad ? ' is-ad' : ''}`}>{story.text}</p>
+                  <p key={`${index}-${round}`} className={`story-text story-${story.font} story-${story.place}`}><span>{story.text}</span></p>
                   {story.ad && <button type="button" className="story-shop" onClick={shop}>{bought ? 'Purchased ✓' : 'Shop now · 15 CC'}</button>}
                   <p className="story-meta">{story.meta}</p>
                 </>
