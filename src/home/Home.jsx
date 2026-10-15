@@ -30,13 +30,22 @@ const MUSIC_VOLUME = 0.2;
 const MUSIC_DUCKED = 0.04;
 const DEGRADE_RATES = [1, 0.985, 0.955, 0.92];
 
-const FEED_POSTS = [
-  { author: 'Peacehold News', badge: 'Official', text: 'Everything is fine.', meta: '12,847 likes' },
-  { author: 'Wooly', badge: 'Your neighbour', text: 'Everything is fine! Lovely day for it 🌾', meta: 'Liked by everyone you know' },
-  { author: 'Trending in Peacehold', badge: '#1', text: '#EverythingIsFine', meta: 'Trending for 35 years' },
-  { author: 'The Shepherd', badge: 'Verified', text: 'Everything is fine. Thank you for not asking.', meta: 'Pinned' },
-  { author: 'Because you liked “Everything is fine”', badge: 'For you', text: 'Everything is fine.', meta: 'Recommended for you' },
+const ACCOUNTS = [
+  { id: 'news', name: 'Peacehold News', color: '#e5484d' },
+  { id: 'wooly', name: 'Wooly', color: '#30a46c' },
+  { id: 'shepherd', name: 'The Shepherd', color: '#3b82f6', shepherd: true },
+  { id: 'trending', name: 'Trending', color: '#f76b15' },
+  { id: 'friends', name: 'Your friends', color: '#8e4ec6' },
 ];
+const STORIES = [
+  { account: 'news', bg: 'linear-gradient(165deg, #ff7a6b, #e5484d)', text: 'Everything is fine.', font: 'serif', meta: '12,847 views' },
+  { account: 'wooly', bg: 'linear-gradient(165deg, #6ad9a3, #2c9a64)', text: 'Everything is fine! 🌾', font: 'hand', meta: 'Lovely day for it' },
+  { account: 'sponsored', bg: 'linear-gradient(165deg, #fbefd2, #e7c98d)', text: 'Feel safe. Stay inside.', font: 'serif', meta: 'Sponsored · Peacehold Fences', ad: true },
+  { account: 'shepherd', bg: 'linear-gradient(165deg, #78aefc, #2f6fde)', text: 'Everything is fine. Thank you for not asking.', font: 'sans', meta: 'Pinned' },
+  { account: 'trending', bg: 'linear-gradient(165deg, #ffab6b, #ef5f12)', text: '#EverythingIsFine', font: 'sans', meta: 'Trending for 35 years' },
+  { account: 'friends', bg: 'linear-gradient(165deg, #c39bf0, #7e3fbf)', text: 'Everyone you know thinks everything is fine.', font: 'hand', meta: 'Liked by everyone you know' },
+];
+const STORY_TIME = 4000;
 
 const PREFERENCES = [
   ['Fences', 'Required for your safety'],
@@ -883,41 +892,162 @@ function RewardsScene({ resident, climbed }) {
   );
 }
 
-function FeedScene({ entered, announce }) {
-  const [posts, setPosts] = useState(FEED_POSTS);
-  const [news, setNews] = useState([]);
-  const [loadedMore, setLoadedMore] = useState(false);
-  const started = useRef(false);
+function SheepAvatar({ color, shepherd }) {
+  return (
+    <svg viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="20" fill={color} />
+      {shepherd ? (
+        <g>
+          <path d="M9 19 Q20 8 31 19 Z" fill="#3a2a1a" />
+          <rect x="7" y="18" width="26" height="3" rx="1.5" fill="#3a2a1a" />
+          <ellipse cx="20" cy="27" rx="7" ry="6" fill="#f2d7b5" />
+        </g>
+      ) : (
+        <g>
+          {[[13, 15], [20, 12], [27, 15], [11, 22], [29, 22], [15, 28], [25, 28]].map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r="6" fill="#fff" />)}
+          <ellipse cx="20" cy="22" rx="6" ry="7.5" fill="#2b2620" />
+          <circle cx="17.5" cy="21" r="1" fill="#fff" /><circle cx="22.5" cy="21" r="1" fill="#fff" />
+        </g>
+      )}
+    </svg>
+  );
+}
 
+function FeedScene({ entered, active, announce, sfx }) {
+  const [index, setIndex] = useState(0);
+  const [round, setRound] = useState(0);
+  const [special, setSpecial] = useState(null); // breaking | correction
+  const [toast, setToast] = useState(null);
+  const [replying, setReplying] = useState(false);
+  const [reply, setReply] = useState('');
+  const [sheep, setSheep] = useState(false);
+  const [bought, setBought] = useState(false);
+  const watched = useRef(0);
+  const started = useRef(false);
+  const story = STORIES[index];
+  const account = ACCOUNTS.find((item) => item.id === story.account);
+
+  const say = (text) => {
+    const id = Date.now();
+    setToast({ id, text });
+    window.setTimeout(() => setToast((current) => (current && current.id === id ? null : current)), 3200);
+  };
+  const go = (step) => {
+    setIndex((current) => {
+      const next = (current + step + STORIES.length) % STORIES.length;
+      if (step > 0 && next === 0) { setRound((value) => value + 1); setSheep(true); }
+      return next;
+    });
+    if (step > 0 && watched.current < STORIES.length) {
+      watched.current += 1;
+      award('watch', 1, 'Watch time reward', { once: false });
+    }
+  };
+
+  // Wolf, dann die stille Korrektur
   useEffect(() => {
     if (!entered || started.current) return undefined;
     started.current = true;
-    const first = window.setTimeout(() => {
-      announce('wolf');
-      setNews([{ type: 'breaking', text: 'Wolf sighted near the eastern fence. Stay inside.' }]);
-    }, 900);
-    const second = window.setTimeout(() => {
-      announce('correction');
-      setNews((current) => [{ type: 'correction', text: 'No wolf was found. Remain alert.' }, ...current]);
-    }, 9000);
-    return () => { window.clearTimeout(first); window.clearTimeout(second); };
+    const timers = [
+      window.setTimeout(() => { setSpecial('breaking'); announce('wolf'); }, 900),
+      window.setTimeout(() => setSpecial(null), 6500),
+      window.setTimeout(() => { setSpecial('correction'); announce('correction'); }, 9000),
+      window.setTimeout(() => setSpecial(null), 13000),
+    ];
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
   }, [entered, announce]);
 
+  // Stories laufen von selbst weiter
+  useEffect(() => {
+    if (!active || special || replying) return undefined;
+    const timer = window.setTimeout(() => go(1), STORY_TIME);
+    return () => window.clearTimeout(timer);
+  }, [active, special, replying, index, round]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const tap = (event) => {
+    if (special) return;
+    const box = event.currentTarget.getBoundingClientRect();
+    go(event.clientX - box.left < box.width * 0.3 ? -1 : 1);
+    sfx('tick');
+  };
+  const notInterested = (event) => {
+    event.stopPropagation();
+    say('Noted. Here’s more of it.');
+    setRound((value) => value + 1);
+    setSheep(true);
+  };
+  const shop = (event) => {
+    event.stopPropagation();
+    if (!bought) { award('fence-decor', -15, 'Decorative fence'); setBought(true); }
+    say('Purchase complete. Your fence will be installed around you.');
+  };
+  const sendReply = (event) => {
+    event.preventDefault();
+    setReplying(false);
+    setReply('');
+    say('Replies are disabled for your safety.');
+  };
+
   return (
-    <Scene id="feed">
-      <div className="scene-inner split-layout">
-        <div>
+    <Scene id="feed" className={sheep ? 'is-scribbled' : ''}>
+      <div className="scene-inner split-layout feed-layout">
+        <div className="feed-copy">
           <p className="step-label">Step 5 · Stay informed</p>
           <h2>Your feed.<br />Personalized for everyone.</h2>
-          <p>Curated by Peacehold to match your interests. Your interests have been curated to match Peacehold.</p>
-          {loadedMore && <p className="scribble scene-note">It’s the same post.</p>}
+          <p className="feed-lead">Curated by Peacehold to match your interests. Your interests have been curated to match Peacehold.</p>
           <Next to="training" />
         </div>
         <div className="feed-phone">
-          <div className="feed-scroll">
-            {news.map((item) => <article key={item.type} className={`feed-card feed-${item.type}`}><span>{item.type === 'breaking' ? 'BREAKING' : 'CORRECTION'}</span><p>{item.text}</p><small>Peacehold Safety Office</small></article>)}
-            {posts.map((post, index) => <article key={index} className="feed-card"><header><i aria-hidden="true" /><strong>{post.author}</strong><em>{post.badge}</em></header><p>{post.text}</p><small>♥ {post.meta}</small></article>)}
-            <button type="button" className="feed-more" onClick={() => { setPosts((current) => [...current, ...FEED_POSTS]); setLoadedMore(true); award('feed', 2, 'Engagement reward', { once: false }); }}>Load more</button>
+          <div className="stories">
+            <div className="story-avatars">
+              {ACCOUNTS.map((item) => (
+                <span key={item.id} className={`story-avatar${item.id === story.account ? ' is-active' : ''}`}>
+                  <SheepAvatar color={item.color} shepherd={item.shepherd} />
+                  <small>{item.name}</small>
+                </span>
+              ))}
+              <svg className="story-strings" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+                {[10, 30, 70, 90].map((x, n) => <path key={x} d={`M${x},6 Q${(x + 50) / 2},${26 + (n % 2) * 3} 50,6`} pathLength="1" style={{ animationDelay: `${n * 0.25}s` }} />)}
+              </svg>
+              {sheep && <span className="scribble story-sheep">Five faces. One voice.</span>}
+            </div>
+
+            <div className={`story${special ? ` is-${special}` : ''}`} style={{ background: special ? undefined : story.bg }} onClick={tap} role="button" tabIndex={0} aria-label="Next story" onKeyDown={(event) => { if (event.key === 'ArrowRight' || event.key === 'Enter') go(1); if (event.key === 'ArrowLeft') go(-1); }}>
+              <div className="story-bars" aria-hidden="true">
+                {STORIES.map((item, n) => <i key={`${n}-${round}`} className={n < index ? 'is-done' : n === index ? `is-current${special || replying ? ' is-paused' : ''}` : ''} />)}
+              </div>
+              {special === 'breaking' && (
+                <div className="story-alert"><b>BREAKING</b><p>A wolf has been sighted near the eastern fence.</p><small>Stay inside. Peacehold Safety Office</small></div>
+              )}
+              {special === 'correction' && (
+                <div className="story-alert"><b>Correction</b><p>No wolf was found.</p><small>Remain alert.</small></div>
+              )}
+              {!special && (
+                <>
+                  <div className="story-head">
+                    {story.ad ? <span className="story-ad">Ad</span> : <SheepAvatar color={account.color} shepherd={account.shepherd} />}
+                    <strong>{story.ad ? 'Peacehold Fences' : account.name}</strong><span className="story-check" aria-label="verified">✓</span>
+                    <button type="button" className="story-mute" onClick={notInterested}>Not interested</button>
+                  </div>
+                  <p key={`${index}-${round}`} className={`story-text story-${story.font}${story.ad ? ' is-ad' : ''}`}>{story.text}</p>
+                  {story.ad && <button type="button" className="story-shop" onClick={shop}>{bought ? 'Purchased ✓' : 'Shop now · 15 CC'}</button>}
+                  <p className="story-meta">{story.meta}</p>
+                </>
+              )}
+              {toast && <p key={toast.id} className="story-toast" role="status">{toast.text}</p>}
+              <div className="story-bottom" onClick={(event) => event.stopPropagation()}>
+                {replying ? (
+                  <form onSubmit={sendReply}>
+                    <label htmlFor="story-reply" className="visually-hidden">Reply</label>
+                    <input id="story-reply" value={reply} onChange={(event) => setReply(event.target.value)} placeholder="Send a reply…" autoComplete="off" autoFocus />
+                    <button type="submit">Send</button>
+                  </form>
+                ) : (
+                  <button type="button" className="story-reply" onClick={() => setReplying(true)}>Reply…</button>
+                )}
+                <span className="story-like" aria-label="You liked this">♥</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1247,7 +1377,7 @@ export default function HomePage({ footer }) {
         <RewardsScene resident={resident} climbed={consent === 'climb'} />
         <HomeScene sfx={sfx} />
         <DayScene active={active === at('day')} sfx={sfx} />
-        <FeedScene entered={entered.has(at('feed'))} announce={announce} />
+        <FeedScene entered={entered.has(at('feed'))} active={active === at('feed')} announce={announce} sfx={sfx} />
         <TrainingScene />
         <VerifyScene onPass={passCaptcha} passed={captchaPassed} />
 
