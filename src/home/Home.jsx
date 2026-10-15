@@ -579,10 +579,10 @@ const LISTINGS = [
 // Ein von Hand gezogener Kreis um den Zaun, bei jeder Karte ein wenig anders
 function fenceCircle(index) {
   const j = (n) => ((index * 37 + n * 13) % 7) - 3;
-  return `M${9 + j(1)},${41 + j(2)} C${12 + j(3)},${27 + j(4)} ${50 + j(5)},${25 + j(6)} ${90 + j(7)},${29 + j(8)} `
-    + `C${99 + j(9) / 2},${32 + j(1)} ${99 + j(2) / 2},${57 + j(3)} ${88 + j(4)},${61 + j(5)} `
-    + `C${60 + j(6)},${67 + j(7) / 2} ${20 + j(8)},${66 + j(9) / 2} ${8 + j(1)},${59 + j(2)} `
-    + `C${1 + j(3) / 2},${54 + j(4)} ${3 + j(5) / 2},${38 + j(6)} ${16 + j(7)},${33 + j(8)}`;
+  return `M${16 + j(1)},${31 + j(2)} C${18 + j(3)},${15 + j(4)} ${52 + j(5)},${12 + j(6)} ${86 + j(7)},${16 + j(8)} `
+    + `C${95 + j(9) / 2},${19 + j(1)} ${96 + j(2) / 2},${48 + j(3)} ${86 + j(4)},${54 + j(5)} `
+    + `C${60 + j(6)},${59 + j(7) / 2} ${26 + j(8)},${59 + j(9) / 2} ${14 + j(1)},${53 + j(2)} `
+    + `C${7 + j(3) / 2},${48 + j(4)} ${8 + j(5) / 2},${26 + j(6)} ${24 + j(7)},${20 + j(8)}`;
 }
 
 function HomeScene({ sfx }) {
@@ -642,7 +642,7 @@ function HomeScene({ sfx }) {
                   <img src="/images/home/pen.webp" alt="" loading="lazy" />
                   {listing.badge && <span className="listing-badge">{listing.badge}</span>}
                   <button type="button" className={`listing-heart${liked.includes(listing.pen) ? ' is-liked' : ''}`} aria-label={`Save pen ${listing.pen}`} onClick={() => setLiked((current) => (current.includes(listing.pen) ? current.filter((pen) => pen !== listing.pen) : [...current, listing.pen]))}>♥</button>
-                  <svg className="fence-circle" viewBox="0 0 100 75" preserveAspectRatio="none" aria-hidden="true">
+                  <svg className="fence-circle" viewBox="0 0 100 75" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                     <path d={fenceCircle(index)} pathLength="1" style={{ animationDelay: `${index * 0.32}s` }} />
                   </svg>
                 </div>
