@@ -568,12 +568,12 @@ function NumberScene({ entered, resident, sfx }) {
 }
 
 const LISTINGS = [
-  { pen: 3, title: 'Cozy pen with fence view', meta: '2 m² · straw included', badge: 'Guest favourite' },
+  { pen: 3, title: 'Cozy pen with fence view', meta: '2 m² · straw included', badge: 'Guest favourite', was: 32 },
   { pen: 7, title: 'Spacious pen with fence view', meta: '2 m² · fully fenced', badge: 'Recommended' },
-  { pen: 11, title: 'Quiet pen near the bell', meta: '2 m² · bell rings hourly', badge: null },
+  { pen: 11, title: 'Quiet pen near the bell', meta: '2 m² · bell rings hourly', badge: null, was: 35 },
   { pen: 12, title: 'Sunny pen with fence view', meta: '2 m² · sun 11:00–11:20', badge: 'Rare find' },
-  { pen: 5, title: 'Charming starter pen', meta: '2 m² · your forever home', badge: null },
-  { pen: 9, title: 'Minimalist pen, fence view', meta: '2 m² · nothing to distract you', badge: 'New' },
+  { pen: 5, title: 'Charming starter pen', meta: '2 m² · your forever home', badge: 'Best price' },
+  { pen: 9, title: 'Minimalist pen, fence view', meta: '2 m² · nothing to distract you', badge: 'New', was: 28 },
 ];
 
 // Ein von Hand gezogener Kreis um den Zaun, bei jeder Karte ein wenig anders
@@ -614,7 +614,8 @@ function HomeScene({ sfx }) {
             <div className="booking-confirm" role="status">
               <p className="booking-head"><span aria-hidden="true">✉</span> Booking confirmed</p>
               <p>You booked <strong>Pen {booked}</strong>. You have been assigned <strong>Pen 7</strong>.</p>
-              <p className="booking-small">Pen 7 is identical to your choice. First month’s rent (40 CC) has been charged automatically. Check-out: —</p>
+              <p className="booking-rent">First month’s rent: <strong>−40 CC</strong>, charged automatically.</p>
+              <p className="booking-small">Pen 7 is identical to your choice. Rent renews monthly. Check-out: —</p>
             </div>
           )}
           {scribbled && (
@@ -633,7 +634,7 @@ function HomeScene({ sfx }) {
             <button type="button" className="chip is-active" aria-pressed="true">Fence <span className="chip-view">view</span> ✓</button>
             <button type="button" className="chip" onClick={() => setNotice('0 pens near the gate. Showing pens near the fence instead.')}>Near the gate</button>
             <button type="button" className="chip" disabled title="Not available in Peacehold">Sea view</button>
-            <span className="portal-count">{notice || `${LISTINGS.length} results · all results are Pen 7`}</span>
+            <span className="portal-count">{notice || `${LISTINGS.length} results · all results are Pen 7 · *plus wool`}</span>
           </div>
           <div className="listing-row">
             {LISTINGS.map((listing, index) => (
@@ -651,7 +652,7 @@ function HomeScene({ sfx }) {
                   <h3>{listing.title}</h3>
                   <p className="listing-meta">{listing.meta}</p>
                   <div className="listing-foot">
-                    <p><strong>Free*</strong> <small>*your wool</small></p>
+                    <p>{listing.was && <s>{listing.was}</s>} <strong>40 CC</strong> <small>/ month*</small></p>
                     <button type="button" onClick={() => book(listing.pen)} disabled={booked !== null}>{booked === listing.pen ? 'Booked' : 'Book'}</button>
                   </div>
                 </div>

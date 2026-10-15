@@ -183,6 +183,8 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .booking-confirm p { font-family: var(--ui) !important; font-size: .9rem; line-height: 1.45 !important; margin: 0; }
 .booking-confirm .booking-head { color: #2f7a46; font-size: .72rem; font-weight: 700; letter-spacing: .12em; margin-bottom: 6px; text-transform: uppercase; }
 .booking-confirm .booking-small { color: #777; font-size: .78rem; margin-top: 4px; }
+.booking-confirm .booking-rent { color: var(--pencil); font-size: .85rem; margin-top: 4px; }
+.listing-foot s { color: #aaa; font-size: .78rem; margin-right: 2px; }
 .listings-sheep { animation: rise .5s ease 2s both; }
 .listings-sheep .scribble { font-size: clamp(2rem, 3vw, 2.6rem); margin: 0; transform: rotate(-4deg); white-space: nowrap; }
 .listings-sheep .scene-next { margin-top: 10px; }
