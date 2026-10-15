@@ -672,199 +672,158 @@ function HomeScene({ sfx }) {
   );
 }
 
-function DayScene({ active, sfx }) {
-  const [message, setMessage] = useState('');
-  const [shaking, setShaking] = useState(null);
-  const [drag, setDrag] = useState(null); // { key, x, y }
-  const [reminder, setReminder] = useState(null);
-  const [week, setWeek] = useState(1);
-  const [custom, setCustom] = useState(null); // { text, status }
-  const [draft, setDraft] = useState('');
-  const [adding, setAdding] = useState(false);
-  const [upgrade, setUpgrade] = useState(false);
-  const [sheep, setSheep] = useState(false);
-  const [current, setCurrent] = useState(-1);
-  const [mobileDay, setMobileDay] = useState(0);
-  const dayTaps = useRef(0);
-  const dragStart = useRef(null);
-  const mouseHandled = useRef(false);
-  const tries = useRef(0);
+function Tally({ groups }) {
+  return (
+    <svg className="tally" viewBox={`0 0 ${groups * 34} 30`} aria-hidden="true">
+      {Array.from({ length: groups }, (_, g) => (
+        <g key={g} transform={`translate(${g * 34} 0)`}>
+          {[0, 1, 2, 3].map((n) => <path key={n} d={`M${4 + n * 6},${4 + ((g + n) % 3)} L${3 + n * 6},${26 - ((g * 2 + n) % 3)}`} />)}
+          <path d={`M0,${20 + (g % 3)} L${26},${6 + (g % 2)}`} />
+        </g>
+      ))}
+    </svg>
+  );
+}
 
-  // Zeitraffer: Jeder Block meldet sich, dann beginnt dieselbe Woche von vorn
+function DayScene({ active, sfx }) {
+  const [day, setDay] = useState(1);
+  const [current, setCurrent] = useState(-1);
+  const [erase, setErase] = useState({});
+  const [rewritten, setRewritten] = useState({});
+  const [message, setMessage] = useState('');
+  const [sheep, setSheep] = useState(false);
+  const [draft, setDraft] = useState('');
+  const [notes, setNotes] = useState([]);
+  const [processed, setProcessed] = useState(0);
+  const [coins, setCoins] = useState(0);
+  const wipe = useRef(null);
+
+  // Zeitraffer: Die Glocke läutet bei jedem Punkt, dann beginnt derselbe Tag von vorn
   useEffect(() => {
     if (!active) return undefined;
-    const timers = SCHEDULE.map((block, index) => window.setTimeout(() => {
-      setReminder({ id: `${week}-${index}`, text: `${block.label} starts now.${block.free ? ' Enjoy responsibly.' : ' Attendance recorded.'}` });
-      setCurrent(index);
-      sfx('tick');
-    }, (minutes(block.from) / DAY_LENGTH) * WEEK_LOOP + 150));
-    timers.push(window.setTimeout(() => { setWeek((current) => current + 1); setSheep(true); }, WEEK_LOOP));
+    const timers = SCHEDULE.map((block, index) => window.setTimeout(() => { setCurrent(index); sfx('tick'); }, (minutes(block.from) / DAY_LENGTH) * WEEK_LOOP + 200));
+    timers.push(window.setTimeout(() => { setDay((value) => value + 1); setCurrent(-1); sfx('ding'); setSheep(true); }, WEEK_LOOP));
     return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [active, week, sfx]);
+  }, [active, day, sfx]);
 
-  const refuse = (key) => {
-    tries.current += 1;
-    setShaking(key);
-    setMessage('Changes to the plan are not part of the plan.');
-    window.setTimeout(() => setShaking(null), 500);
-    if (tries.current >= 2) setSheep(true);
-  };
-  const onPointerDown = (event, key) => {
-    if (event.pointerType !== 'mouse') return;
-    dragStart.current = { key, x: event.clientX, y: event.clientY };
+  // Kreide wegwischen: je weiter man wischt, desto mehr verschmiert sie, dann schreibt sich der Plan neu
+  const onDown = (event, index) => {
+    wipe.current = { index, x: event.clientX, total: 0, sound: false };
     event.currentTarget.setPointerCapture?.(event.pointerId);
   };
-  const onPointerMove = (event) => {
-    const start = dragStart.current;
-    if (start) setDrag({ key: start.key, x: event.clientX - start.x, y: event.clientY - start.y });
+  const onMove = (event) => {
+    const state = wipe.current;
+    if (!state) return;
+    state.total += Math.abs(event.clientX - state.x);
+    state.x = event.clientX;
+    const amount = Math.min(1, state.total / 240);
+    setErase((value) => ({ ...value, [state.index]: amount }));
+    if (amount > 0.15 && !state.sound) { state.sound = true; sfx('scratch'); }
   };
-  const onPointerUp = (key) => {
-    if (!dragStart.current) return;
-    dragStart.current = null;
-    mouseHandled.current = true;
-    setDrag(null);
-    refuse(key);
+  const onUp = () => {
+    const state = wipe.current;
+    if (!state) return;
+    wipe.current = null;
+    if (state.total < 20) setErase((value) => ({ ...value, [state.index]: 0.4 }));
+    window.setTimeout(() => {
+      setErase((value) => ({ ...value, [state.index]: 0 }));
+      setRewritten((value) => ({ ...value, [state.index]: (value[state.index] || 0) + 1 }));
+      setMessage('The plan rewrites itself.');
+      setSheep(true);
+    }, 900);
   };
 
-  const addEvent = (event) => {
+  const drop = (event) => {
     event.preventDefault();
     const text = draft.trim();
     if (!text) return;
-    setAdding(false);
+    const id = Date.now();
     setDraft('');
-    setCustom({ text, status: 'pending' });
-    award('change-fee', -5, 'Change request fee', { once: false });
-    window.setTimeout(() => setCustom({ text, status: 'declined' }), 1400);
-    window.setTimeout(() => { setCustom(null); setMessage(`“${text}” was declined by Peacehold and replaced with Grazing.`); setSheep(true); }, 3600);
-  };
-  const pickDay = (index) => {
-    setMobileDay(index);
-    dayTaps.current += 1;
-    if (dayTaps.current >= 2) {
-      setMessage(`${WEEKDAYS[index]} has been planned exactly like Monday. For your convenience.`);
+    setNotes((value) => [...value, { id, text }]);
+    award('suggestion', -5, 'Suggestion handling fee', { once: false });
+    window.setTimeout(() => {
+      setNotes((value) => value.filter((note) => note.id !== id));
+      setProcessed((value) => value + 1);
+      setMessage(`“${text}” has been received and processed.`);
       setSheep(true);
-    }
+    }, 1800);
   };
-  const buyUpgrade = () => {
-    award('freetime-upgrade', -20, 'Free time upgrade · 10 minutes', { once: false });
-    setUpgrade(false);
-    setMessage('Upgrade successful. Your free time is now 10 minutes, starting next week. Next week has been postponed.');
+  const insertCoin = () => {
+    setCoins((value) => value + 1);
+    sfx('clack');
+    award('freetime-upgrade', -20, 'Free time extension', { once: false });
+    setMessage('Payment received. Free time remains 21:00–21:05. Your extension has been applied to next week.');
   };
 
   return (
-    <Scene id="day" className={`${active ? 'is-running' : ''}${sheep ? ' is-scribbled' : ''}${message ? ' has-message' : ''}`}>
-      <div className="scene-inner calendar-layout">
-        <div className="calendar-copy">
+    <Scene id="day" className={`${sheep ? 'is-scribbled' : ''}${message ? ' has-message' : ''}`}>
+      <picture className="scene-picture" aria-hidden="true">
+        <source media="(max-width: 760px)" srcSet="/images/home/barn-mobile.webp" />
+        <img src="/images/home/barn.webp" alt="" loading="lazy" />
+      </picture>
+      <div className="scene-inner barn-layout">
+        <div className="barn-copy">
           <p className="step-label">Step 4 · Your day</p>
-          <h2>Your week has been planned for you.</h2>
-          <p className="calendar-lead">So you never have to wonder what comes next. Feel free to adjust anything.</p>
-          {message && <p className="scene-feedback calendar-message" role="status">{message}</p>}
-          <div className="calendar-next">
-            {sheep && <p className="scribble scene-note">Same day. Seven times.</p>}
+          <h2>Your day has been planned for you.</h2>
+          <p className="barn-lead">It’s on the board. It will always be on the board. Feel free to adjust anything.</p>
+          {message && <p className="scene-feedback barn-message" role="status">{message}</p>}
+          <div className="barn-next">
             <Next to="feed" />
           </div>
         </div>
 
-        <div className="calendar">
-          <div className="calendar-bar">
-            <strong>Peacehold Calendar</strong>
-            <span className="calendar-week">Week {week} of ∞</span>
-            {message && <span className="agenda-message" aria-hidden="true">{message}</span>}
-            <button type="button" className="calendar-add" onClick={() => setAdding((value) => !value)}>+ New event</button>
-          </div>
-          {adding && (
-            <form className="calendar-form" onSubmit={addEvent}>
-              <label htmlFor="new-event" className="visually-hidden">Event name</label>
-              <input id="new-event" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="What would you like to do?" autoComplete="off" />
-              <button type="submit">Add</button>
-            </form>
-          )}
-          {upgrade && (
-            <div className="calendar-upgrade" role="dialog" aria-label="Free time upgrade">
-              <p><strong>Extend free time to 10 minutes</strong> · 20 CC per week</p>
-              <div><button type="button" onClick={buyUpgrade}>Upgrade</button><button type="button" onClick={() => setUpgrade(false)}>Not now</button></div>
+        <div className="board-wrap">
+          <div className="board">
+            <div className="board-head">
+              <h3>Today’s plan</h3>
+              <span key={day} className="board-day">Day {day}</span>
+              <span key={`bell-${current}`} className={`board-bell${current >= 0 ? ' is-ringing' : ''}`} aria-hidden="true">🔔</span>
             </div>
-          )}
-          {reminder && <p key={reminder.id} className="calendar-reminder" role="status"><span aria-hidden="true">📅</span>{reminder.text}</p>}
-
-          {/* Handy: Wochenleiste mit sieben gleichen Streifen und der Tag als Liste */}
-          <div className="agenda">
-            <div className="agenda-week" role="tablist" aria-label="Days of the week">
-              {WEEKDAYS.map((day, dayIndex) => (
-                <button key={day} type="button" role="tab" aria-selected={mobileDay === dayIndex} className={`agenda-tab${mobileDay === dayIndex ? ' is-active' : ''}`} onClick={() => pickDay(dayIndex)}>
-                  <span className="agenda-tab-name">{day}</span>
-                  <b className="scribble" aria-hidden="true">Mon</b>
-                  <span className="agenda-strip" aria-hidden="true">
-                    {SCHEDULE.map((block) => <i key={block.from} className={`cal-${block.color}`} style={{ flexGrow: Math.max(minutes(block.to) - minutes(block.from), 6) }} />)}
+            {message && <p className="board-message" aria-hidden="true">{message}</p>}
+            <ol className="board-list">
+              {SCHEDULE.map((block, index) => (
+                <li
+                  key={block.from}
+                  className={`board-row${current === index ? ' is-now' : ''}${block.free ? ' is-free' : ''}`}
+                  style={{ '--erase': erase[index] || 0 }}
+                  onPointerDown={(event) => onDown(event, index)}
+                  onPointerMove={onMove}
+                  onPointerUp={onUp}
+                  onPointerCancel={onUp}
+                >
+                  <span key={rewritten[index] || 0} className={`board-text${rewritten[index] ? ' is-rewriting' : ''}`}>
+                    <time>{block.from}</time>{block.label}{block.free && <small> (5 min)</small>}
                   </span>
-                </button>
+                </li>
               ))}
-            </div>
-            <ol key={mobileDay} className="agenda-list" aria-label={`${WEEKDAYS[mobileDay]} schedule`}>
-              {SCHEDULE.map((block, index) => {
-                const key = `${mobileDay}-${index}`;
-                const replaced = custom && index === 7;
-                return (
-                  <li key={key}>
-                    <button
-                      type="button"
-                      className={`agenda-item cal-${replaced ? 'custom' : block.color}${replaced ? ` is-${custom.status}` : ''}${block.free ? ' is-free' : ''}${shaking === key ? ' is-shaking' : ''}${current === index ? ' is-now' : ''}`}
-                      onClick={() => (block.free ? setUpgrade(true) : refuse(key))}
-                    >
-                      <time>{block.from}</time>
-                      <span>{replaced ? custom.text : block.label}{block.free && <small> · 5 min · tap to extend</small>}{replaced && <small> · {custom.status === 'pending' ? 'pending approval…' : 'declined by Peacehold'}</small>}</span>
-                      {current === index && <em>Now</em>}
-                    </button>
-                  </li>
-                );
-              })}
             </ol>
+            <div className="board-foot">
+              <span>Wipe a line to change it</span>
+              <button type="button" className="coin-slot" onClick={insertCoin}>
+                <i aria-hidden="true" key={coins} className={coins ? 'is-dropping' : ''} />
+                <span>Free time +5 min<br /><b>Insert 20 CC</b></span>
+              </button>
+            </div>
           </div>
 
-          <div className="calendar-scroll">
-            <div className="calendar-grid">
-              <div className="calendar-hours" aria-hidden="true">
-                {['06:00', '09:00', '12:00', '15:00', '18:00', '21:00'].map((time) => <span key={time} style={{ top: `${dayPercent(time)}%` }}>{time}</span>)}
-              </div>
-              {WEEKDAYS.map((day, dayIndex) => (
-                <div key={day} className="calendar-day">
-                  <p className="calendar-dayname"><span>{day}</span><b className="scribble" aria-hidden="true">Monday</b></p>
-                  <div className="calendar-column">
-                    {SCHEDULE.map((block, index) => {
-                      const key = `${dayIndex}-${index}`;
-                      const moving = drag && drag.key === key;
-                      return (
-                        <button
-                          key={key}
-                          type="button"
-                          className={`calendar-block cal-${block.color}${block.free ? ' is-free' : ''}${shaking === key ? ' is-shaking' : ''}${moving ? ' is-dragging' : ''}`}
-                          style={{ top: `${dayPercent(block.from)}%`, height: `${dayPercent(block.to) - dayPercent(block.from)}%`, transform: moving ? `translate(${drag.x}px, ${drag.y}px)` : undefined }}
-                          onClick={() => {
-                            if (block.free) setUpgrade(true);
-                            else if (mouseHandled.current) mouseHandled.current = false;
-                            else refuse(key);
-                          }}
-                          onPointerDown={(event) => !block.free && onPointerDown(event, key)}
-                          onPointerMove={onPointerMove}
-                          onPointerUp={() => onPointerUp(key)}
-                          title={`${block.from}–${block.to} · ${block.label}`}
-                        >
-                          <span>{block.label}</span><small>{block.from}</small>
-                        </button>
-                      );
-                    })}
-                    {dayIndex === 0 && custom && (
-                      <span className={`calendar-block cal-custom is-${custom.status}`} style={{ top: `${dayPercent('19:00')}%`, height: `${dayPercent('21:00') - dayPercent('19:00')}%` }}>
-                        <span>{custom.text}</span><small>{custom.status === 'pending' ? 'Pending approval…' : 'Declined by Peacehold'}</small>
-                      </span>
-                    )}
-                    <i key={`now-${week}`} className="calendar-now" aria-hidden="true" />
-                  </div>
-                </div>
-              ))}
+          <form className="suggestions" onSubmit={drop}>
+            <div className="suggestion-box" aria-hidden="true">
+              <span className="suggestion-label">Suggestions</span>
+              <span className="suggestion-slot" />
+              {notes.map((note) => <span key={note.id} className="suggestion-note">{note.text}</span>)}
+              <span className="suggestion-bin">🗑<small>{processed}</small></span>
             </div>
-          </div>
-          <p className="calendar-foot">Free time 21:00–21:05 (tap the gold line) · Lights out 21:05</p>
+            <label htmlFor="suggestion" className="visually-hidden">Your suggestion</label>
+            <input id="suggestion" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Your suggestion" autoComplete="off" />
+            <button type="submit">Drop in</button>
+          </form>
+
+          {sheep && (
+            <div className="barn-sheep" aria-hidden="true">
+              <Tally groups={6} />
+              <p className="scribble">Same day. 4,381 times.</p>
+            </div>
+          )}
         </div>
       </div>
     </Scene>

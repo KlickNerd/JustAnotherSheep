@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@400;700&family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;500;600;700&display=swap');
 
 :root { --black: #0b0b0b; --charcoal: #171717; --ivory: #f0e9dc; --tan: #b69b77; --brass: #a78954; --brown: #5c4b3d; --red: #8d2622; --max: 1400px; color: var(--ivory); background: var(--black); font-family: Oswald, Impact, sans-serif; }
 * { box-sizing: border-box; } html { scroll-behavior: smooth; } body { margin: 0; background: var(--black); } a { color: inherit; text-decoration: none; } button, input { font: inherit; } img { display: block; max-width: 100%; }
