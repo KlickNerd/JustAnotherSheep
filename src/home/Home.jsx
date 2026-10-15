@@ -1038,25 +1038,170 @@ function FeedScene({ entered, active, announce, sfx }) {
   );
 }
 
-function TrainingScene() {
+const SLIDE_COUNT = 6;
+const SLIDE_LOCK = 4;
+const NEIGHBOURS = [48213, 48214, 48215, 48216];
+
+function TrainingScene({ active, resident }) {
+  const [slide, setSlide] = useState(0);
+  const [lock, setLock] = useState(SLIDE_LOCK);
+  const [checking, setChecking] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const [reported, setReported] = useState(null);
   const [answered, setAnswered] = useState(false);
+  const [printed, setPrinted] = useState(false);
+  const [note, setNote] = useState('');
+  const [sheepAsks, setSheepAsks] = useState(false);
+  const [lines, setLines] = useState(0);
+
+  // „Weiter“ erst nach dem Countdown
+  useEffect(() => {
+    if (!active) return undefined;
+    setLock(SLIDE_LOCK);
+    const timer = window.setInterval(() => setLock((value) => (value > 0 ? value - 1 : 0)), 1000);
+    return () => window.clearInterval(timer);
+  }, [active, slide]);
+
+  // Folie 1: Sheep fragt nach; Folie 2: Aufmerksamkeitscheck; Folie 3: Zeilen nacheinander
+  useEffect(() => {
+    if (!active) return undefined;
+    const timers = [];
+    if (slide === 0) timers.push(window.setTimeout(() => setSheepAsks(true), 2200));
+    if (slide === 1 && !checked) timers.push(window.setTimeout(() => setChecking(true), 1800));
+    if (slide === 2) { setLines(0); [1, 2, 3].forEach((n) => timers.push(window.setTimeout(() => setLines(n), n * 900))); }
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [active, slide, checked]);
+
+  const next = () => {
+    if (lock > 0 || checking) { setNote(checking ? 'Please confirm you are still watching.' : `You can continue in ${lock} seconds.`); return; }
+    setNote('');
+    setReporting(false);
+    setSlide((value) => Math.min(SLIDE_COUNT - 1, value + 1));
+  };
+  const back = () => setNote('Going back is not supported in this training.');
+  const report = (number) => {
+    setReported(number);
+    award('report', 5, 'Vigilance reward');
+  };
+  const answer = () => {
+    setAnswered(true);
+    award('training', 5, 'Certificate of safety');
+  };
+  const print = () => {
+    if (!printed) award('cert-print', -5, 'Certificate printing fee');
+    setPrinted(true);
+  };
+
   return (
     <Scene id="training">
-      <div className="scene-inner training-layout">
-        <p className="step-label">Step 6 · Safety training</p>
-        <h2>Know your enemy.</h2>
-        <div className="wolf-cards">
-          {['Wolf (adult)', 'Wolf (young)', 'Wolf (disguised as sheep)'].map((label) => (
-            <figure key={label}><div className="wolf-missing" aria-hidden="true"><span>?</span></div><figcaption><strong>{label}</strong><small>Image unavailable</small></figcaption></figure>
-          ))}
+      <picture className="scene-picture" aria-hidden="true">
+        <source media="(max-width: 760px)" srcSet="/images/home/classroom-mobile.webp" />
+        <img src="/images/home/classroom.webp" alt="" loading="lazy" />
+      </picture>
+      <div className="scene-inner academy-layout">
+        <div className="academy-copy">
+          <p className="step-label">Step 6 · Safety training</p>
+          <h2>Know your enemy.</h2>
+          <p className="academy-lead">Wolf Awareness 101 is mandatory, voluntary and takes only a few minutes of your life.</p>
+          <Next to="verify" />
         </div>
-        <div className="quiz">
-          <p className="quiz-question">Quick check: What does a wolf look like?</p>
-          <div className="quiz-options">{QUIZ.map((option) => <button key={option} type="button" onClick={() => { setAnswered(true); award('training', 5, 'Certificate of safety'); }}>{option}</button>)}</div>
-          {answered && <p className="scene-feedback" role="status">Correct! All answers are correct. You have completed your safety training.</p>}
-          {answered && <p className="scribble scene-note">Has anyone ever seen one?</p>}
+
+        <div className="projector">
+          <div className="academy">
+            <div className="academy-bar">
+              <span className="academy-logo">Peacehold Academy</span>
+              <span className="academy-course">Wolf Awareness 101 · Mandatory</span>
+            </div>
+            <div className="academy-progress" aria-hidden="true"><i style={{ width: `${((slide + 1) / SLIDE_COUNT) * 100}%` }} /></div>
+
+            <div key={slide} className="academy-slide">
+              {slide === 0 && (
+                <>
+                  <h3>What is a wolf?</h3>
+                  <div className="academy-missing">
+                    <span>Image unavailable</span>
+                    <small>Classified for your safety.</small>
+                    {sheepAsks && <b className="scribble academy-question" aria-hidden="true">?</b>}
+                  </div>
+                  {sheepAsks && <p className="scribble academy-sheep">Has anyone ever seen one?</p>}
+                </>
+              )}
+              {slide === 1 && (
+                <>
+                  <h3>Wolves can look like anyone.</h3>
+                  <figure className="academy-figure">
+                    <img src="/images/home/wolf-costume.webp" alt="A sheep wearing cardboard wolf ears and drawn-on fangs" />
+                    <figcaption>Fig. 2 · Wolf (disguised as sheep)</figcaption>
+                  </figure>
+                </>
+              )}
+              {slide === 2 && !reporting && (
+                <>
+                  <h3>Anyone could be a wolf.</h3>
+                  <ul className="academy-lines">
+                    {['Your neighbour.', 'Your friends.', 'You.'].map((line, n) => <li key={line} className={lines > n ? 'is-shown' : ''}>{line}</li>)}
+                  </ul>
+                  <button type="button" className="academy-report" onClick={() => setReporting(true)}>⚑ Report a suspicious neighbour</button>
+                </>
+              )}
+              {slide === 2 && reporting && (
+                <>
+                  <h3>Report a suspicious neighbour</h3>
+                  <div className="academy-neighbours">
+                    {NEIGHBOURS.map((number) => (
+                      <button key={number} type="button" className={reported === number ? 'is-reported' : ''} onClick={() => report(number)}>
+                        <img src="/images/home/neighbour.webp" alt="" />
+                        <span>#{number.toLocaleString('en-US')}</span>
+                      </button>
+                    ))}
+                    <p className="scribble academy-sheep academy-just" aria-hidden="true">They’re just sheep.</p>
+                  </div>
+                  {reported && <p className="academy-ok" role="status">Thank you. Resident #{reported.toLocaleString('en-US')} has been reported. +5 Vigilance Credits.</p>}
+                </>
+              )}
+              {slide === 3 && (
+                <>
+                  <h3>What to do</h3>
+                  <div className="academy-columns">
+                    <p><span>If you see a wolf</span><strong>Report it.</strong></p>
+                    <p><span>If you don’t see a wolf</span><strong>Stay alert.</strong></p>
+                  </div>
+                </>
+              )}
+              {slide === 4 && (
+                <>
+                  <h3>Quick check: What does a wolf look like?</h3>
+                  <div className="quiz-options">{QUIZ.map((option) => <button key={option} type="button" onClick={answer}>{option}</button>)}</div>
+                  {answered && <p className="academy-ok" role="status">Correct! All answers are correct.</p>}
+                </>
+              )}
+              {slide === 5 && (
+                <div className="academy-certificate">
+                  <small>Peacehold Academy certifies that</small>
+                  <strong>Resident #{resident.toLocaleString('en-US')}</strong>
+                  <small>is a</small>
+                  <em>Certified Wolf-Aware Resident</em>
+                  <span className="academy-seal" aria-hidden="true">✦</span>
+                  <button type="button" onClick={print}>{printed ? 'Printed ✓ · Not delivered' : 'Print certificate · 5 CC'}</button>
+                </div>
+              )}
+            </div>
+
+            {checking && (
+              <div className="academy-check" role="dialog" aria-label="Attention check">
+                <p>Are you still watching?</p>
+                <button type="button" onClick={() => { setChecking(false); setChecked(true); setNote(''); }}>Yes, I’m watching</button>
+              </div>
+            )}
+
+            <div className="academy-nav">
+              <button type="button" className="academy-back" onClick={back}>‹ Back</button>
+              <span className="academy-note" role="status">{note || `Slide ${slide + 1} of ${SLIDE_COUNT}`}</span>
+              {slide < SLIDE_COUNT - 1 && <button type="button" className="academy-next" onClick={next} aria-disabled={lock > 0 || checking}>{lock > 0 ? `Next (${lock})` : 'Next ›'}</button>}
+            </div>
+          </div>
         </div>
-        <Next to="verify" />
       </div>
     </Scene>
   );
@@ -1361,7 +1506,7 @@ export default function HomePage({ footer }) {
         <HomeScene sfx={sfx} />
         <DayScene active={active === at('day')} sfx={sfx} />
         <FeedScene entered={entered.has(at('feed'))} active={active === at('feed')} announce={announce} sfx={sfx} />
-        <TrainingScene />
+        <TrainingScene active={active === at('training')} resident={resident} />
         <VerifyScene onPass={passCaptcha} passed={captchaPassed} />
 
         {captchaPassed && (
