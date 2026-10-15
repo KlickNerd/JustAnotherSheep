@@ -494,7 +494,7 @@ function NumberScene({ entered, resident, sfx }) {
   const typeName = (event) => setName([...event.target.value].map((char, index) => (char === ' ' ? ' ' : digits[index % digits.length])).join(''));
 
   return (
-    <Scene id="number" className={`is-${stage}`}>
+    <Scene id="number" className={`is-${stage}${choice ? ' has-choice' : ''}`}>
       <picture className="scene-picture" aria-hidden="true">
         <source media="(max-width: 760px)" srcSet="/images/home/registration-mobile.webp" />
         <img src="/images/home/registration.webp" alt="" loading="lazy" />
@@ -523,6 +523,7 @@ function NumberScene({ entered, resident, sfx }) {
               )}
             </div>
           )}
+          {(choice === 'confirmed' || name) && <p className="scribble scene-note">You have a name.</p>}
           {(choice === 'confirmed' || name.replace(/ /g, '').length >= 3) && <Next to="home" />}
         </div>
 
@@ -549,7 +550,6 @@ function NumberScene({ entered, resident, sfx }) {
                 <strong>{stage === 'printing' ? `#${resident.toLocaleString('en-US')}` : '#·····'}</strong>
                 <small>Please wait to be counted</small>
               </button>
-              {stage === 'waiting' && <p className="dispenser-hint" aria-hidden="true">Pull ↓</p>}
             </div>
           ) : (
             <div className="ear-tag is-punched" aria-label={`Resident number ${resident}`}>
@@ -557,7 +557,6 @@ function NumberScene({ entered, resident, sfx }) {
               <span className="ear-tag-label">Peacehold</span>
               <strong>#{resident.toLocaleString('en-US')}</strong>
               {choice === 'confirmed' && <span className="stamp">Confirmed</span>}
-              {(choice === 'confirmed' || name) && <span className="scribble ear-tag-note">You have a name.</span>}
             </div>
           )}
           <p className="registry-stats">Registered today <strong>{count.toLocaleString('en-US')}</strong><span aria-hidden="true">·</span>Left Peacehold <strong>0</strong></p>

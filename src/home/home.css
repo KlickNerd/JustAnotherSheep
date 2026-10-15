@@ -124,6 +124,7 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .scene-number::after { background: linear-gradient(100deg, rgba(246,241,229,.93) 0%, rgba(246,241,229,.72) 34%, rgba(246,241,229,0) 60%); content: ""; inset: 0; position: absolute; }
 .number-layout { align-items: center; display: grid; gap: clamp(32px, 6vw, 90px); grid-template-columns: 1fr auto; }
 .number-copy { max-width: 520px; }
+.number-copy .scribble { color: var(--pencil); }
 .number-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
 .number-actions .home-button, .number-actions .ghost-button { margin-top: 0; }
 .number-actions .ghost-button { background: rgba(255,255,255,.6); }
@@ -144,7 +145,7 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .flap-sign::after { display: none; }
 @keyframes flap { from { opacity: .3; transform: rotateX(-90deg); } to { opacity: 1; transform: none; } }
 
-.dispenser { align-items: center; display: flex; flex-direction: column; min-height: 240px; position: relative; }
+.dispenser { align-items: center; display: flex; flex-direction: column; min-height: 230px; position: relative; }
 .dispenser-body { align-items: center; background: linear-gradient(160deg, #e0503f, #c0392b 60%, #a32d22); border-radius: 26px 26px 18px 18px; box-shadow: 0 24px 40px -22px rgba(80,10,0,.7), inset 0 2px 0 rgba(255,255,255,.25); color: #fff; display: flex; flex-direction: column; gap: 10px; padding: 16px 24px 18px; position: relative; width: 210px; z-index: 2; }
 .dispenser-body i { background: radial-gradient(circle at 35% 35%, #fff 0 18%, #f3e2b8 19% 100%); border: 3px solid #fff; border-radius: 50%; height: 34px; width: 34px; }
 .dispenser-body span { font-family: var(--ui); font-size: .82rem; font-weight: 700; letter-spacing: .02em; line-height: 1.25; text-align: center; }
@@ -156,7 +157,8 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .ticket small { font-size: .46rem; letter-spacing: .06em; opacity: .55; text-transform: uppercase; }
 .ticket:active { cursor: grabbing; }
 .is-printing .ticket { height: 128px; }
-.dispenser-hint { animation: nudge 1.4s ease-in-out infinite; color: var(--ink) !important; font-family: 'DM Mono', monospace !important; font-size: .7rem; letter-spacing: .2em; margin: 8px 0 0; text-transform: uppercase; }
+.is-waiting .ticket { animation: tease 2.4s ease-in-out 1s infinite; }
+@keyframes tease { 0%, 70%, 100% { height: 58px; } 80% { height: 72px; } 90% { height: 62px; } }
 .ear-tag.is-punched { animation: punch .55s cubic-bezier(.2,1.5,.4,1) both, swing 4s ease-in-out .6s infinite; }
 @keyframes punch { 0% { opacity: 0; transform: scale(1.35) rotate(-8deg); } 60% { opacity: 1; transform: scale(.94) rotate(2deg); } 100% { transform: none; } }
 .registry-stats { background: rgba(255,253,246,.88); border-radius: 999px; box-shadow: 0 10px 24px -18px rgba(0,0,0,.5); color: var(--ink-soft) !important; font-family: 'DM Mono', monospace !important; font-size: .66rem; letter-spacing: .1em; line-height: 1.4 !important; margin: 0; padding: 8px 14px; text-transform: uppercase; }
@@ -426,6 +428,15 @@ a.choice-alt { border-bottom: 1px solid currentColor; justify-self: start; paddi
   .scene-picture img { object-position: 50% 100%; }
   .number-layout { gap: 18px; }
   .is-tagged .number-lead { display: none; }
+  .scene-number .scene-note { font-size: 1.8rem; margin-top: 8px; }
+  .has-choice .registry-stats { display: none; }
+  .has-choice .ear-tag { min-height: 150px; padding: 46px 18px 18px; width: 210px; }
+  .has-choice .ear-tag strong { font-size: 1.8rem; }
+  .has-choice .stamp { border-width: 3px; bottom: 6px; font-size: .95rem; padding: 0 8px; right: 6px; }
+  .has-choice .ear-tag-hole { height: 18px; top: 16px; width: 18px; }
+  .name-field { margin-top: 8px; }
+  .name-field input { padding: 10px 12px; }
+  .name-field .scene-feedback { margin-top: 8px; padding: 10px 12px; }
   .registration { gap: 12px; }
   .dispenser { min-height: 190px; }
   .dispenser-body { border-radius: 20px 20px 14px 14px; gap: 6px; padding: 10px 18px 12px; width: 170px; }
@@ -434,6 +445,7 @@ a.choice-alt { border-bottom: 1px solid currentColor; justify-self: start; paddi
   .dispenser-body b { width: 104px; }
   .ticket { height: 48px; width: 112px; }
   .is-printing .ticket { height: 112px; }
+  @keyframes tease { 0%, 70%, 100% { height: 48px; } 80% { height: 62px; } 90% { height: 52px; } }
   .serving-board { padding: 8px 12px 10px; }
   .flap { font-size: 1.4rem; }
   .registry-stats { font-size: .58rem; }
