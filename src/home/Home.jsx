@@ -691,7 +691,9 @@ function DayScene({ active, sfx }) {
   const [erase, setErase] = useState({});
   const [rewritten, setRewritten] = useState({});
   const [message, setMessage] = useState('');
+  const [short, setShort] = useState('');
   const [sheep, setSheep] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
   const [draft, setDraft] = useState('');
   const [notes, setNotes] = useState([]);
   const [processed, setProcessed] = useState(0);
@@ -729,6 +731,7 @@ function DayScene({ active, sfx }) {
       setErase((value) => ({ ...value, [state.index]: 0 }));
       setRewritten((value) => ({ ...value, [state.index]: (value[state.index] || 0) + 1 }));
       setMessage('The plan rewrites itself.');
+      setShort('The plan rewrites itself.');
       setSheep(true);
     }, 900);
   };
@@ -739,12 +742,14 @@ function DayScene({ active, sfx }) {
     if (!text) return;
     const id = Date.now();
     setDraft('');
+    setSuggesting(false);
     setNotes((value) => [...value, { id, text }]);
     award('suggestion', -5, 'Suggestion handling fee', { once: false });
     window.setTimeout(() => {
       setNotes((value) => value.filter((note) => note.id !== id));
       setProcessed((value) => value + 1);
       setMessage(`“${text}” has been received and processed.`);
+      setShort(`“${text}” has been processed.`);
       setSheep(true);
     }, 1800);
   };
@@ -753,6 +758,7 @@ function DayScene({ active, sfx }) {
     sfx('clack');
     award('freetime-upgrade', -20, 'Free time extension', { once: false });
     setMessage('Payment received. Free time remains 21:00–21:05. Your extension has been applied to next week.');
+    setShort('Paid. Free time remains 5 min.');
   };
 
   return (
@@ -779,7 +785,7 @@ function DayScene({ active, sfx }) {
               <span key={day} className="board-day">Day {day}</span>
               <span key={`bell-${current}`} className={`board-bell${current >= 0 ? ' is-ringing' : ''}`} aria-hidden="true">🔔</span>
             </div>
-            {message && <p className="board-message" aria-hidden="true">{message}</p>}
+            {short && <p className="board-message" aria-hidden="true">{short}</p>}
             <ol className="board-list">
               {SCHEDULE.map((block, index) => (
                 <li
@@ -796,9 +802,11 @@ function DayScene({ active, sfx }) {
                   </span>
                 </li>
               ))}
+              {sheep && <li className="board-sheep" aria-hidden="true"><Tally groups={4} /><span className="scribble">Same day. 4,381 times.</span></li>}
             </ol>
             <div className="board-foot">
               <span>Wipe a line to change it</span>
+              <button type="button" className="suggest-toggle" onClick={() => setSuggesting((value) => !value)}>✉ Suggest</button>
               <button type="button" className="coin-slot" onClick={insertCoin}>
                 <i aria-hidden="true" key={coins} className={coins ? 'is-dropping' : ''} />
                 <span>Free time +5 min<br /><b>Insert 20 CC</b></span>
@@ -806,7 +814,7 @@ function DayScene({ active, sfx }) {
             </div>
           </div>
 
-          <form className="suggestions" onSubmit={drop}>
+          <form className={`suggestions${suggesting ? ' is-open' : ''}`} onSubmit={drop}>
             <div className="suggestion-box" aria-hidden="true">
               <span className="suggestion-label">Suggestions</span>
               <span className="suggestion-slot" />

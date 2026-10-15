@@ -247,7 +247,7 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .board-bell.is-ringing { animation: bell .6s ease; }
 @keyframes bell { 20% { transform: rotate(18deg); } 45% { transform: rotate(-14deg); } 70% { transform: rotate(8deg); } 100% { transform: none; } }
 .board-list { list-style: none; margin: 0; padding: 0; }
-.board-row { cursor: grab; font-size: 1.12rem; line-height: 1.35; padding: 3px 0; position: relative; touch-action: pan-y; user-select: none; }
+.board-row { cursor: grab; font-size: clamp(1.1rem, 1.35vw, 1.3rem); line-height: 1.35; padding: 3px 0; position: relative; touch-action: pan-y; user-select: none; }
 .board-row::after { background: radial-gradient(ellipse at center, rgba(241,238,228,.22), rgba(241,238,228,.08) 55%, transparent 72%); content: ""; inset: -2px -10px; opacity: var(--erase); pointer-events: none; position: absolute; }
 .board-text { display: inline-block; filter: blur(calc(var(--erase) * 3px)); opacity: calc(1 - var(--erase) * .85); transition: opacity .3s ease, filter .3s ease; }
 .board-text time { color: #f5d77a; display: inline-block; font-size: .9em; margin-right: 12px; min-width: 3.1em; }
@@ -277,7 +277,8 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .suggestions button { background: #7a4a20; border: 0; border-radius: 8px; color: #fff; cursor: pointer; font-family: var(--ui); font-size: .8rem; font-weight: 700; padding: 8px 12px; }
 .barn-sheep { animation: rise .5s ease both; bottom: -70px; left: 0; position: absolute; }
 .barn-sheep .tally { display: block; height: 26px; stroke: var(--pencil); stroke-linecap: round; stroke-width: 2.4; fill: none; }
-.barn-sheep .scribble { font-size: clamp(1.6rem, 2.4vw, 2.1rem); margin: 4px 0 0; transform: rotate(-2deg); }
+.barn-sheep .scribble { color: #8d1f12; font-size: clamp(1.6rem, 2.4vw, 2.1rem); margin: 4px 0 0; text-shadow: 0 1px 0 rgba(255,240,210,.6); transform: rotate(-2deg); }
+.board-sheep, .suggest-toggle { display: none; }
 .board-message { animation: rise .3s ease both; color: #f5d77a; display: none; font-family: 'Kalam', cursive !important; font-size: .9rem; line-height: 1.3 !important; margin: 0 0 6px; }
 
 /* ---------- 4 · Belohnungen ---------- */
@@ -591,15 +592,20 @@ a.choice-alt { border-bottom: 1px solid currentColor; justify-self: start; paddi
   .board-wrap { gap: 10px; grid-template-columns: 1fr; }
   .board { padding: 12px 14px 10px; }
   .board-head h3 { font-size: 1.35rem; }
-  .board-row { font-size: 1rem; padding: 2px 0; }
+  .board-row { font-size: 1rem; line-height: 1.3; padding: 1px 0; }
+  .board-row.is-now::before { left: -14px; }
   .board-foot > span { display: none; }
-  .suggestions { align-items: center; display: flex; flex-direction: row; gap: 8px; padding: 8px; }
+  .board-message { display: block; font-size: .85rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .board-sheep { align-items: center; display: flex; gap: 8px; padding-top: 4px; }
+  .board-sheep .tally { height: 16px; stroke: #e2786a; stroke-linecap: round; stroke-width: 2.4; fill: none; }
+  .board-sheep .scribble { color: #ff9c8c; font-size: 1.3rem; transform: rotate(-2deg); }
+  .suggest-toggle { background: none; border: 1px solid rgba(241,238,228,.4); border-radius: 8px; color: #f1eee4; cursor: pointer; display: block; font-family: var(--ui); font-size: .78rem; padding: 6px 10px; }
+  .suggestions { display: none; }
+  .suggestions.is-open { align-items: center; display: flex; flex-direction: row; gap: 8px; padding: 8px; }
   .suggestion-box { display: none; }
   .suggestions input { flex: 1; margin-top: 0; }
-  .board-message { display: block; }
-  .barn-sheep { bottom: auto; left: auto; position: relative; right: auto; top: auto; }
-  .barn-sheep .tally { height: 18px; }
-  .barn-sheep .scribble { font-size: 1.4rem; }
+  .barn-sheep { display: none; }
+  .barn-copy h2 { font-size: 1.6rem; }
   .feed-phone { max-width: 300px; }
   .feed-scroll { height: 38svh; }
   .wolf-cards { gap: 8px; }
