@@ -1,20 +1,3 @@
 {
-  "files": [
-    {
-      "path": "art-src/classroom.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_121054_f9387f31-2692-43a9-883e-14bbb1c7ca3d.png"
-    },
-    {
-      "path": "art-src/classroom-mobile.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_121100_66fb573f-b0a4-496d-92c4-f9270f00e2c4.png"
-    },
-    {
-      "path": "art-src/wolf-costume.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_121106_2bed439d-7af7-4710-be0a-c81c720e529b.png"
-    },
-    {
-      "path": "art-src/neighbour.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_121110_2c5af7c8-77e0-4f1e-8653-acc1d5318000.png"
-    }
-  ]
+  "files": []
 }
