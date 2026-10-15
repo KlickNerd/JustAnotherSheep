@@ -282,15 +282,18 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .cal-orange { background: #f76b15; }
 .cal-purple { background: #8e4ec6; }
 .cal-teal { background: #12a594; }
-.cal-gold { background: #c79a1e; cursor: pointer; min-height: 3px; overflow: visible; padding: 0; z-index: 2; }
-.cal-gold::after { content: ""; inset: -12px -2px; position: absolute; }
-.cal-gold span, .cal-gold small { display: none; }
+.cal-gold { background: #c79a1e; }
+.calendar-block.cal-gold { cursor: pointer; min-height: 3px; overflow: visible; padding: 0; z-index: 2; }
+.calendar-block.cal-gold::after { content: ""; inset: -12px -2px; position: absolute; }
+.calendar-block.cal-gold span, .calendar-block.cal-gold small { display: none; }
 .cal-custom { background: #1f6feb; box-shadow: 0 0 0 2px #fff; z-index: 2; }
 .cal-custom.is-declined { animation: shake .45s ease; background: #9aa0a6; text-decoration: line-through; }
 .calendar-now { background: #e5484d; height: 2px; left: -1px; opacity: 0; pointer-events: none; position: absolute; right: 0; top: 0; z-index: 3; }
 .calendar-now::before { background: #e5484d; border-radius: 50%; content: ""; height: 8px; left: -4px; position: absolute; top: -3px; width: 8px; }
 .is-running .calendar-now { animation: nowLine 20s linear both; opacity: 1; }
 @keyframes nowLine { from { top: 0; } to { top: 100%; } }
+.agenda { display: none; }
+.agenda-message { display: none; }
 .calendar-foot { color: #999; font-family: var(--ui) !important; font-size: .7rem; line-height: 1.3 !important; margin: 8px 0 0; text-align: right; }
 
 /* ---------- 4 · Belohnungen ---------- */
@@ -599,15 +602,45 @@ a.choice-alt { border-bottom: 1px solid currentColor; justify-self: start; paddi
   .calendar-copy .scene-next { margin-top: 10px; }
   .calendar { border-radius: 16px; margin: 0 calc(-1 * var(--scene-x) + 8px); padding: 10px 10px 8px; }
   .calendar-grid { grid-template-columns: 36px repeat(7, calc((100vw - 82px) / 3)); min-width: 0; }
-  .calendar-hours, .calendar-column { height: 33svh; }
-  .calendar-bar strong { font-size: .82rem; }
+  .calendar-scroll, .calendar-reminder { display: none; }
+  .agenda { display: block; }
+  .agenda-week { display: grid; gap: 4px; grid-template-columns: repeat(7, 1fr); margin-bottom: 8px; }
+  .agenda-tab { align-items: center; background: #f7f5f0; border: 1px solid transparent; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 3px; padding: 5px 3px; position: relative; }
+  .agenda-tab.is-active { background: #fff; border-color: #1f6feb; box-shadow: 0 4px 12px -6px rgba(31,111,235,.6); }
+  .agenda-tab-name { color: #555; font-family: var(--ui); font-size: .66rem; font-weight: 700; letter-spacing: .04em; position: relative; text-transform: uppercase; }
+  .agenda-tab-name::after { background: var(--pencil); content: ""; height: 2px; left: -3px; position: absolute; right: -3px; top: 50%; transform: rotate(-12deg) scaleX(0); transform-origin: left; transition: transform .3s ease; }
+  .agenda-tab b { color: var(--pencil); font-size: .95rem; left: 50%; opacity: 0; position: absolute; top: -12px; transform: translateX(-50%) rotate(-8deg); transition: opacity .3s ease; }
+  .is-scribbled .agenda-tab-name::after { transform: rotate(-12deg) scaleX(1); }
+  .is-scribbled .agenda-tab b { opacity: 1; }
+  .agenda-strip { border-radius: 4px; display: flex; flex-direction: column; height: 24px; overflow: hidden; width: 70%; }
+  .agenda-strip i { display: block; min-height: 2px; }
+  .agenda-list { animation: agendaIn .35s ease both; display: grid; gap: 3px; list-style: none; margin: 0; padding: 0; }
+  @keyframes agendaIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+  .agenda-item { align-items: center; border: 0; border-radius: 9px; color: #fff; cursor: pointer; display: grid; font-family: var(--ui); font-size: .78rem; font-weight: 600; gap: 10px; grid-template-columns: 40px 1fr auto; min-height: 24px; padding: 3px 10px; text-align: left; width: 100%; }
+  .agenda-item time { font-family: 'DM Mono', monospace; font-size: .7rem; font-weight: 500; opacity: .85; }
+  .agenda-item small { font-weight: 400; opacity: .85; }
+  .agenda-item em { animation: flicker 1.2s steps(2) infinite; background: rgba(255,255,255,.9); border-radius: 999px; color: #e5484d; font-size: .62rem; font-style: normal; font-weight: 800; padding: 2px 7px; text-transform: uppercase; }
+  .agenda-item.is-now { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #e5484d; }
+  .agenda-item.is-free { min-height: 22px; padding-bottom: 1px; padding-top: 1px; }
+  .agenda-item.is-shaking { animation: shake .45s ease; }
+  .agenda-item.cal-custom.is-declined { text-decoration: line-through; }
+  .calendar-bar { margin-bottom: 8px; }
+  .calendar-bar strong { display: none; }
+  .calendar-week { font-size: .66rem; }
   .calendar-week { white-space: nowrap; }
-  .calendar-add { padding: 7px 11px; white-space: nowrap; }
+  .calendar-add { font-size: .74rem; padding: 6px 11px; white-space: nowrap; }
   .calendar-foot { display: none; }
-  .calendar-copy h2 { margin-bottom: 8px; }
+  .calendar-copy h2 { margin-bottom: 4px; }
+  .scene-day .calendar-lead { display: none; }
+  .scene-day { padding-bottom: 66px; padding-top: calc(var(--home-head) + 36px); }
   .has-message .calendar-lead { display: none; }
-  .calendar-copy .scene-feedback { margin-top: 8px; padding: 10px 12px; }
-  .calendar-copy .scene-note { font-size: 1.7rem; margin-top: 8px; }
+  .calendar-copy .calendar-message { display: none; }
+  .calendar-next { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+  .calendar-next .scene-next { order: -1; }
+  .has-message .calendar-week { display: none; }
+  .calendar-copy .scene-note { font-size: 1.55rem; margin: 0; white-space: nowrap; }
+  .calendar-copy .calendar-next .scene-next { margin-top: 4px; }
+  .agenda-message { animation: rise .3s ease both; background: #fdf3f1; border-left: 3px solid var(--pencil); border-radius: 8px; color: #6b2a20; display: block; flex: 1; font-family: var(--ui); font-size: .7rem; line-height: 1.3; min-width: 0; padding: 4px 8px; }
   .calendar-block { font-size: .62rem; }
   .feed-phone { max-width: 300px; }
   .feed-scroll { height: 38svh; }

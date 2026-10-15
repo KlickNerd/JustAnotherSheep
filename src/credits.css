@@ -3,8 +3,8 @@
    Sieht aus wie eine freundliche Banking-App von Peacehold.
    ============================================================ */
 
-.credits-pill-wrap { bottom: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; position: fixed; right: 16px; z-index: 33; }
-.credits-pill { align-items: center; background: #fffdf6; border: 1px solid rgba(31,27,20,.14); border-radius: 999px; box-shadow: 0 10px 24px -12px rgba(0,0,0,.45); color: #1f1b14; display: flex; font-family: 'DM Mono', monospace; font-size: .78rem; gap: 7px; letter-spacing: .04em; padding: 9px 15px 9px 12px; transition: transform .15s ease; }
+.credits-pill-wrap { pointer-events: none; bottom: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; position: fixed; right: 16px; z-index: 33; }
+.credits-pill { pointer-events: auto; align-items: center; background: #fffdf6; border: 1px solid rgba(31,27,20,.14); border-radius: 999px; box-shadow: 0 10px 24px -12px rgba(0,0,0,.45); color: #1f1b14; display: flex; font-family: 'DM Mono', monospace; font-size: .78rem; gap: 7px; letter-spacing: .04em; padding: 9px 15px 9px 12px; transition: transform .15s ease; }
 .credits-pill:hover { transform: translateY(-1px); }
 .credits-pill i { color: #c79a1e; font-style: normal; }
 .credits-pill strong { font-weight: 500; font-variant-numeric: tabular-nums; }
@@ -40,7 +40,11 @@
 p.daily-bonus { cursor: default; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif !important; line-height: 1.45 !important; max-width: 420px; }
 
 @media (max-width: 760px) {
-  .credit-notice { left: 16px; max-width: none; position: fixed; right: 16px; top: 112px; }
+  .credit-notice { display: block; max-width: 240px; padding: 7px 11px; }
+  .credit-notice strong { font-size: .76rem; }
+  .credit-notice span { font-size: .72rem; margin-left: 4px; }
+  .credit-interest { display: none; }
+  .credits-pill.is-accruing i { animation: accrue 1s ease-in-out infinite; color: #a3392a; }
   .credits-pill { font-size: .72rem; padding: 9px 13px 9px 11px; }
   .credit-pop { max-width: 210px; }
 }
@@ -56,3 +60,5 @@ p.daily-bonus { cursor: default; font-family: system-ui, -apple-system, 'Segoe U
 @keyframes flickerNote { 0%, 90% { opacity: 1; } 95% { opacity: .55; } }
 .credits-pill-wrap.is-void .credits-pill strong { text-decoration: line-through; text-decoration-color: #a3392a; text-decoration-thickness: 2px; }
 .credits-pill-wrap.is-void .credits-pill span::after { color: #a3392a; content: " · void"; }
+
+@keyframes accrue { 50% { opacity: .2; } }

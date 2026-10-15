@@ -683,6 +683,9 @@ function DayScene({ active, sfx }) {
   const [adding, setAdding] = useState(false);
   const [upgrade, setUpgrade] = useState(false);
   const [sheep, setSheep] = useState(false);
+  const [current, setCurrent] = useState(-1);
+  const [mobileDay, setMobileDay] = useState(0);
+  const dayTaps = useRef(0);
   const dragStart = useRef(null);
   const mouseHandled = useRef(false);
   const tries = useRef(0);
@@ -692,6 +695,7 @@ function DayScene({ active, sfx }) {
     if (!active) return undefined;
     const timers = SCHEDULE.map((block, index) => window.setTimeout(() => {
       setReminder({ id: `${week}-${index}`, text: `${block.label} starts now.${block.free ? ' Enjoy responsibly.' : ' Attendance recorded.'}` });
+      setCurrent(index);
       sfx('tick');
     }, (minutes(block.from) / DAY_LENGTH) * WEEK_LOOP + 150));
     timers.push(window.setTimeout(() => { setWeek((current) => current + 1); setSheep(true); }, WEEK_LOOP));
@@ -733,6 +737,14 @@ function DayScene({ active, sfx }) {
     window.setTimeout(() => setCustom({ text, status: 'declined' }), 1400);
     window.setTimeout(() => { setCustom(null); setMessage(`“${text}” was declined by Peacehold and replaced with Grazing.`); setSheep(true); }, 3600);
   };
+  const pickDay = (index) => {
+    setMobileDay(index);
+    dayTaps.current += 1;
+    if (dayTaps.current >= 2) {
+      setMessage(`${WEEKDAYS[index]} has been planned exactly like Monday. For your convenience.`);
+      setSheep(true);
+    }
+  };
   const buyUpgrade = () => {
     award('freetime-upgrade', -20, 'Free time upgrade · 10 minutes', { once: false });
     setUpgrade(false);
@@ -746,15 +758,18 @@ function DayScene({ active, sfx }) {
           <p className="step-label">Step 4 · Your day</p>
           <h2>Your week has been planned for you.</h2>
           <p className="calendar-lead">So you never have to wonder what comes next. Feel free to adjust anything.</p>
-          {message && <p className="scene-feedback" role="status">{message}</p>}
-          {sheep && <p className="scribble scene-note">Same day. Seven times.</p>}
-          <Next to="feed" />
+          {message && <p className="scene-feedback calendar-message" role="status">{message}</p>}
+          <div className="calendar-next">
+            {sheep && <p className="scribble scene-note">Same day. Seven times.</p>}
+            <Next to="feed" />
+          </div>
         </div>
 
         <div className="calendar">
           <div className="calendar-bar">
             <strong>Peacehold Calendar</strong>
             <span className="calendar-week">Week {week} of ∞</span>
+            {message && <span className="agenda-message" aria-hidden="true">{message}</span>}
             <button type="button" className="calendar-add" onClick={() => setAdding((value) => !value)}>+ New event</button>
           </div>
           {adding && (
@@ -771,6 +786,40 @@ function DayScene({ active, sfx }) {
             </div>
           )}
           {reminder && <p key={reminder.id} className="calendar-reminder" role="status"><span aria-hidden="true">📅</span>{reminder.text}</p>}
+
+          {/* Handy: Wochenleiste mit sieben gleichen Streifen und der Tag als Liste */}
+          <div className="agenda">
+            <div className="agenda-week" role="tablist" aria-label="Days of the week">
+              {WEEKDAYS.map((day, dayIndex) => (
+                <button key={day} type="button" role="tab" aria-selected={mobileDay === dayIndex} className={`agenda-tab${mobileDay === dayIndex ? ' is-active' : ''}`} onClick={() => pickDay(dayIndex)}>
+                  <span className="agenda-tab-name">{day}</span>
+                  <b className="scribble" aria-hidden="true">Mon</b>
+                  <span className="agenda-strip" aria-hidden="true">
+                    {SCHEDULE.map((block) => <i key={block.from} className={`cal-${block.color}`} style={{ flexGrow: Math.max(minutes(block.to) - minutes(block.from), 6) }} />)}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <ol key={mobileDay} className="agenda-list" aria-label={`${WEEKDAYS[mobileDay]} schedule`}>
+              {SCHEDULE.map((block, index) => {
+                const key = `${mobileDay}-${index}`;
+                const replaced = custom && index === 7;
+                return (
+                  <li key={key}>
+                    <button
+                      type="button"
+                      className={`agenda-item cal-${replaced ? 'custom' : block.color}${replaced ? ` is-${custom.status}` : ''}${block.free ? ' is-free' : ''}${shaking === key ? ' is-shaking' : ''}${current === index ? ' is-now' : ''}`}
+                      onClick={() => (block.free ? setUpgrade(true) : refuse(key))}
+                    >
+                      <time>{block.from}</time>
+                      <span>{replaced ? custom.text : block.label}{block.free && <small> · 5 min · tap to extend</small>}{replaced && <small> · {custom.status === 'pending' ? 'pending approval…' : 'declined by Peacehold'}</small>}</span>
+                      {current === index && <em>Now</em>}
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
 
           <div className="calendar-scroll">
             <div className="calendar-grid">

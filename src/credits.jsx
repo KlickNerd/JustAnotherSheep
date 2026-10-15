@@ -53,7 +53,7 @@ function withCreditLine(next) {
   return {
     ...next,
     once: { ...next.once, creditLine: true },
-    notice: { id: eventId, title: 'Buy now, graze later.', text: 'Your Peacehold credit line has been approved. No action needed.' },
+    notice: { id: eventId, title: 'Credit line approved.', text: 'Buy now, graze later.' },
   };
 }
 
@@ -191,7 +191,7 @@ export function CreditsPill({ dark = false, interest = false, voided = false }) 
           <strong>{pop.amount >= 0 ? '+' : ''}{formatCredits(pop.amount)}</strong> {pop.label}
         </span>
       )}
-      <SiteLink href="/store" className={`credits-pill${credits.balance < 0 ? ' is-debt' : ''}`} title={voided ? 'Void' : undefined} aria-label={`Compliance Credits: ${credits.balance}. Open the Peacehold Store`}>
+      <SiteLink href="/store" className={`credits-pill${credits.balance < 0 ? ' is-debt' : ''}${interest && credits.balance < 0 && !voided ? ' is-accruing' : ''}`} title={voided ? 'Void' : undefined} aria-label={`Compliance Credits: ${credits.balance}. Open the Peacehold Store`}>
         <i aria-hidden="true">◉</i>
         <strong>{formatCredits(credits.balance)}</strong>
         <span>CC</span>
