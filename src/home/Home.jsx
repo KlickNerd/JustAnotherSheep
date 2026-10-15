@@ -45,17 +45,24 @@ const PREFERENCES = [
   ['Wolves', 'Required for your motivation'],
 ];
 
+// Der Tagesplan: Minuten ab 06:00, jede Woche sieben Mal derselbe Tag
+const DAY_START = 6 * 60;
+const DAY_LENGTH = 15.5 * 60;
 const SCHEDULE = [
-  ['06:00', 'Wake-up bell'],
-  ['06:15', 'Wool inspection'],
-  ['07:00', 'Morning assembly (voluntary)'],
-  ['08:00', 'Grazing, designated area'],
-  ['12:00', 'Approved lunch'],
-  ['13:00', 'Grazing, designated area'],
-  ['18:00', 'Evening count'],
-  ['21:00', 'Free time (5 min, supervised)'],
-  ['21:05', 'Lights out'],
+  { from: '06:00', to: '06:15', label: 'Wake-up bell', color: 'yellow' },
+  { from: '06:15', to: '07:00', label: 'Wool inspection', color: 'blue' },
+  { from: '07:00', to: '08:00', label: 'Morning assembly (voluntary)', color: 'red' },
+  { from: '08:00', to: '12:00', label: 'Grazing, designated area', color: 'green' },
+  { from: '12:00', to: '13:00', label: 'Approved lunch', color: 'orange' },
+  { from: '13:00', to: '18:00', label: 'Grazing, designated area', color: 'green' },
+  { from: '18:00', to: '19:00', label: 'Evening count', color: 'purple' },
+  { from: '19:00', to: '21:00', label: 'Gratitude reflection', color: 'teal' },
+  { from: '21:00', to: '21:05', label: 'Free time', color: 'gold', free: true },
 ];
+const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WEEK_LOOP = 20000;
+const minutes = (time) => { const [h, m] = time.split(':').map(Number); return h * 60 + m - DAY_START; };
+const dayPercent = (time) => (minutes(time) / DAY_LENGTH) * 100;
 
 const QUIZ = ['Dangerous', 'Very dangerous', 'Like anyone who asks questions'];
 
@@ -665,34 +672,151 @@ function HomeScene({ sfx }) {
   );
 }
 
-function DayScene() {
-  const [shaking, setShaking] = useState(null);
+function DayScene({ active, sfx }) {
   const [message, setMessage] = useState('');
-  const tryChange = (index) => {
-    setShaking(index);
+  const [shaking, setShaking] = useState(null);
+  const [drag, setDrag] = useState(null); // { key, x, y }
+  const [reminder, setReminder] = useState(null);
+  const [week, setWeek] = useState(1);
+  const [custom, setCustom] = useState(null); // { text, status }
+  const [draft, setDraft] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [upgrade, setUpgrade] = useState(false);
+  const [sheep, setSheep] = useState(false);
+  const dragStart = useRef(null);
+  const mouseHandled = useRef(false);
+  const tries = useRef(0);
+
+  // Zeitraffer: Jeder Block meldet sich, dann beginnt dieselbe Woche von vorn
+  useEffect(() => {
+    if (!active) return undefined;
+    const timers = SCHEDULE.map((block, index) => window.setTimeout(() => {
+      setReminder({ id: `${week}-${index}`, text: `${block.label} starts now.${block.free ? ' Enjoy responsibly.' : ' Attendance recorded.'}` });
+      sfx('tick');
+    }, (minutes(block.from) / DAY_LENGTH) * WEEK_LOOP + 150));
+    timers.push(window.setTimeout(() => { setWeek((current) => current + 1); setSheep(true); }, WEEK_LOOP));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [active, week, sfx]);
+
+  const refuse = (key) => {
+    tries.current += 1;
+    setShaking(key);
     setMessage('Changes to the plan are not part of the plan.');
     window.setTimeout(() => setShaking(null), 500);
+    if (tries.current >= 2) setSheep(true);
   };
+  const onPointerDown = (event, key) => {
+    if (event.pointerType !== 'mouse') return;
+    dragStart.current = { key, x: event.clientX, y: event.clientY };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+  const onPointerMove = (event) => {
+    const start = dragStart.current;
+    if (start) setDrag({ key: start.key, x: event.clientX - start.x, y: event.clientY - start.y });
+  };
+  const onPointerUp = (key) => {
+    if (!dragStart.current) return;
+    dragStart.current = null;
+    mouseHandled.current = true;
+    setDrag(null);
+    refuse(key);
+  };
+
+  const addEvent = (event) => {
+    event.preventDefault();
+    const text = draft.trim();
+    if (!text) return;
+    setAdding(false);
+    setDraft('');
+    setCustom({ text, status: 'pending' });
+    award('change-fee', -5, 'Change request fee', { once: false });
+    window.setTimeout(() => setCustom({ text, status: 'declined' }), 1400);
+    window.setTimeout(() => { setCustom(null); setMessage(`“${text}” was declined by Peacehold and replaced with Grazing.`); setSheep(true); }, 3600);
+  };
+  const buyUpgrade = () => {
+    award('freetime-upgrade', -20, 'Free time upgrade · 10 minutes', { once: false });
+    setUpgrade(false);
+    setMessage('Upgrade successful. Your free time is now 10 minutes, starting next week. Next week has been postponed.');
+  };
+
   return (
-    <Scene id="day">
-      <div className="scene-inner split-layout">
-        <div>
+    <Scene id="day" className={`${active ? 'is-running' : ''}${sheep ? ' is-scribbled' : ''}${message ? ' has-message' : ''}`}>
+      <div className="scene-inner calendar-layout">
+        <div className="calendar-copy">
           <p className="step-label">Step 4 · Your day</p>
-          <h2>Your day has been planned for you.</h2>
-          <p>So you never have to wonder what comes next. Feel free to adjust anything.</p>
-          <button type="button" className="ghost-button" onClick={() => { setMessage('Your request has been received. And denied.'); award('change-fee', -5, 'Change request fee', { once: false }); }}>Request a change</button>
+          <h2>Your week has been planned for you.</h2>
+          <p className="calendar-lead">So you never have to wonder what comes next. Feel free to adjust anything.</p>
           {message && <p className="scene-feedback" role="status">{message}</p>}
+          {sheep && <p className="scribble scene-note">Same day. Seven times.</p>}
           <Next to="feed" />
         </div>
-        <ol className="schedule">
-          {SCHEDULE.map(([time, label], index) => (
-            <li key={time}>
-              <button type="button" className={shaking === index ? 'is-shaking' : ''} onClick={() => tryChange(index)}>
-                <time>{time}</time><span>{label}</span><i aria-hidden="true">⋮⋮</i>
-              </button>
-            </li>
-          ))}
-        </ol>
+
+        <div className="calendar">
+          <div className="calendar-bar">
+            <strong>Peacehold Calendar</strong>
+            <span className="calendar-week">Week {week} of ∞</span>
+            <button type="button" className="calendar-add" onClick={() => setAdding((value) => !value)}>+ New event</button>
+          </div>
+          {adding && (
+            <form className="calendar-form" onSubmit={addEvent}>
+              <label htmlFor="new-event" className="visually-hidden">Event name</label>
+              <input id="new-event" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="What would you like to do?" autoComplete="off" />
+              <button type="submit">Add</button>
+            </form>
+          )}
+          {upgrade && (
+            <div className="calendar-upgrade" role="dialog" aria-label="Free time upgrade">
+              <p><strong>Extend free time to 10 minutes</strong> · 20 CC per week</p>
+              <div><button type="button" onClick={buyUpgrade}>Upgrade</button><button type="button" onClick={() => setUpgrade(false)}>Not now</button></div>
+            </div>
+          )}
+          {reminder && <p key={reminder.id} className="calendar-reminder" role="status"><span aria-hidden="true">📅</span>{reminder.text}</p>}
+
+          <div className="calendar-scroll">
+            <div className="calendar-grid">
+              <div className="calendar-hours" aria-hidden="true">
+                {['06:00', '09:00', '12:00', '15:00', '18:00', '21:00'].map((time) => <span key={time} style={{ top: `${dayPercent(time)}%` }}>{time}</span>)}
+              </div>
+              {WEEKDAYS.map((day, dayIndex) => (
+                <div key={day} className="calendar-day">
+                  <p className="calendar-dayname"><span>{day}</span><b className="scribble" aria-hidden="true">Monday</b></p>
+                  <div className="calendar-column">
+                    {SCHEDULE.map((block, index) => {
+                      const key = `${dayIndex}-${index}`;
+                      const moving = drag && drag.key === key;
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          className={`calendar-block cal-${block.color}${block.free ? ' is-free' : ''}${shaking === key ? ' is-shaking' : ''}${moving ? ' is-dragging' : ''}`}
+                          style={{ top: `${dayPercent(block.from)}%`, height: `${dayPercent(block.to) - dayPercent(block.from)}%`, transform: moving ? `translate(${drag.x}px, ${drag.y}px)` : undefined }}
+                          onClick={() => {
+                            if (block.free) setUpgrade(true);
+                            else if (mouseHandled.current) mouseHandled.current = false;
+                            else refuse(key);
+                          }}
+                          onPointerDown={(event) => !block.free && onPointerDown(event, key)}
+                          onPointerMove={onPointerMove}
+                          onPointerUp={() => onPointerUp(key)}
+                          title={`${block.from}–${block.to} · ${block.label}`}
+                        >
+                          <span>{block.label}</span><small>{block.from}</small>
+                        </button>
+                      );
+                    })}
+                    {dayIndex === 0 && custom && (
+                      <span className={`calendar-block cal-custom is-${custom.status}`} style={{ top: `${dayPercent('19:00')}%`, height: `${dayPercent('21:00') - dayPercent('19:00')}%` }}>
+                        <span>{custom.text}</span><small>{custom.status === 'pending' ? 'Pending approval…' : 'Declined by Peacehold'}</small>
+                      </span>
+                    )}
+                    <i key={`now-${week}`} className="calendar-now" aria-hidden="true" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="calendar-foot">Free time 21:00–21:05 (tap the gold line) · Lights out 21:05</p>
+        </div>
       </div>
     </Scene>
   );
@@ -1106,7 +1230,7 @@ export default function HomePage({ footer }) {
         <NumberScene entered={entered.has(at('number'))} resident={resident} sfx={sfx} />
         <RewardsScene resident={resident} climbed={consent === 'climb'} />
         <HomeScene sfx={sfx} />
-        <DayScene />
+        <DayScene active={active === at('day')} sfx={sfx} />
         <FeedScene entered={entered.has(at('feed'))} announce={announce} />
         <TrainingScene />
         <VerifyScene onPass={passCaptcha} passed={captchaPassed} />
