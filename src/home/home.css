@@ -316,10 +316,10 @@ div.scene-feedback p + p { color: var(--ink-soft); margin-top: 4px; }
 .is-scribbled .story-strings path { animation: drawCircle .6s ease-out both; }
 .story-sheep { animation: rise .5s ease 1s both; background: rgba(255,255,255,.92); border-radius: 6px; font-size: 1.25rem; left: 50%; padding: 0 6px; position: absolute; top: 62px; transform: translateX(-50%) rotate(-3deg); white-space: nowrap; z-index: 3; }
 .story { background: #2b2620; border-radius: 18px; color: #fff; cursor: pointer; display: flex; flex: 1; flex-direction: column; margin: 4px 8px 8px; overflow: hidden; padding: 12px 14px; position: relative; user-select: none; }
-.story > * { position: relative; z-index: 1; }
+.story > * { position: relative; z-index: 2; }
 .story > .story-image { height: 100%; inset: 0; object-fit: cover; opacity: 0; position: absolute; transform: scale(1.04); transition: opacity .45s ease, transform 4s linear; width: 100%; z-index: 0; }
 .story > .story-image.is-shown { opacity: 1; transform: scale(1.12); }
-.story::before { background: linear-gradient(180deg, rgba(0,0,0,.38) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,.45) 100%); content: ""; inset: 0; pointer-events: none; position: absolute; z-index: 0; }
+.story::before { background: linear-gradient(180deg, rgba(0,0,0,.38) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,.45) 100%); content: ""; inset: 0; pointer-events: none; position: absolute; z-index: 1; }
 .story-bars { display: flex; gap: 3px; }
 .story-bars i { background: rgba(255,255,255,.35); border-radius: 2px; flex: 1; height: 3px; overflow: hidden; position: relative; }
 .story-bars i::after { background: #fff; content: ""; inset: 0; position: absolute; transform: scaleX(0); transform-origin: left; }

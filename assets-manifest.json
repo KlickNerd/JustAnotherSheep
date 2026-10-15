@@ -1,32 +1,3 @@
 {
-  "files": [
-    {
-      "path": "art-src/story-meadow.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_113709_b6e0cd37-e252-4fc5-80f3-b44d040cf1b1.png"
-    },
-    {
-      "path": "art-src/story-selfie.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_113714_06dd032f-72dc-49a0-82a5-7ede09683cab.png"
-    },
-    {
-      "path": "art-src/story-fence-ad.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_113719_76a20576-d055-400e-ab0f-53400ef9c490.png"
-    },
-    {
-      "path": "art-src/story-tower.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_113724_9f50a0ea-b5b6-4c5b-84e2-c61ac8005142.png"
-    },
-    {
-      "path": "art-src/story-crowd.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_113728_ddcf4f96-53be-436d-a8b2-28c2871734cd.png"
-    },
-    {
-      "path": "art-src/story-friends.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_113734_71b1f004-2544-49a3-80cb-53bd43cb3423.png"
-    },
-    {
-      "path": "art-src/feed-green.tmp.png",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_33yC8Nf5QASnVdc8jtPe4nlmeDA/hf_20261015_113740_570ddaef-81f2-4697-98f7-34f93a5b9365.png"
-    }
-  ]
+  "files": []
 }
