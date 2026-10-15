@@ -307,6 +307,41 @@ function useSoundSystem(wantMusicFromStart) {
     source.stop(now + 1.7);
   }, []);
 
+  // Kleine Geräusche, direkt erzeugt: Gong der Wartemarke, Klacken der Ohrmarkenzange
+  const sfx = useCallback((kind) => {
+    const e = engine.current;
+    if (!e || mutedRef.current) return;
+    const { ctx } = e;
+    const now = ctx.currentTime;
+    if (kind === 'ding') {
+      [[1318.5, 0], [1046.5, 0.16]].forEach(([frequency, offset]) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, now + offset);
+        gain.gain.exponentialRampToValueAtTime(0.3, now + offset + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 1.1);
+        osc.connect(gain).connect(e.master);
+        osc.start(now + offset);
+        osc.stop(now + offset + 1.2);
+      });
+    } else {
+      const length = Math.floor(ctx.sampleRate * (kind === 'clack' ? 0.09 : 0.025));
+      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i += 1) data[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 3;
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = kind === 'clack' ? 1800 : 3200;
+      const gain = ctx.createGain();
+      gain.gain.value = kind === 'clack' ? 0.9 : 0.25;
+      source.connect(filter).connect(gain).connect(e.master);
+      source.start(now);
+    }
+  }, []);
+
   const playSong = useCallback(() => {
     if (mutedRef.current) return;
     loadSong(getSong()).play().catch(() => { /* ohne vorheriges Tippen: der Abspielknopf bleibt sichtbar */ });
@@ -339,7 +374,7 @@ function useSoundSystem(wantMusicFromStart) {
     engine.current?.ctx.close().catch(() => {});
   }, []);
 
-  return { muted, setMuted, toasts, announce, startMusic, unlock, primeSong, degrade, tapeStop, playSong, getSong };
+  return { muted, setMuted, toasts, announce, startMusic, unlock, primeSong, degrade, tapeStop, playSong, getSong, sfx };
 }
 
 function SongPlayer({ getSong }) {
@@ -409,39 +444,123 @@ function ConsentBanner({ onGesture, onAccept, onClimb }) {
   );
 }
 
-function NumberScene({ entered, resident }) {
-  const [shown, setShown] = useState(0);
-  const [confirmed, setConfirmed] = useState(false);
+function registeredToday() {
+  const now = new Date();
+  return 1180 + Math.floor((now.getHours() * 60 + now.getMinutes()) * 0.85);
+}
+
+function FlapNumber({ value }) {
+  const chars = `#${value.toLocaleString('en-US')}`.split('');
+  return (
+    <span className="flap-number" aria-label={`Number ${value}`}>
+      {chars.map((char, index) => <span key={`${index}-${char}`} className={`flap${/[0-9]/.test(char) ? '' : ' flap-sign'}`} style={{ animationDelay: `${index * 45}ms` }}>{char}</span>)}
+    </span>
+  );
+}
+
+function NumberScene({ entered, resident, sfx }) {
+  const [stage, setStage] = useState('waiting'); // waiting → printing → tagged
+  const [drag, setDrag] = useState(0);
+  const [choice, setChoice] = useState(null); // confirmed | name
+  const [name, setName] = useState('');
+  const [count, setCount] = useState(registeredToday);
+  const dragStart = useRef(null);
+  const digits = String(resident);
+
   useEffect(() => {
     if (!entered) return undefined;
-    let frame;
-    const start = performance.now();
-    const tick = (now) => {
-      const t = Math.min(1, (now - start) / 1800);
-      setShown(Math.round(resident * (1 - Math.pow(1 - t, 3))));
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [entered, resident]);
+    const timer = window.setInterval(() => setCount((current) => current + 1), 3500);
+    return () => window.clearInterval(timer);
+  }, [entered]);
+
+  const pull = () => {
+    if (stage !== 'waiting') return;
+    setDrag(0);
+    setStage('printing');
+    sfx('ding');
+    window.setTimeout(() => { setStage('tagged'); sfx('clack'); }, 1500);
+  };
+  const onPointerDown = (event) => { dragStart.current = event.clientY; event.currentTarget.setPointerCapture?.(event.pointerId); };
+  const onPointerMove = (event) => { if (dragStart.current !== null) setDrag(Math.max(0, Math.min(90, event.clientY - dragStart.current))); };
+  const onPointerUp = () => {
+    if (dragStart.current === null) return;
+    dragStart.current = null;
+    if (drag > 45) pull(); else setDrag(0);
+  };
+
+  const confirm = () => { setChoice('confirmed'); award('number', 10, 'Number confirmed'); };
+  const keepName = () => { setChoice('name'); award('name', -10, 'Unregistered name detected'); };
+  // Jeder getippte Buchstabe wird zur Ziffer der eigenen Nummer
+  const typeName = (event) => setName([...event.target.value].map((char, index) => (char === ' ' ? ' ' : digits[index % digits.length])).join(''));
 
   return (
-    <Scene id="number">
+    <Scene id="number" className={`is-${stage}`}>
+      <picture className="scene-picture" aria-hidden="true">
+        <source media="(max-width: 760px)" srcSet="/images/home/registration-mobile.webp" />
+        <img src="/images/home/registration.webp" alt="" loading="lazy" />
+      </picture>
       <div className="scene-inner number-layout">
-        <div>
+        <div className="number-copy">
           <p className="step-label">Step 1 · Your number</p>
-          <h2>Welcome, resident.<br />This is who you are now.</h2>
-          <p>Your number is unique, permanent and much easier to remember than a name.</p>
-          {!confirmed
-            ? <button type="button" className="home-button" onClick={() => { setConfirmed(true); award('number', 10, 'Number confirmed'); }}>Confirm my number</button>
-            : <Next to="home" />}
+          <h2>Welcome, resident.<br />{stage === 'tagged' ? 'This is who you are now.' : 'Please take a number.'}</h2>
+          <p className="number-lead">{stage === 'tagged' ? 'Your number is unique, permanent and much easier to remember than a name.' : 'Every resident is counted. It only takes a second and lasts forever.'}</p>
+          {stage !== 'tagged' && <button type="button" className="home-button" onClick={pull} disabled={stage !== 'waiting'}>Take a number</button>}
+          {stage === 'tagged' && !choice && (
+            <div className="number-actions">
+              <button type="button" className="home-button" onClick={confirm}>Confirm my number</button>
+              <button type="button" className="ghost-button" onClick={keepName}>I’d rather keep my name</button>
+            </div>
+          )}
+          {choice === 'name' && (
+            <div className="name-field">
+              <label htmlFor="resident-name">Your name</label>
+              <input id="resident-name" value={name} onChange={typeName} autoComplete="off" placeholder="Type your name" />
+              {name.replace(/ /g, '').length >= 3 && (
+                <div className="scene-feedback" role="status">
+                  <p><strong>Name not recognised.</strong> Did you mean #{resident.toLocaleString('en-US')}?</p>
+                  <button type="button" className="link-button" onClick={confirm}>Yes, that’s me</button>
+                </div>
+              )}
+            </div>
+          )}
+          {(choice === 'confirmed' || name.replace(/ /g, '').length >= 3) && <Next to="home" />}
         </div>
-        <div className="ear-tag" aria-label={`Resident number ${resident}`}>
-          <span className="ear-tag-hole" aria-hidden="true" />
-          <span className="ear-tag-label">Peacehold</span>
-          <strong>#{shown.toLocaleString('en-US')}</strong>
-          {confirmed && <span className="stamp">Confirmed</span>}
-          {confirmed && <span className="scribble ear-tag-note">You have a name.</span>}
+
+        <div className="registration">
+          <div className="serving-board">
+            <span>Now serving</span>
+            <FlapNumber value={stage === 'waiting' ? resident - 1 : resident} />
+          </div>
+          {stage !== 'tagged' ? (
+            <div className="dispenser">
+              <div className="dispenser-body"><i aria-hidden="true" /><span>Please take<br />a number</span><b aria-hidden="true" /></div>
+              <button
+                type="button"
+                className="ticket"
+                style={{ transform: `translateY(${drag}px)` }}
+                onClick={pull}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerUp}
+                aria-label="Pull a ticket"
+              >
+                <span>Peacehold</span>
+                <strong>{stage === 'printing' ? `#${resident.toLocaleString('en-US')}` : '#·····'}</strong>
+                <small>Please wait to be counted</small>
+              </button>
+              {stage === 'waiting' && <p className="dispenser-hint" aria-hidden="true">Pull ↓</p>}
+            </div>
+          ) : (
+            <div className="ear-tag is-punched" aria-label={`Resident number ${resident}`}>
+              <span className="ear-tag-hole" aria-hidden="true" />
+              <span className="ear-tag-label">Peacehold</span>
+              <strong>#{resident.toLocaleString('en-US')}</strong>
+              {choice === 'confirmed' && <span className="stamp">Confirmed</span>}
+              {(choice === 'confirmed' || name) && <span className="scribble ear-tag-note">You have a name.</span>}
+            </div>
+          )}
+          <p className="registry-stats">Registered today <strong>{count.toLocaleString('en-US')}</strong><span aria-hidden="true">·</span>Left Peacehold <strong>0</strong></p>
         </div>
       </div>
     </Scene>
@@ -770,7 +889,7 @@ function AgreementScene() {
    --------------------------------------------------------------- */
 export default function HomePage({ footer }) {
   const [consent, setConsent] = useState(() => pageConsent);
-  const { muted, setMuted, toasts, announce, startMusic, unlock, primeSong, degrade, tapeStop, playSong, getSong } = useSoundSystem(Boolean(consent));
+  const { muted, setMuted, toasts, announce, startMusic, unlock, primeSong, degrade, tapeStop, playSong, getSong, sfx } = useSoundSystem(Boolean(consent));
   const songAllowed = useRef(false);
   const [active, setActive] = useState(0);
   const [entered, setEntered] = useState(() => new Set([0]));
@@ -881,7 +1000,7 @@ export default function HomePage({ footer }) {
           </div>
         </Scene>
 
-        <NumberScene entered={entered.has(at('number'))} resident={resident} />
+        <NumberScene entered={entered.has(at('number'))} resident={resident} sfx={sfx} />
         <HomeScene />
         <DayScene />
         <RewardsScene resident={resident} />
