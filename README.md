@@ -14,6 +14,11 @@ Canonical imagery is currently loaded from the published reference site so visua
 comparison uses the existing source art. Local asset copying remains a follow-up
 before production deployment.
 
+## Game
+
+The PEACEHOLD browser game lives in [`game/`](game/README.md) and deploys as its
+own Cloudflare Worker (`peacehold-game`). It is not part of the website build.
+
 ## Local Setup
 
 ```bash
