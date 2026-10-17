@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SiteLink } from '../router';
+import TruthHero from './TruthHero';
 import './landing.css';
 
 /* Die neue Startseite: Landeplatz für alle, die über einen Clip auf
@@ -84,25 +85,13 @@ function Signup() {
 export default function Landing({ footer }) {
   return (
     <main className="landing">
-      <section className="landing-hero">
-        <picture>
-          <source media="(max-width: 760px)" srcSet="/images/brand/hero-peacehold-mobile.webp" />
-          <img src="/images/brand/hero-peacehold.webp" alt="Peacehold farm on a sunny morning: the flock grazes, one black sheep stands upright and looks back" />
-        </picture>
-        <div className="landing-hero-copy">
-          <p className="landing-kicker">Welcome to Peacehold</p>
-          <h1>Just Another Sheep</h1>
-          <p className="landing-deck">Everything is fine.<br /><span className="landing-scribble">Sheep isn’t so sure.</span></p>
-          <p className="landing-intro">An animated satire about a farm that takes care of everything, and the one sheep who started asking questions.</p>
-          <Socials />
-        </div>
-      </section>
+      <TruthHero />
 
       <section className="landing-band">
         <Loudspeaker />
       </section>
 
-      <section className="landing-section landing-clip">
+      <section id="series" className="landing-section landing-clip">
         <div className="landing-copy">
           <p className="landing-kicker">The series</p>
           <h2>Short episodes.<br />Long questions.</h2>
