@@ -233,7 +233,7 @@ function hmLevel(){return Math.min(5,Math.max(1,s.stall+Math.floor((s.plotItems.
 function hmLimit(){return Math.min(12,5+hmLevel()*2)}
 function hmObjects(){return [...s.plotItems].sort((a,b)=>a.pos-b.pos)}
 function hmPosition(pos){return HM_POSITIONS[pos%12]}
-function hmMigrate(){if(s.hmMigrated)return;let used=new Set();s.plotItems.forEach((o,i)=>{let choice=o.type==='stall'?5:(o.pos%12);while(used.has(choice))choice=(choice+1)%12;used.add(choice);o.pos=choice});s.hmMigrated=true;save()}
+function hmMigrate(){if(s.hmMigrated)return;let used=new Set();let kept=[];s.plotItems.forEach((o,i)=>{if(used.size>=12)return;let choice=o.type==='stall'?5:(o.pos%12);while(used.has(choice))choice=(choice+1)%12;used.add(choice);o.pos=choice;kept.push(o)});s.plotItems=kept;s.hmMigrated=true;save()}
 hmMigrate();
 function plot(){let g=50*s.stall,c=80*s.stall,ready=Date.now()-s.lastHarvest>=45000,remaining=Math.max(0,Math.ceil((45000-(Date.now()-s.lastHarvest))/1000));let level=hmLevel(),limit=hmLimit(),n=s.plotItems.length;
 let scenery='<div class="hm-road"></div><div class="hm-road branch"></div><div class="hm-water"></div>'+[{x:7,y:9},{x:87,y:13},{x:93,y:27},{x:8,y:60},{x:10,y:91},{x:87,y:93}].map(t=>'<span class="hm-tree" style="left:'+t.x+'%;top:'+t.y+'%">🌳</span>').join('');
