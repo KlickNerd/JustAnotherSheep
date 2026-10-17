@@ -200,6 +200,14 @@ nav button.active{background:linear-gradient(#684621,#392417);box-shadow:inset 0
 .hm-bottom p{margin:5px 0}
 .hm-world.is-building .hm-slot.building{cursor:pointer}
 @media(max-width:400px){.hm-location{width:20%}.hm-world{height:117vw}.hm-controls button{font-size:11px}.hm-location label{font-size:9px}}
+
+/* PEACEHOLD approved landscape — activates after official asset is uploaded */
+.hm-world.world-art-ready{background:#8e9d67 url('/images/game/peacehold-homeland-v1.webp') center center/100% 100% no-repeat}
+.hm-world.world-art-ready:before,.hm-world.world-art-ready:after,.hm-world.world-art-ready .hm-road,.hm-world.world-art-ready .hm-water,.hm-world.world-art-ready .hm-tree{display:none}
+.hm-world.world-art-ready .hm-slot{background:#21190b33;opacity:.55;border:1px dashed #e9d4a6}
+.hm-world.world-art-ready .hm-slot.building{background:#ffeab850;opacity:1}
+.hm-world.world-art-ready .hm-location{filter:drop-shadow(1px 3px 4px #21160d);width:16%}
+.hm-world.world-art-ready .hm-location .sprite{background:#2b1c1255;border-radius:9px}
 </style><div class="app"><header><div><b>🐑 <span id="name">Sheep #127</span></b><div class="muted" id="lvl">Lv 1</div></div><div class="res"><span>🌿 <b id="grass"></b></span><span>☁️ <b id="wool"></b></span><span>🪙 <b id="coins"></b></span><span>⚡ <b id="energy"></b></span></div></header><main id="main"></main><nav id="nav"></nav></div><div id="alert" hidden></div><script>
 const K="peacehold-mobile-v1",initial={level:1,xp:0,grass:90,wool:12,coins:220,energy:100,awareness:5,suspicion:0,influence:10,stall:1,skills:{Wit:1,Grit:1,Charm:1,Sneak:1},herd:false,vote:null,job:null,last:Date.now()};
 let s;try{s={...initial,...JSON.parse(localStorage.getItem(K))}}catch{s={...initial}}/* One-time demo supply package; preserves all existing progress. */
@@ -235,6 +243,7 @@ function hmObjects(){return [...s.plotItems].sort((a,b)=>a.pos-b.pos)}
 function hmPosition(pos){return HM_POSITIONS[pos%12]}
 function hmMigrate(){if(s.hmMigrated)return;let used=new Set();let kept=[];s.plotItems.forEach((o,i)=>{if(used.size>=12)return;let choice=o.type==='stall'?5:(o.pos%12);while(used.has(choice))choice=(choice+1)%12;used.add(choice);o.pos=choice;kept.push(o)});s.plotItems=kept;s.hmMigrated=true;save()}
 hmMigrate();
+const HOMELAND_ART='/images/game/peacehold-homeland-v1.webp';let homelandArtReady=false;const artPreload=new Image();artPreload.onload=()=>{homelandArtReady=true;document.querySelectorAll('.hm-world').forEach(e=>e.classList.add('world-art-ready'))};artPreload.src=HOMELAND_ART;
 function plot(){let g=50*s.stall,c=80*s.stall,ready=Date.now()-s.lastHarvest>=45000,remaining=Math.max(0,Math.ceil((45000-(Date.now()-s.lastHarvest))/1000));let level=hmLevel(),limit=hmLimit(),n=s.plotItems.length;
 let scenery='<div class="hm-road"></div><div class="hm-road branch"></div><div class="hm-water"></div>'+[{x:7,y:9},{x:87,y:13},{x:93,y:27},{x:8,y:60},{x:10,y:91},{x:87,y:93}].map(t=>'<span class="hm-tree" style="left:'+t.x+'%;top:'+t.y+'%">🌳</span>').join('');
 let slots=HM_POSITIONS.map((p,pos)=>{let o=s.plotItems.find(i=>i.pos===pos);if(o){return '<button class="hm-location '+(s.plotSelected===pos?'active':'')+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="'+PLOT_ITEMS[o.type].name+'" onclick="plotTap('+pos+')"><span class="sprite">'+plotIcon(o.type)+'</span><label>'+PLOT_ITEMS[o.type].name+'</label>'+(o.type==='workshop'&&s.stallStock?'<span class="bubble">🧶</span>':'')+(o.type==='garden'&&ready?'<span class="bubble">🌿</span>':'')+'</button>'}let unlocked=pos<limit;return '<button class="hm-slot '+(s.plotMode&&unlocked?'building ':'')+(!unlocked?'locked':'')+'" style="left:'+p.x+'%;top:'+p.y+'%" '+(!unlocked?'disabled':'')+' onclick="plotTap('+pos+')" aria-label="'+(unlocked?'Build site '+(pos+1):'Locked build site')+'">'+(s.plotMode&&unlocked?'+':unlocked?'·':'🔒')+'</button>'}).join('');
