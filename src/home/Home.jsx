@@ -1207,45 +1207,120 @@ function TrainingScene({ active, resident }) {
   );
 }
 
-function VerifyScene({ onPass, passed }) {
+const CAPTCHA_ROUNDS = [
+  { target: 'wolves', hint: 'If there are none, click verify.', image: '/images/home/fence.webp', fail: 'There must be wolves. Please look again.' },
+  { target: 'suspicious sheep', hint: 'If there are none, report one anyway.', image: '/images/home/story-crowd.webp', fail: 'You answered too quickly to be a sheep.' },
+  { target: 'freedom', hint: 'Select all that apply.', image: '/images/home/pen.webp', fail: 'Your clicks were too independent.' },
+];
+
+function VerifyScene({ onPass, passed, sfx }) {
+  const [stage, setStage] = useState('checkbox'); // checkbox → spinning → grid → audio
+  const [round, setRound] = useState(0);
   const [selected, setSelected] = useState([]);
   const [attempts, setAttempts] = useState(0);
   const [message, setMessage] = useState('');
-  const image = attempts % 2 === 0 ? '/images/home/fence.webp' : '/images/brand/hero-peacehold.webp';
+  const [heard, setHeard] = useState('');
+  const [playing, setPlaying] = useState(false);
+  const challenge = CAPTCHA_ROUNDS[round];
 
-  const verify = () => {
-    if (selected.length === 0) { setMessage('Please select all squares containing wolves.'); return; }
+  const fail = (text) => {
+    setMessage(text);
     setSelected([]);
     setAttempts((count) => count + 1);
-    setMessage('Verification failed. Please try again.');
+    sfx('clack');
+  };
+  const tick = () => {
+    if (stage !== 'checkbox') return;
+    setStage('spinning');
+    window.setTimeout(() => { setStage('grid'); setMessage('You hesitated. Please complete an additional challenge.'); }, 1400);
+  };
+  const verify = () => {
+    fail(selected.length === 0 && round !== 0 ? `Please select all squares with ${challenge.target}.` : challenge.fail);
+    setRound((value) => (value + 1) % CAPTCHA_ROUNDS.length);
+  };
+  const reload = () => setMessage('A new challenge has been loaded. It is the same challenge.');
+  const openAudio = () => {
+    award('audio-captcha', -5, 'Audio challenge');
+    setStage('audio');
+    setMessage('');
+    setPlaying(true);
+    window.setTimeout(() => setPlaying(false), 2600);
+  };
+  const submitAudio = (event) => {
+    event.preventDefault();
+    const correct = heard.trim().toLowerCase().replace(/[.!]/g, '') === 'everything is fine';
+    setHeard('');
+    setStage('grid');
+    fail(correct ? 'Correct. Unfortunately, correct answers are suspicious.' : 'Incorrect. The correct answer was: “Everything is fine.”');
   };
 
   return (
     <Scene id="verify" className={passed ? 'is-passed' : ''}>
+      <picture className="scene-picture verify-dusk" aria-hidden="true"><img src="/images/home/fence.webp" alt="" loading="lazy" /></picture>
+      <div className="searchlight" aria-hidden="true" />
+      <div className="cctv" aria-hidden="true"><i /></div>
       <div className="scene-inner verify-layout">
-        <p className="step-label">Step 7 · Verification</p>
+        <div className="verify-copy">
+          <p className="step-label">Step 7 · Verification</p>
+          <h2>Unusual activity detected.</h2>
+          <p className="verify-lead">Please verify that you are not a wolf. This helps us keep Peacehold safe for residents like you.</p>
+          <p className="warning-sign" aria-hidden="true">⚠ Wolf area · Stay inside</p>
+          {!passed && attempts >= 2 && <button type="button" className="scribble sheep-skip" onClick={onPass}>There are no wolves. Skip it →</button>}
+          {!passed && <p className="locked-hint">🔒 Complete verification to continue</p>}
+          {passed && <Next to="vote" />}
+        </div>
+
         <div className={`captcha${passed ? ' is-broken' : ''}`} aria-live="polite">
-          <div className="captcha-head"><span>Select all squares with</span><strong>wolves</strong><span>Click verify once there are none left.</span></div>
-          <div className="captcha-grid">
-            {Array.from({ length: 9 }, (_, index) => (
-              <button
-                key={`${attempts}-${index}`}
-                type="button"
-                disabled={passed}
-                aria-pressed={selected.includes(index)}
-                aria-label={`Square ${index + 1}`}
-                className={selected.includes(index) ? 'is-selected' : ''}
-                style={{ backgroundImage: `url(${image})`, backgroundPosition: `${(index % 3) * 50}% ${Math.floor(index / 3) * 50}%` }}
-                onClick={() => setSelected((current) => (current.includes(index) ? current.filter((item) => item !== index) : [...current, index]))}
-              />
-            ))}
-          </div>
-          <div className="captcha-foot"><span>{message}</span><button type="button" onClick={verify} disabled={passed}>Verify</button></div>
+          {(stage === 'checkbox' || stage === 'spinning') && (
+            <div className="captcha-box">
+              <button type="button" className={`captcha-check${stage === 'spinning' ? ' is-spinning' : ''}`} onClick={tick} aria-label="I’m not a wolf" disabled={passed} />
+              <span>I’m not a wolf</span>
+              <span className="captcha-brand"><b>🛡</b>PeaceCAPTCHA<small>Privacy · Terms · Fences</small></span>
+            </div>
+          )}
+
+          {stage === 'grid' && (
+            <>
+              <div className="captcha-head"><span>Select all squares with</span><strong>{challenge.target}</strong><span>{challenge.hint}</span></div>
+              <div key={round} className="captcha-grid">
+                {Array.from({ length: 9 }, (_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    disabled={passed}
+                    aria-pressed={selected.includes(index)}
+                    aria-label={`Square ${index + 1}`}
+                    className={selected.includes(index) ? 'is-selected' : ''}
+                    style={{ backgroundImage: `url(${challenge.image})`, backgroundPosition: `${(index % 3) * 50}% ${Math.floor(index / 3) * 50}%` }}
+                    onClick={() => setSelected((current) => (current.includes(index) ? current.filter((item) => item !== index) : [...current, index]))}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+
+          {stage === 'audio' && (
+            <form className="captcha-audio" onSubmit={submitAudio}>
+              <p className="captcha-audio-head">Audio challenge</p>
+              <div className={`captcha-wave${playing ? ' is-playing' : ''}`} aria-hidden="true">{Array.from({ length: 24 }, (_, n) => <i key={n} style={{ animationDelay: `${(n % 6) * 0.08}s` }} />)}</div>
+              <label htmlFor="captcha-heard">Type what you heard</label>
+              <input id="captcha-heard" value={heard} onChange={(event) => setHeard(event.target.value)} autoComplete="off" />
+              <button type="submit">Verify</button>
+            </form>
+          )}
+
+          {stage !== 'checkbox' && stage !== 'spinning' && (
+            <div className="captcha-foot">
+              <div className="captcha-tools">
+                <button type="button" onClick={reload} aria-label="New challenge" disabled={passed}>↻</button>
+                {stage === 'grid' && <button type="button" onClick={openAudio} disabled={passed}>🎧 <small>5 CC</small></button>}
+              </div>
+              <span>{message}</span>
+              {stage === 'grid' && <button type="button" className="captcha-verify" onClick={verify} disabled={passed}>Verify</button>}
+            </div>
+          )}
           {passed && <span className="scribble captcha-scrawl" aria-hidden="true">There are no wolves.</span>}
         </div>
-        {!passed && attempts >= 2 && <button type="button" className="scribble sheep-skip" onClick={onPass}>There are no wolves. Skip it →</button>}
-        {!passed && <p className="locked-hint">🔒 Complete verification to continue</p>}
-        {passed && <Next to="vote" />}
       </div>
     </Scene>
   );
@@ -1507,7 +1582,7 @@ export default function HomePage({ footer }) {
         <DayScene active={active === at('day')} sfx={sfx} />
         <FeedScene entered={entered.has(at('feed'))} active={active === at('feed')} announce={announce} sfx={sfx} />
         <TrainingScene active={active === at('training')} resident={resident} />
-        <VerifyScene onPass={passCaptcha} passed={captchaPassed} />
+        <VerifyScene onPass={passCaptcha} passed={captchaPassed} sfx={sfx} />
 
         {captchaPassed && (
           <>
