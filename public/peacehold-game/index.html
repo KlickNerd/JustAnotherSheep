@@ -1,0 +1,279 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>PEACEHOLD — Just Another Sheep</title><style>
+:root{--bg:#191916;--panel:#e9ddc7;--gold:#dfb875}*{box-sizing:border-box}body{margin:0;background:#111;color:#f3e9d8;font:15px system-ui,-apple-system,sans-serif}.app{max-width:750px;margin:auto;background:var(--bg);min-height:100dvh}header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px;background:#30271f;position:sticky;top:0;z-index:3;font-size:13px;border-bottom:1px solid #8e704d}.res{display:flex;gap:11px;flex-wrap:wrap;font-weight:700}h1,h2,h3{font-family:Georgia,serif}h1{margin:0}nav{position:sticky;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:#30271f;border-top:1px solid #8e704d;padding-bottom:env(safe-area-inset-bottom)}nav button{padding:12px 0;color:#e5d7bf;background:transparent;border:0;font-size:12px}nav button.active{background:#6f5133;color:#fff}.scene{min-height:68dvh;position:relative;overflow:hidden;background:radial-gradient(circle at 73% 15%,#fff8c6 0,#eac78a 13%,transparent 40%),linear-gradient(#92bdcb 0%,#f2d3a2 42%,#7ea66e 43%,#4e7350 100%)}.hills{position:absolute;top:38%;height:28%;width:150%;left:-25%;border-radius:50% 50% 0 0;background:#88aa75}.path{position:absolute;bottom:-10%;left:20%;width:60%;height:68%;clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);background:#cbb18b}.tower{position:absolute;left:43%;top:24%;width:16%;height:39%;background:#ece1c6;border:7px solid #877965;text-align:center;font-size:32px;padding-top:7%;box-shadow:0 -28px #4d4138}.barn{position:absolute;top:47%;width:29%;height:26%;background:#b8a58c;border:5px solid #5d5345;clip-path:polygon(0 30%,50% 0,100% 30%,100% 100%,0 100%)}.barn.left{left:3%}.barn.right{right:3%}.pin{position:absolute;background:#2d241ddd;border:1px solid #bd9e6c;color:#fff0d7;border-radius:8px;padding:11px;box-shadow:0 5px 10px #0004;font-weight:bold}.pin.a{top:21%;left:29%}.pin.b{top:52%;left:3%}.pin.c{top:55%;right:3%}.pin.d{bottom:18%;left:7%}.pin.e{bottom:17%;right:6%}.herohead{position:relative;text-align:center;padding:24px 10px 0;color:#281f17;text-shadow:0 1px #f8e6c3}main{min-height:72dvh}.meters{padding:9px 12px;background:#322820;display:flex;gap:15px;font-size:12px;justify-content:center}.intro{padding:17px;background:#29221c}.section{padding:18px}.card{background:var(--panel);color:#30271f;margin:12px 0;padding:17px;border:1px solid #b9a07c;border-radius:10px}.card p{line-height:1.5}.row{display:flex;align-items:center;justify-content:space-between;gap:8px}.btn{border:1px solid #9f7443;border-radius:8px;padding:11px 14px;background:var(--gold);color:#302316;font-weight:750;cursor:pointer}.btn:disabled{opacity:.4}.btn.alt{background:#4f5743;color:white}.btn.red{background:#9e6455;color:white}.tabs{display:flex;gap:6px;overflow:auto}.tabs button{white-space:nowrap}.big{font-size:35px}.muted{color:#baa98e;font-size:12px}.card .muted{color:#776857}.meter{height:8px;background:#a8a08d;border-radius:9px;overflow:hidden}.meter i{display:block;height:100%;background:#6f9765}.status{padding:12px;color:#ffe0a4}#alert{position:fixed;z-index:10;bottom:74px;left:10%;width:80%;background:#18221c;border:1px solid #9f8b61;padding:13px;border-radius:8px;text-align:center}[hidden]{display:none!important}
+
+/* PEACEHOLD v0.2 — cinematic illustrated Farm hub */
+:root{--bg:#1b1512;--panel:#eee0c4;--gold:#d9b377}
+body{background:#100e0d;color:#f2e6d2}
+.app{background:#1b1714}
+header{background:linear-gradient(110deg,#2c211a,#433124);border-bottom:2px solid #957653;box-shadow:0 3px 16px #120e0c7a;padding:12px 14px;min-height:76px}
+header .res{column-gap:12px;row-gap:6px}
+nav{background:linear-gradient(#453124,#241b17);border-top:2px solid #a18157;box-shadow:0 -4px 20px #180e0a88}
+nav button{font-weight:700;border-right:1px solid #6b513c;font-size:13px;min-height:65px}
+nav button.active{background:linear-gradient(145deg,#84603a,#50351e);box-shadow:inset 0 0 0 2px #cba262;color:#fff5d6}
+.scene{height:min(70dvh,730px);min-height:510px;background:linear-gradient(to bottom,#0002 0%,transparent 22%,#100b0577 100%),url('/images/brand/hero-peacehold-mobile.webp') center center/cover no-repeat #927c59}
+.scene .hills,.scene .path,.scene .barn,.scene .tower{display:none}
+.scene .herohead{position:absolute;top:16px;left:10%;width:80%;padding:8px 11px;color:#fff4d6;text-shadow:0 2px 12px #170f0e,0 2px 5px #170f0e;background:#20160e84;border:1px solid #d8b88c77;border-radius:8px}
+.scene .herohead small{font-size:10px;letter-spacing:2px}
+.scene .herohead h1{font-size:clamp(21px,5vw,32px);line-height:1.07}
+.scene .herohead b{font-size:11px}
+.scene .pin{background:linear-gradient(#35271eea,#211a17eb);border:1px solid #c7a572;color:#f5e9d5;border-radius:6px;font:700 clamp(11px,2.8vw,15px) Georgia,serif;padding:11px 13px;text-shadow:0 1px #000;box-shadow:0 5px 12px #150e0a8a;min-height:43px}
+.scene .pin:active{transform:scale(.97);background:#755536}
+.scene .pin.a{top:30%;left:50%;transform:translateX(-50%)}
+.scene .pin.b{top:52%;left:4%}
+.scene .pin.c{top:48%;right:4%}
+.scene .pin.d{bottom:17%;right:4%;left:auto}
+.scene .pin.e{bottom:32%;left:45%;right:auto}
+.meters{background:#33271e;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:16px;border-top:2px solid #ad8a5b}
+.meters>div{min-width:0}
+.meters .meter{margin-top:7px;background:#665a4a}
+.meters i{background:linear-gradient(90deg,#7a9f69,#b2be86)}
+.intro{background:linear-gradient(110deg,#efe1c3,#d4bc91);color:#33271e;border:5px solid #34271e;margin:0;padding:18px;font-size:14px;line-height:1.6}
+.intro h3{margin:0 0 10px;font-size:23px}
+.intro .btn{margin-top:10px;display:block}
+.section{background:linear-gradient(#31251d,#1b1714);min-height:76dvh}
+.card{box-shadow:0 5px 14px #09070645;border-radius:6px}
+.btn{border-radius:6px}
+@media(max-width:420px){header{font-size:12px}header .res{gap:9px}.scene{min-height:490px;height:64dvh}.scene .pin{padding:9px 10px}.scene .herohead{top:12px}.intro h3{font-size:20px}}
+
+
+/* PEACEHOLD Premium Game UI v1 */
+:root{--panel:#efe1c8;--gold:#d2a962}
+body{font-family:Georgia,serif;letter-spacing:.04px;background:#140e0c}
+.app{max-width:750px;min-height:100dvh;background:#211814}
+header{min-height:79px;gap:8px;position:relative;background:linear-gradient(135deg,#453123,#241811);border:3px solid #997044;border-radius:0 0 9px 9px;box-shadow:inset 0 0 0 1px #d7b678,0 6px 20px #130b0780;font-size:13px}
+header:before{content:"";position:absolute;inset:5px;pointer-events:none;border:1px solid #96765255;border-radius:4px}
+header .res{gap:10px;font:700 15px Georgia,serif;align-items:center}
+header .res span{white-space:nowrap}
+header b#name{font:700 18px Georgia,serif}
+header .muted{font-family:Georgia,serif;color:#dbc3a1}
+nav{border:2px solid #8e6539;background:linear-gradient(#493225,#231913);z-index:5}
+nav button{font:700 14px Georgia,serif;border-right:1px solid #816342;min-height:65px}
+nav button.active{background:linear-gradient(#684621,#392417);box-shadow:inset 0 0 0 2px #c69b51,0 0 12px #e2ab4833}
+.section{padding:18px 12px 30px;min-height:74dvh;background:linear-gradient(160deg,#3b2a20,#1d1612)}
+.section h1{font-size:31px;margin:10px 0 12px;color:#f3dcaa;text-shadow:0 2px 5px #000}
+.section h2{font-size:24px}
+.section .muted{color:#d1b68f}
+.card{border:3px solid #79512c;outline:1px solid #bd955d;outline-offset:-7px;background:linear-gradient(140deg,#f6e6c7,#dec6a1);color:#2a2019;border-radius:8px;box-shadow:0 5px 15px #11090688;padding:18px}
+.card h3,.card h2{margin:0 0 9px}
+.card p{margin:9px 0;line-height:1.4}
+.btn{font:700 14px Georgia,serif;background:linear-gradient(#f6d28a,#b98a3e);border:2px solid #8b5b29;box-shadow:inset 0 1px #fff0bc,0 3px 5px #0003;border-radius:7px;padding:11px}
+.btn.alt{background:linear-gradient(#566b54,#304332);color:#f5f0dd}
+.btn.red{background:linear-gradient(#a86253,#703729);color:#fff}
+.tabs{padding:6px 1px 12px}
+.tabs .btn{font-size:12px;flex-shrink:0}
+.meters{border-top:3px solid #9b7648}
+.meters>div{width:100%}
+.intro{box-shadow:inset 0 0 0 2px #b78e52}
+.wood-heading{border:2px solid #a9804c;background:linear-gradient(125deg,#5c412e,#2d2119);padding:16px;color:#fff0d3;border-radius:8px;box-shadow:0 5px 18px #100a0880}
+.scene{height:min(67dvh,745px);min-height:490px;background-image:linear-gradient(180deg,#07050305,#120d0b05 55%,#0e0b0865),url('/images/brand/hero-peacehold-mobile.webp')}
+.scene .herohead{background:linear-gradient(90deg,#261a12c9,#443122a8);border:1px solid #d9b57c;top:10px}
+.scene .pin{border:2px solid #c59d5d;box-shadow:inset 0 0 0 1px #46301e,0 3px 10px #10090990;background:linear-gradient(#493226ed,#211611f2)}
+.scene .pin.a{top:29%;left:27%;transform:none}
+.scene .pin.b{top:48%;left:3%}
+.scene .pin.c{top:49%;right:3%}
+.scene .pin.d{bottom:15%;right:3%}
+.scene .pin.e{bottom:35%;left:34%}
+.section.jobs-view{background:linear-gradient(#1b100d99,#21120ebf),url('/images/home/barn-mobile.webp') center/cover fixed}
+.section.sheep-view{background:linear-gradient(#2a1c13aa,#1b110ddd),url('/images/home/barn-mobile.webp') center/cover fixed}
+.section.herd-view{background:linear-gradient(#21150fbb,#130e0bd9),url('/images/home/barn-mobile.webp') center/cover fixed}
+.section.society-view{background:linear-gradient(#21150fba,#130e0be9),url('/images/home/classroom-mobile.webp') center/cover fixed}
+.job-card{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:start}
+.job-art{width:84px;height:92px;object-fit:cover;border:3px solid #b88d56;border-radius:5px}
+.job-card .btn{width:100%;margin-top:9px}
+.job-card .job-title{font-size:19px;line-height:1.1;margin:0}
+.reward-line{display:flex;flex-wrap:wrap;gap:5px;font-weight:bold;font-size:12px}
+.reward-line span{background:#e2cca5;padding:5px;border-radius:4px}
+.game-stat{display:flex;align-items:center;gap:11px;margin:9px 0}
+.game-stat>strong{min-width:85px}
+.game-stat .meter{flex:1;background:#72624d;height:11px}
+.game-stat .meter i{background:linear-gradient(90deg,#82a77a,#b9c98b)}
+.profile-art{height:270px;background:linear-gradient(#0a070520,#0a070577),url('/images/brand/sheet-deadpan.webp') center 30%/cover no-repeat;border:3px solid #947249;border-radius:7px;box-shadow:0 5px 15px #0005;margin:12px 0}
+.herd-art{height:190px;background:linear-gradient(#20100833,#140d0888),url('/images/characters/flock.webp') center/cover no-repeat;border:3px solid #987348;border-radius:6px;margin-bottom:12px}
+.member-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.member{background:#d2bc95;text-align:center;border:2px solid #a78557;border-radius:5px;padding:10px 5px;font-size:12px}
+.role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.role{padding:12px;background:#dbc49d;border:1px solid #987b55;border-radius:5px}
+.location-icon{font-size:20px}
+@media(min-width:600px){.job-card{grid-template-columns:125px 1fr}.job-art{width:125px;height:105px}.member-row{grid-template-columns:repeat(6,1fr)}}
+
+
+/* Personal stall vertical slice */
+.plot-wrap{padding:14px;background:linear-gradient(145deg,#39291e,#1a1410)}
+.plot-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:11px}.plot-heading h2{margin:0;color:#f2dab0;font-size:23px}.plot-heading small{color:#d8b78a}
+.plot-scene{position:relative;height:clamp(275px,78vw,480px);border:5px solid #654427;outline:2px solid #c49b61;box-shadow:inset 0 0 0 2px #d7b980,0 7px 20px #100904a8;border-radius:9px;background-position:center;background-size:cover;overflow:hidden}
+.plot-scene[data-tier="1"]{background-image:linear-gradient(0deg,#170e08aa,#34230a05 55%),url('/images/home/pen.webp')}
+.plot-scene[data-tier="2"]{background-image:linear-gradient(0deg,#170e08a4,#34230a05 55%),url('/images/home/barn-mobile.webp')}
+.plot-scene[data-tier="3"]{background-image:linear-gradient(0deg,#170e08aa,#34230a05 55%),url('/images/home/barn.webp')}
+.plot-ribbon{position:absolute;top:10px;left:10px;background:#24180de0;border:1px solid #e6c17f;border-radius:5px;padding:7px 10px;color:#f5dfbb;font-size:12px}
+.plot-description{position:absolute;bottom:9px;left:9px;right:9px;background:#1d130ddc;border:1px solid #bb8b4c;border-radius:5px;padding:9px;color:#f5e2c3;font-size:13px;line-height:1.4}
+.plot-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+.plot-actions .btn{min-height:55px}
+.plot-progress{background:linear-gradient(130deg,#f4e2bd,#d8bd90);color:#38291c;border:3px solid #86603b;border-radius:8px;padding:13px}
+.plot-progress h3{margin:3px 0 7px;font-size:20px}
+.plot-progress p{margin:5px 0 11px;line-height:1.5}
+.plot-progress .meter{height:12px;background:#a88b68;margin:10px 0}.plot-progress .meter i{background:linear-gradient(90deg,#63804b,#b9bf77)}
+.plot-tag{background:#ead1a6;border:1px solid #a78c63;border-radius:5px;padding:8px;margin:5px 0;display:block;font-size:13px}
+.plot-cta{width:100%;min-height:51px}
+@media(max-width:390px){.plot-actions .btn{font-size:12px;padding:9px}.plot-heading h2{font-size:20px}}
+
+/* Interactive plot editor v1 */
+.land-board{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));aspect-ratio:1.12;background:linear-gradient(145deg,#83a46b,#456a43);border:6px ridge #9b7146;box-shadow:inset 0 0 32px #183e2177,0 8px 18px #08080699;border-radius:10px;overflow:hidden;touch-action:manipulation}
+.land-cell{position:relative;border:1px solid #dae5ab27;background:transparent;min-width:0;cursor:pointer;padding:0;color:#fff;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.land-cell:nth-child(3n){background:#e5d2850b}.land-cell:active{background:#ead39877}
+.land-cell.selected{outline:3px solid #f9df87;outline-offset:-3px;background:#fff0a725}
+.land-cell.available{background:#f5d76538}
+.land-cell .object{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-shadow:0 2px 3px #182012;font-weight:bold;line-height:1.1;z-index:1;pointer-events:none}
+.land-cell .object .art{font-size:clamp(26px,8vw,54px);filter:drop-shadow(1px 4px 2px #233b20b3)}
+.land-cell .object small{font:700 clamp(8px,2vw,11px) Georgia,serif;background:#30241cde;padding:2px 3px;border-radius:3px;white-space:nowrap}
+.land-cell .object.ready:after{content:'✦';position:absolute;top:-10px;right:-7px;color:#ffe783;font-size:21px;animation:twinkle 1.2s infinite alternate}
+@keyframes twinkle{to{opacity:.35;transform:translateY(-3px)}}
+.land-controls{display:flex;flex-wrap:wrap;gap:7px;margin:11px 0}
+.land-controls button{flex:1 0 44%;min-height:43px}
+.land-status{background:#271a14;color:#f4dfb9;padding:11px;border:1px solid #bd975d;border-radius:6px;margin:10px 0;font-size:13px;line-height:1.5}
+.build-market{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.build-offer{border:2px solid #ad8b58;background:linear-gradient(#f6e3bd,#dac19b);border-radius:7px;color:#2b2117;padding:10px;text-align:left;font:700 13px Georgia,serif;min-height:94px}
+.build-offer .build-icon{display:block;font-size:29px;margin-bottom:4px}
+.build-offer small{display:block;font-size:11px;margin-top:5px}
+.build-offer:disabled{opacity:.47}
+.build-offer.on{border:3px solid #5f803d;background:#fce2a0}
+.land-board-hint{font:12px Georgia,serif;color:#dbc6a0;margin:9px 0 12px}
+
+/* PEACEHOLD Plot V2: illustrated terrain and individually rendered building assets */
+.plot-wrap{background:linear-gradient(#422e20,#241a14);padding:14px 12px 23px}
+.land-board{background:linear-gradient(180deg,#111b1025,#10201355),url('/images/home/story-meadow.webp') center/cover no-repeat,#75865b;isolation:isolate;border:5px solid #7b5736;outline:2px solid #c1a16e;box-shadow:inset 0 0 0 2px #dec597,inset 0 -28px 50px #293e2488,0 8px 22px #100a0780;border-radius:13px}
+.land-board:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at center,#c2c68a13,#111d1155),repeating-linear-gradient(0deg,transparent 0 16.55%,#f9e5a80b 16.56% 16.66%)}
+.land-cell,.land-cell:nth-child(3n){background:transparent;border-color:transparent;z-index:1;transition:background .16s,box-shadow .16s}
+.land-cell.available{background:#f6da7840;box-shadow:inset 0 0 0 1px #e7c46e88}
+.land-cell.selected{background:#fff4ac39;box-shadow:inset 0 0 13px #ffeb9b66;outline:2px dashed #fff2b2;outline-offset:-3px}
+.land-cell .object .art{display:block;width:clamp(43px,14vw,90px);height:clamp(43px,14vw,90px);font-size:0;filter:drop-shadow(2px 7px 3px #121e1588);transform:translateY(-4px)}
+.land-cell .object .art svg{width:100%;height:100%;overflow:visible}
+.land-cell .object small{font-size:clamp(7px,1.9vw,11px);background:#24170de3;border:1px solid #bea277;padding:3px 5px;transform:translateY(-6px);box-shadow:0 2px 3px #120a0688}
+.land-cell .object{transform:translateY(1px);transition:transform .2s}
+.land-cell:active .object{transform:translateY(-5px) scale(1.06)}
+.plot-heading{padding:9px 4px}.plot-heading h2{font-size:25px}
+.land-status{background:linear-gradient(#4b3325,#241a15);border:2px solid #b18c54;border-radius:9px;box-shadow:inset 0 0 0 1px #503423;font-size:14px}
+.build-offer{background:linear-gradient(135deg,#fff1d0,#d9ba89);box-shadow:inset 0 0 0 2px #ffe8b7,0 3px 8px #0a050544;min-height:118px;text-align:center}
+.build-offer .build-icon{height:64px;display:flex;align-items:center;justify-content:center}
+.build-offer .build-icon svg{height:62px;width:85px;filter:drop-shadow(1px 4px 3px #3f2a2059)}
+.build-offer.on{outline:3px solid #d3ae51}
+.plot-progress{background:linear-gradient(135deg,#f9e9c9,#d6b98d);box-shadow:inset 0 0 0 3px #ead1a7,0 6px 19px #130a0677}
+.plot-actions .btn{font-size:14px}
+@media(max-width:390px){.land-cell .object .art{width:13vw;height:13vw}.land-cell .object small{font-size:7px;padding:2px}.build-offer .build-icon{height:56px}}
+
+/* Homeland builder v3 — elevated orthographic village */
+.homeland{padding:13px;background:linear-gradient(#37281c,#211711);border-top:3px solid #b08a50}
+.homeland-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:8px 0 12px}
+.homeland-head h2{margin:0;font:700 25px Georgia;color:#f4dfa9}
+.homeland-head small{color:#d4b981;font-size:11px;letter-spacing:1.2px}
+.hm-level{border:1px solid #dfb875;padding:7px 12px;border-radius:7px;background:#20160dbb;font-weight:bold}
+.hm-world{position:relative;height:clamp(365px,111vw,670px);border:5px solid #8b6337;border-radius:17px;overflow:hidden;background:radial-gradient(ellipse at 45% 55%,#b2c98f 0,#729258 48%,#3b6845 93%);box-shadow:inset 0 0 30px #14290b8c,0 9px 20px #100905a1;isolation:isolate}
+.hm-world:before{content:"";position:absolute;inset:0;background:linear-gradient(#f9dfa938,#152c1722 65%),url('/images/home/story-meadow.webp') center/cover;opacity:.34}
+.hm-world:after{content:"";position:absolute;inset:7% 5%;border:2px dashed #eee0a867;border-radius:45% 30% 42% 32%;pointer-events:none}
+.hm-road{position:absolute;left:-24%;top:48%;width:145%;height:16%;transform:rotate(-25deg);border:5px solid #ad966e99;background:linear-gradient(#d2bc8bba,#f1d19a99,#b18f5dbb);box-shadow:0 3px 5px #42382045}
+.hm-road.branch{left:43%;top:24%;width:88%;height:9%;transform:rotate(65deg);opacity:.8}
+.hm-water{position:absolute;right:-18%;bottom:-15%;width:55%;height:40%;border-radius:50%;transform:rotate(-18deg);background:repeating-linear-gradient(155deg,#70b9c0,#70b9c0 8px,#a9dad5 12px,#72adb2 17px);border:8px solid #b1ad83;box-shadow:0 0 12px #174d53}
+.hm-tree{position:absolute;font-size:32px;filter:drop-shadow(3px 5px 2px #19271066);pointer-events:none}
+.hm-location{position:absolute;transform:translate(-50%,-60%);border:0;background:transparent;color:white;padding:0;width:18%;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;filter:drop-shadow(2px 6px 3px #1f281b77);cursor:pointer;z-index:2;transition:transform .2s}
+.hm-location .sprite{display:block;width:100%;height:80%}
+.hm-location .sprite svg{width:100%;height:100%;overflow:visible}
+.hm-location label{font:700 clamp(9px,2.1vw,13px) Georgia,serif;color:#fff2d4;text-shadow:0 2px 4px #100906,1px 1px #100906;background:#2b1b14dc;border:1px solid #bd975d;border-radius:4px;padding:3px 5px;white-space:nowrap;pointer-events:none}
+.hm-location.active{filter:drop-shadow(0 0 9px #ffe494);transform:translate(-50%,-65%) scale(1.11)}
+.hm-location:active{transform:translate(-50%,-65%) scale(1.1)}
+.hm-location .bubble{position:absolute;top:-15%;right:-8%;border:2px solid #eac77e;background:#f5e4bc;color:#372014;border-radius:50%;font-size:17px;padding:4px;animation:hm-bob 1.7s ease-in-out infinite;box-shadow:0 2px 10px #18130a7a}
+@keyframes hm-bob{50%{transform:translateY(-6px)}}
+.hm-slot{position:absolute;transform:translate(-50%,-50%);border:2px dashed #ecdfa270;border-radius:50%;width:12%;aspect-ratio:1;background:#e3d8a319;color:#ffffd7;text-shadow:0 1px 3px #182613;font-size:22px;z-index:2}
+.hm-slot.building{border-color:#ffe2a2;background:#ffe1a447;animation:hm-pulse 1.5s infinite alternate}
+@keyframes hm-pulse{to{background:#ffe1a47a;box-shadow:0 0 13px #ffe5a0}}
+.hm-slot.locked{opacity:.42;background:#303e3388}
+.hm-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}
+.hm-controls button{font-size:13px;min-height:46px;padding:8px 4px}
+.hm-goal{border:2px solid #a98046;border-radius:8px;background:linear-gradient(#f3e0b7,#d6b98a);padding:12px;color:#342317;box-shadow:inset 0 0 0 2px #ffe8b7}
+.hm-goal h3{font-size:19px;margin:0 0 7px}
+.hm-goal p{margin:6px 0;font-size:13px;line-height:1.5}
+.hm-shop{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:9px}
+.hm-shop button{border:2px solid #a27643;border-radius:7px;background:linear-gradient(#f7e5c2,#d6b58a);color:#3b2715;min-height:90px;display:flex;align-items:center;flex-direction:column;gap:2px;padding:8px;font:700 13px Georgia}
+.hm-shop button:disabled{opacity:.48}
+.hm-shop svg{height:51px;width:70px}
+.hm-shop small{font-size:11px}
+.hm-shop button.active{border-color:#56854f;background:#fff0bd;box-shadow:0 0 9px #f7c86d}
+.hm-bottom{margin-top:11px;padding:13px;background:#2b1c12;color:#f3dfbc;border:1px solid #bb965e;border-radius:8px;font-size:13px}
+.hm-bottom p{margin:5px 0}
+.hm-world.is-building .hm-slot.building{cursor:pointer}
+@media(max-width:400px){.hm-location{width:20%}.hm-world{height:117vw}.hm-controls button{font-size:11px}.hm-location label{font-size:9px}}
+
+/* PEACEHOLD Homeland: approved illustration as the playable world.
+   The map keeps the artwork's exact 1672x941 ratio and pans sideways on phones;
+   slots are positioned in % of the map, so they stay on the painted plots at any size. */
+.hm-world.art{height:auto;overflow-x:auto;overflow-y:hidden;background:#5f6f42;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+.hm-world.art::-webkit-scrollbar{display:none}
+.hm-world.art:before,.hm-world.art:after{display:none}
+.hm-map{--mh:clamp(300px,86vw,460px);position:relative;height:var(--mh);width:calc(var(--mh)*1.7768);background:#8e9d67 url('/images/game/peacehold-homeland-v1.webp') center/100% 100% no-repeat}
+.hm-map .hm-slot{width:9%;aspect-ratio:1.6;border-radius:50%;border:2px solid transparent;background:transparent;font-size:clamp(14px,3.8vw,20px);color:#fff7dc;text-shadow:0 1px 3px #000;opacity:1;animation:none;box-shadow:none}
+.hm-map .hm-slot.locked{opacity:0}
+.hm-world.art.is-building .hm-slot:not(.locked),.hm-world.art.is-moving .hm-slot:not(.locked){border:2px dashed #ffe7a8;background:#ffe3a03d;animation:hm-pulse 1.5s infinite alternate}
+.hm-world.art.is-building .hm-slot.locked{opacity:.85;background:#1a120a8c;border:1px solid #00000040;font-size:13px}
+.hm-map .hm-location{width:10.5%;z-index:3;filter:drop-shadow(0 4px 3px #1d130ab8) drop-shadow(0 0 1px #fff3cf)}
+.hm-map .hm-location:before{content:"";position:absolute;left:8%;right:8%;bottom:14%;height:26%;border-radius:50%;background:radial-gradient(#2a1c0f99,#2a1c0f00 70%);z-index:-1}
+.hm-map .hm-location .sprite{background:none}
+.hm-map .hm-location label{font-size:clamp(8px,2vw,11px);padding:2px 5px;margin-top:-2px}
+.hm-map .hm-location.active{filter:drop-shadow(0 0 7px #ffe494) drop-shadow(0 4px 3px #1d130ab8)}
+</style><div class="app"><header><div><b>🐑 <span id="name">Sheep #127</span></b><div class="muted" id="lvl">Lv 1</div></div><div class="res"><span>🌿 <b id="grass"></b></span><span>☁️ <b id="wool"></b></span><span>🪙 <b id="coins"></b></span><span>⚡ <b id="energy"></b></span></div></header><main id="main"></main><nav id="nav"></nav></div><div id="alert" hidden></div><script>
+const K="peacehold-mobile-v1",initial={level:1,xp:0,grass:90,wool:12,coins:220,energy:100,awareness:5,suspicion:0,influence:10,stall:1,skills:{Wit:1,Grit:1,Charm:1,Sneak:1},herd:false,vote:null,job:null,last:Date.now()};
+let s;try{s={...initial,...JSON.parse(localStorage.getItem(K))}}catch{s={...initial}}/* One-time demo supply package; preserves all existing progress. */
+if(!s.demoSupplyOct17){s.grass=Math.max(9999,Number(s.grass)||0);s.wool=Math.max(9999,Number(s.wool)||0);s.coins=Math.max(9999,Number(s.coins)||0);s.energy=100;s.demoSupplyOct17=true;localStorage.setItem(K,JSON.stringify(s))}
+let page="Farm",category="All";s.stall=Math.max(1,Number(s.stall)||1);s.lastProduction=Number(s.lastProduction)||Date.now();s.lastHarvest=Number(s.lastHarvest)||0;s.stallStock=Math.max(0,Number(s.stallStock)||0);s.plotTutorial=!!s.plotTutorial;const jobs=[["Gather Grass","Civic",12,5,{grass:50,wool:2},15],["Deliver Wool Tax","Loyalist",20,10,{coins:130,influence:8},20],["Clean Bell Tower","Civic",18,8,{coins:100},18],["Distribute Approved Pamphlets","Loyalist",24,10,{coins:150,influence:12},25],["Pass a Hidden Message","Underground",30,15,{coins:170,awareness:12,suspicion:8},30]];
+function save(){localStorage.setItem(K,JSON.stringify(s))}function toast(t){let a=document.querySelector("#alert");a.textContent=t;a.hidden=false;setTimeout(()=>a.hidden=true,3100)}function tick(){let n=Date.now();let prod=Math.min(240,Math.max(0,Math.floor((n-s.lastProduction)/120000)));if(prod>0){s.stallStock=Math.min(240*(s.stall+plotProductionCount('workshop'))+120*plotProductionCount('storage'), s.stallStock+prod*(s.stall*3+2*plotProductionCount('workshop')));s.lastProduction+=prod*120000}let gain=Math.floor((n-s.last)/60000);if(gain>0){s.energy=Math.min(100,s.energy+gain);s.last+=gain*60000}if(s.job&&n>=s.job.end){let j=jobs[s.job.id];Object.entries(j[4]).forEach(([k,v])=>s[k]=(s[k]||0)+v);s.xp+=j[5];while(s.xp>=s.level*100){s.xp-=s.level*100;s.level++;s.energy=Math.min(100,s.energy+15)}s.job=null;toast("Job complete! Rewards collected.")}save()}function meter(t,v){return '<span>'+t+' '+v+'/100</span><div class="meter"><i style="width:'+v+'%"></i></div>'}function main(){tick();["grass","wool","coins","energy"].forEach(k=>document.getElementById(k).textContent=s[k]);document.getElementById("lvl").textContent="Lv "+s.level+" · "+s.xp+"/"+s.level*100+" XP";document.getElementById("nav").innerHTML=[["Farm","🏡"],["Society","🏛️"],["Jobs","⚒️"],["Sheep","🐑"],["Herd","🤝"]].map(([t,e])=>'<button class="'+(page===t?'active':'')+'" onclick="go(\''+t+'\')">'+e+'<br>'+t+'</button>').join('');document.getElementById("main").innerHTML=({Farm:farm,Society:society,Jobs:jobpage,Sheep:sheep,Herd:herd})[page]();hmScrollRestore()}function go(x){page=x;main();window.scrollTo(0,0)}
+
+const PLOT_ITEMS={stall:{name:'Stall',icon:'🏠',grass:0,coins:0},garden:{name:'Grass Garden',icon:'🌾',grass:35,coins:40},workshop:{name:'Wool Shed',icon:'🧶',grass:65,coins:100},tree:{name:'Apple Tree',icon:'🌳',grass:20,coins:25},fence:{name:'Fence',icon:'🪵',grass:10,coins:15},storage:{name:'Storage',icon:'📦',grass:85,coins:120}};
+if(!Array.isArray(s.plotItems)||!s.plotItems.some(i=>i.type==='stall'))s.plotItems=[{type:'stall',pos:14}];
+s.plotItems=s.plotItems.filter(i=>i&&PLOT_ITEMS[i.type]&&Number.isInteger(i.pos)&&i.pos>=0&&i.pos<36);
+s.plotItems=s.plotItems.filter((i,idx,arr)=>arr.findIndex(v=>v.pos===i.pos)===idx);
+s.plotItems=s.plotItems.filter((i,idx,arr)=>i.type!=='stall'||arr.findIndex(v=>v.type==='stall')===idx);
+if(!s.plotItems.some(i=>i.type==='stall'))s.plotItems.push({type:'stall',pos:14});
+s.plotMode=null;s.plotSelected=null;
+
+function plotIcon(type){
+const base='<ellipse cx="50" cy="91" rx="40" ry="8" fill="#26371d" opacity=".35"/>';
+let art={
+stall:'<path d="M16 45 49 16 84 45 79 52 49 27 21 52Z" fill="#85472d" stroke="#34241a" stroke-width="3"/><rect x="24" y="46" width="51" height="39" rx="2" fill="#d9b984" stroke="#60452b" stroke-width="3"/><path d="M20 49 49 23 79 49" stroke="#b97847" stroke-width="8" fill="none"/><rect x="42" y="61" width="16" height="24" rx="2" fill="#62432b" stroke="#e7d4aa" stroke-width="3"/><rect x="29" y="54" width="9" height="11" fill="#9fc3b4" stroke="#694d35" stroke-width="2"/><rect x="63" y="54" width="8" height="11" fill="#9fc3b4" stroke="#694d35" stroke-width="2"/><path d="M72 24V11H79V30" fill="#996041" stroke="#503524" stroke-width="2"/>',
+garden:'<path d="M10 78 50 58 91 79 50 93Z" fill="#715131" stroke="#34261d" stroke-width="3"/><path d="M23 77 51 65 80 78 50 88Z" fill="#638048"/><path d="M31 78 25 58M49 78 46 43M65 76 73 55" stroke="#558e40" stroke-width="5" stroke-linecap="round"/><path d="M25 58q-18-14-9-27 19 5 13 25M46 44q-13-22 4-30 14 15-3 31M72 55q-4-22 13-25 9 19-11 29" fill="#ccb65d" stroke="#796f30" stroke-width="2"/>',
+workshop:'<path d="M10 48 49 18 90 48 84 55 49 31 15 55Z" fill="#89482a" stroke="#423025" stroke-width="3"/><rect x="18" y="49" width="64" height="38" fill="#b58b5e" stroke="#5a3b2d" stroke-width="3"/><path d="M17 56H83M17 68H83M27 49V85M75 49V85" stroke="#755037" stroke-width="3"/><rect x="41" y="58" width="22" height="28" fill="#533a2b" stroke="#d4b17b" stroke-width="3"/><circle cx="51" cy="73" r="9" fill="#e7dabe" stroke="#c0a17a" stroke-width="2"/><path d="M44 73q6-10 14 0M45 78q6-9 13-1" stroke="#ac9072" stroke-width="2" fill="none"/>',
+tree:'<path d="M46 59V85H55V55" fill="#785035" stroke="#493422" stroke-width="3"/><circle cx="48" cy="39" r="26" fill="#46693c" stroke="#2d4528" stroke-width="3"/><circle cx="33" cy="47" r="17" fill="#64874b"/><circle cx="63" cy="44" r="18" fill="#527a42"/><circle cx="42" cy="27" r="19" fill="#789451"/><circle cx="35" cy="49" r="4" fill="#c5673b"/><circle cx="63" cy="40" r="4" fill="#cd6040"/><circle cx="46" cy="28" r="4" fill="#ca5c37"/>',
+storage:'<path d="M13 38 49 13 88 38 84 44 49 24 18 46Z" fill="#885038" stroke="#422b20" stroke-width="3"/><rect x="20" y="42" width="60" height="44" fill="#ba8e5c" stroke="#543b2a" stroke-width="3"/><rect x="31" y="58" width="20" height="26" fill="#79502f" stroke="#3c291f" stroke-width="2"/><path d="M54 52h17v16H54z" fill="#c4c5aa" stroke="#5b4d3f" stroke-width="3"/><path d="M23 52h54M24 76h54" stroke="#dfb889" stroke-width="3"/>',
+fence:'<path d="M15 80V37L26 30V81M70 80V37L81 30V81" fill="#a47b51" stroke="#563a27" stroke-width="3"/><path d="M11 45 88 49 87 58 11 54ZM11 65 88 69 87 77 11 73Z" fill="#c5a172" stroke="#6b462c" stroke-width="2"/><path d="M18 33 18 81M73 33 73 81" stroke="#e1ba84" stroke-width="2"/>'
+};return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+base+(art[type]||art.stall)+'</svg>'
+}
+function plotProductionCount(type){return s.plotItems.filter(i=>i.type===type).length}
+
+const HM_POSITIONS=[{x:41,y:43.9},{x:62.7,y:45.6},{x:38.1,y:61.5},{x:64,y:61.3},{x:50.7,y:39},{x:51,y:74.9},{x:29,y:52.4},{x:72.1,y:52.1},{x:35.9,y:36.9},{x:56.7,y:34.6},{x:28.7,y:69.7},{x:75.4,y:67.6}];
+function hmLevel(){return Math.min(5,Math.max(1,s.stall+Math.floor((s.plotItems.length-1)/4)))}
+function hmLimit(){return Math.min(12,5+hmLevel()*2)}
+function hmObjects(){return [...s.plotItems].sort((a,b)=>a.pos-b.pos)}
+function hmPosition(pos){return HM_POSITIONS[pos%12]}
+function hmMigrate(){if(s.hmMigrated)return;let used=new Set();let kept=[];s.plotItems.forEach((o,i)=>{if(used.size>=12)return;let choice=o.type==='stall'?5:(o.pos%12);while(used.has(choice))choice=(choice+1)%12;used.add(choice);o.pos=choice;kept.push(o)});s.plotItems=kept;s.hmMigrated=true;save()}
+hmMigrate();
+const HOMELAND_ART='/images/game/peacehold-homeland-v1.webp';let homelandArt=false,hmScroll=null;const artPreload=new Image();artPreload.onload=()=>{homelandArt=true;if(page==='Farm')main()};artPreload.src=HOMELAND_ART;
+function hmScrollRestore(){let w=document.querySelector('.hm-world.art');if(!w)return;let max=w.scrollWidth-w.clientWidth;if(hmScroll===null)hmScroll=Math.round(max/2);w.scrollLeft=Math.min(max,hmScroll);w.onscroll=()=>{hmScroll=w.scrollLeft}}
+function plot(){let g=50*s.stall,c=80*s.stall,ready=Date.now()-s.lastHarvest>=45000,remaining=Math.max(0,Math.ceil((45000-(Date.now()-s.lastHarvest))/1000));let level=hmLevel(),limit=hmLimit(),n=s.plotItems.length;
+let scenery='<div class="hm-road"></div><div class="hm-road branch"></div><div class="hm-water"></div>'+[{x:7,y:9},{x:87,y:13},{x:93,y:27},{x:8,y:60},{x:10,y:91},{x:87,y:93}].map(t=>'<span class="hm-tree" style="left:'+t.x+'%;top:'+t.y+'%">🌳</span>').join('');
+let slots=HM_POSITIONS.map((p,pos)=>{let o=s.plotItems.find(i=>i.pos===pos);if(o){return '<button class="hm-location '+(s.plotSelected===pos?'active':'')+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="'+PLOT_ITEMS[o.type].name+'" onclick="plotTap('+pos+')"><span class="sprite">'+plotIcon(o.type)+'</span><label>'+PLOT_ITEMS[o.type].name+'</label>'+(o.type==='workshop'&&s.stallStock?'<span class="bubble">🧶</span>':'')+(o.type==='garden'&&ready?'<span class="bubble">🌿</span>':'')+'</button>'}let unlocked=pos<limit;return '<button class="hm-slot '+(s.plotMode&&unlocked?'building ':'')+(!unlocked?'locked':'')+'" style="left:'+p.x+'%;top:'+p.y+'%" '+(!unlocked?'disabled':'')+' onclick="plotTap('+pos+')" aria-label="'+(unlocked?'Build site '+(pos+1):'Locked build site')+'">'+(s.plotMode&&unlocked?'+':unlocked?(homelandArt?'':'·'):'🔒')+'</button>'}).join('');
+let shop=['garden','workshop','storage','tree','fence'].map(k=>{let d=PLOT_ITEMS[k],ok=s.grass>=d.grass&&s.coins>=d.coins;return '<button class="'+(s.plotMode===k?'active':'')+'" '+(!ok||n>=limit?'disabled':'')+' onclick="selectBuilding(\''+k+'\')">'+plotIcon(k)+d.name+'<small>🌿 '+d.grass+' · 🪙 '+d.coins+'</small></button>'}).join('');
+let goal=n<limit?'Build a new structure to grow your settlement.':'Upgrade your Stall to unlock more space.';
+return '<section class="homeland"><div class="homeland-head"><div><small>BUILD YOUR HOMELAND</small><h2>My Peacehold Plot</h2></div><span class="hm-level">LV '+level+'</span></div><div class="hm-world '+(homelandArt?'art ':'')+(s.plotMode?'is-building ':'')+(s.plotSelected!==null?'is-moving':'')+'">'+(homelandArt?'<div class="hm-map">'+slots+'</div>':scenery+slots)+'</div><div class="hm-controls"><button class="btn" onclick="toggleBuild()">🔨 Build</button><button class="btn alt" onclick="collectAllPlot()">🧺 Collect All</button><button class="btn alt" onclick="clearPlotMode()">✖ Cancel</button></div><div class="hm-goal"><h3>⭐ Next Goal</h3><p>'+goal+' '+n+'/'+limit+' slots occupied. Next stall upgrade: 🌿 '+g+' and 🪙 '+c+'.</p><p>Production: '+(s.stall*3+2*plotProductionCount('workshop'))+' Wool / 2 min · '+plotProductionCount('garden')+' Grass Gardens · Storage capacity '+(240*(s.stall+plotProductionCount('workshop'))+120*plotProductionCount('storage'))+' Wool.</p><button class="btn" '+(s.grass<g||s.coins<c?'disabled':'')+' onclick="upgrade()">Upgrade Stall — 🌿 '+g+' / 🪙 '+c+'</button><h3 style="margin-top:15px">Build Menu</h3><p>'+(s.plotMode?'Tap an empty glowing site to place '+PLOT_ITEMS[s.plotMode].name+'.':'Select a building, then tap a free space. Tap existing buildings to move them.')+'</p><div class="hm-shop">'+shop+'</div></div><div class="hm-bottom"><p>🌿 Meadow: '+(ready?'Ready to harvest':'Ready in '+remaining+'s')+'</p><p>🧶 Wool waiting: '+s.stallStock+'</p><p>🏠 '+n+' buildings & decorations placed. Positions and progress are saved automatically.</p><button class="btn" '+(ready?'':'disabled')+' onclick="harvestGrass()">Harvest Meadow · +'+(25+10*plotProductionCount('garden'))+' Grass</button> <button class="btn alt" '+(s.stallStock?'':'disabled')+' onclick="collectStall()">Collect Wool</button></div></section>'}
+function toggleBuild(){s.plotMode=s.plotMode?null:'garden';s.plotSelected=null;main()}
+function collectAllPlot(){tick();let amount=s.stallStock;let grass=0;if(Date.now()-s.lastHarvest>=45000){grass=25+10*plotProductionCount('garden');s.grass+=grass;s.lastHarvest=Date.now();s.xp+=8}if(amount){s.wool+=amount;s.stallStock=0}save();main();toast('Collected '+amount+' Wool and '+grass+' Grass!')}
+function selectBuilding(key){if(!PLOT_ITEMS[key]||key==='stall')return;let d=PLOT_ITEMS[key];if(s.coins<d.coins||s.grass<d.grass)return;s.plotMode=key;s.plotSelected=null;main()}
+function clearPlotMode(){s.plotMode=null;s.plotSelected=null;main()}
+function plotTap(pos){let obj=s.plotItems.find(i=>i.pos===pos);if(s.plotMode){if(pos>=hmLimit())return toast('Upgrade your Stall to unlock this site.');if(s.plotItems.length>=hmLimit())return toast('Your homeland is full. Upgrade to expand.');if(obj)return toast('This tile is occupied.');let d=PLOT_ITEMS[s.plotMode];if(s.grass<d.grass||s.coins<d.coins)return clearPlotMode();s.grass-=d.grass;s.coins-=d.coins;s.plotItems.push({type:s.plotMode,pos});s.plotMode=null;s.xp+=12;save();main();return toast('Building placed! +12 XP')}if(s.plotSelected!==null){if(pos>=hmLimit())return toast('This site is locked.');if(s.plotSelected===pos){s.plotSelected=null;return main()}if(obj){s.plotSelected=pos;return main()}let move=s.plotItems.find(i=>i.pos===s.plotSelected);if(move)move.pos=pos;s.plotSelected=null;save();main();return toast('Building moved!')}if(obj){s.plotSelected=pos;main()}else toast('Select a building from the shop to place it.')}
+function harvestGrass(){tick();if(Date.now()-s.lastHarvest<45000)return;s.grass+=25+10*plotProductionCount('garden');s.xp+=8;s.lastHarvest=Date.now();save();main();toast('Meadow harvested! +25 Grass · +8 XP')}
+function collectStall(){tick();if(!s.stallStock)return;let n=s.stallStock;s.wool+=n;s.stallStock=0;save();main();toast('Collected '+n+' Wool from your stall!')}
+function farm(){return '<div class="scene"><div class="herohead"><small>PEACEHOLD PRESENTS</small><h1>JUST ANOTHER SHEEP</h1><b>A safer flock. A brighter tomorrow.</b></div><button class="pin a" onclick="go(\'Society\')">🔔 Bell Tower</button><button class="pin b" onclick="go(\'Jobs\')">⚒ Market</button><button class="pin c" onclick="go(\'Society\')">📜 Tax Office</button><button class="pin d" onclick="document.querySelector(\'.plot-wrap\').scrollIntoView({behavior:\'smooth\'})">🏠 Your Stall ↓</button><button class="pin e" onclick="go(\'Herd\')">🚪 The Open Gate</button></div><div class="meters">'+meter("Awareness",s.awareness)+meter("Suspicion",s.suspicion)+'</div>'+plot()+'<div class="intro"><h3>🔔 Official Announcement</h3>The Shepherd is pleased to announce a proposal to increase wool taxes by 5%. <button class="btn" onclick="go(\'Society\')">Vote now</button></div>'}
+function jobpage(){const img=['/images/home/story-meadow.webp','/images/home/barn-mobile.webp','/images/home/story-tower.webp','/images/home/classroom-mobile.webp','/images/home/fence-night.webp'];return '<div class="section jobs-view"><div class="wood-heading"><h1>⚒️ JOBS</h1><small>WORK TODAY. A BRIGHTER TOMORROW.</small></div>'+(s.job?'<div class="card"><b>⏳ '+jobs[s.job.id][0]+'</b><p>Time remaining: '+Math.max(0,Math.ceil((s.job.end-Date.now())/1000))+'s</p></div>':'')+'<div class="tabs">'+["All","Civic","Loyalist","Underground"].map(x=>'<button class="btn '+(x===category?'':'alt')+'" onclick="category=\''+x+'\';main()">'+(x==='All'?'All Jobs':x)+'</button>').join('')+'</div>'+jobs.map((j,i)=>category!=="All"&&j[1]!==category?"":'<div class="card job-card"><img class="job-art" src="'+img[i]+'" alt=""><div><h3 class="job-title">'+j[0]+'</h3><p class="muted">⏱ '+j[2]+' sec · ⚡ '+j[3]+' · '+j[1]+'</p><div class="reward-line">'+Object.entries(j[4]).map(([k,v])=>'<span>+'+v+' '+k+'</span>').join('')+'<span>+'+j[5]+' XP</span></div><button class="btn" '+(s.job||s.energy<j[3]?'disabled':'')+' onclick="start('+i+')">Start Job ›</button></div></div>').join('')+'</div>'}
+function start(i){tick();let j=jobs[i];if(s.job||s.energy<j[3])return;s.energy-=j[3];s.job={id:i,end:Date.now()+j[2]*1000};save();main();toast("The Shepherd appreciates your productivity.")}
+function society(){return '<section class="section society-view"><h1>🏛️ Weekly Assembly</h1><div class="card"><h2>Raise Wool Tax by 5%</h2><p>For infrastructure, public happiness, and absolutely necessary extra watchtowers.</p><p>“All sheep have a voice. Some voices are more official.”</p><div class="row"><button class="btn alt" '+(s.vote?'disabled':'')+' onclick="vote(\'Support\')">Support</button><button class="btn red" '+(s.vote?'disabled':'')+' onclick="vote(\'Oppose\')">Oppose</button><button class="btn" '+(s.vote?'disabled':'')+' onclick="vote(\'Manipulate\')">Manipulate</button></div><p>'+ (s.vote?'Your choice: '+s.vote:'Choose carefully. The Shepherd is watching.')+'</p><p class="muted">Simulated local vote. Online multiplayer elections are not implemented.</p></div><div class="card"><h3>Your Influence</h3><div class="big">'+s.influence+'</div><p>Awareness: '+s.awareness+' · Suspicion: '+s.suspicion+'</p></div><div class="card"><h3>Civic Roles</h3><p>🔔 Bell Keeper (20 Influence)</p><p>🧾 Tax Collector (80 Influence)</p><p>📜 Council Clerk (150 Influence)</p><p>👑 Council Speaker (500 Influence)</p></div></section>'}
+function vote(c){if(s.vote)return;s.vote=c;if(c==="Support"){s.influence+=12;s.coins+=40}else if(c==="Oppose"){s.influence+=18;s.awareness+=10;s.suspicion+=5}else{s.influence+=30;s.suspicion+=20;s.coins=Math.max(0,s.coins-35)}s.awareness=Math.min(100,s.awareness);s.suspicion=Math.min(100,s.suspicion);save();main();toast("Your choice has been officially recorded.")}
+function sheep(){return '<section class="section sheep-view"><div class="wood-heading"><h1>🐑 SHEEP #127</h1><small>QUESTIONING WORKER · LEVEL '+s.level+'</small></div><div class="profile-art"></div><div class="card"><h2>Character Attributes</h2><p><i>Same flock. Different path.</i></p>'+Object.entries(s.skills).map(([k,v])=>'<div class="game-stat"><strong>'+k+'</strong><div class="meter"><i style="width:'+Math.min(100,12*v)+'%"></i></div><b>'+v+'</b></div><button class="btn" '+(s.coins<50*v?'disabled':'')+' onclick="train(\''+k+'\')">+ '+50*v+' 🪙</button>').join('')+'</div><div class="card"><h2>Awareness & Suspicion</h2>'+meter('👁 Awareness',s.awareness)+meter('🛡 Suspicion',s.suspicion)+'</div><div class="card"><h2>Reputation & Influence</h2><p>⭐ Influence: '+s.influence+'</p><p>Role: Worker · Allegiance: '+(s.herd?'The Open Gate':'Independent')+'</p></div><div class="card"><h2>🏠 Your Stall · Level '+s.stall+'</h2><p>Your quiet place to rest and plan.</p><button class="btn" '+(s.grass<50*s.stall||s.coins<80*s.stall?'disabled':'')+' onclick="upgrade()">Upgrade Stall · 🌿 '+50*s.stall+' / 🪙 '+80*s.stall+'</button></div></section>'}
+function train(k){let c=50*s.skills[k];if(s.coins<c)return;s.coins-=c;s.skills[k]++;s.influence+=2;save();main();toast("Training complete!")}function upgrade(){let g=50*s.stall,c=80*s.stall;if(s.grass<g||s.coins<c)return;s.grass-=g;s.coins-=c;s.stall++;s.influence+=5;s.xp+=30;save();main();toast("Stall upgraded! +30 XP · More Wool production!")}
+function herd(){return '<section class="section herd-view"><div class="wood-heading"><h1>THE OPEN GATE</h1><small>MORE SHEEP. SAFER TOMORROWS.</small></div><div class="herd-art"></div><div class="card"><h2>🤝 The Open Gate</h2><p><b>Herd Level 1</b> · 1/20 members</p><p><i>“The Shepherd calls it unity. We call it organizing.”</i></p>'+(s.herd?'<b>✓ Member of The Open Gate</b>':'<button class="btn" onclick="s.herd=true;s.awareness=Math.min(100,s.awareness+5);save();main();toast(\'Welcome to the Open Gate\')">Join the Herd</button>')+'</div><div class="card"><h2>Herd Members</h2><div class="member-row"><div class="member">🐑<br>Sheep #127<br>Online</div><div class="member">🔒<br>Awaiting<br>players</div><div class="member">🔒<br>Awaiting<br>players</div></div></div><div class="card"><h2>📜 Herd Missions</h2><p>Smuggle Grain · Spread a Rumor · Scout the Old Fence</p><p class="muted">Multiplayer missions are planned. Not available in this local demo.</p></div><div class="card"><h2>⚔️ Farm Rivalries</h2><p>Red Barn Crew · Henhouse United · Pasture Runaways</p><p class="muted">PvP will unlock with the online multiplayer backend.</p></div></section>'}
+setInterval(()=>{if(s.job)main()},1000);main();
+</script></html>

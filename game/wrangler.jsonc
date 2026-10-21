@@ -1,0 +1,10 @@
+{
+  // PEACEHOLD game: eigener Cloudflare Worker, getrennt von der Website.
+  // Liefert die statischen Dateien aus ./public aus, kein Build-Schritt.
+  // In Workers Builds: Root-Verzeichnis "game", Deploy-Befehl "npx wrangler deploy".
+  "name": "peacehold-game",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "./public"
+  }
+}
