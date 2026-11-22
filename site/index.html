@@ -805,23 +805,21 @@ body.scrolled .bar{transform:none}
   <span class="soundchip-bars" aria-hidden="true"><i></i><i></i><i></i></span>
 </button>
 
-<div class="setup" id="setup" hidden></div>
 
 <script>
 /* =====================================================================
-   SETUP: fill these in before launch. Empty values keep the page working
-   (buttons stay on the page, the coin buttons stay hidden) and show a
-   small yellow note in the corner until everything is set.
+   SETUP: contract address and outbound links. A channel with an empty
+   link is hidden everywhere on the page.
    ===================================================================== */
 const JAS = {
-  ca: "",                       // Solana contract address of $BAAAH
+  ca: "E4KkMBqEpJbiD8bpifZu2JXKaLorMSHYFzMZY1fmpump",   // Solana contract address of $BAAAH
   links: {
-    x: "",                      // https://x.com/...
-    telegram: "",               // https://t.me/...
-    discord: "",                // https://discord.gg/...
-    youtube: "",                // https://youtube.com/@...
-    buy: "",                    // swap / launchpad link
-    chart: ""                   // chart link
+    x: "https://x.com/theshepherdlied",
+    telegram: "https://t.me/theflockchannel",
+    discord: "",                // https://discord.gg/...   (empty = hidden)
+    youtube: "",                // https://youtube.com/@... (empty = hidden)
+    buy: "https://pump.fun/coin/E4KkMBqEpJbiD8bpifZu2JXKaLorMSHYFzMZY1fmpump",
+    chart: "https://dexscreener.com/solana/E4KkMBqEpJbiD8bpifZu2JXKaLorMSHYFzMZY1fmpump"
   }
 };
 
@@ -837,12 +835,9 @@ const JAS = {
       el.target = "_blank";
       el.rel = "noopener";
     } else {
+      // a channel without a link is not shown at all
       if (missing.indexOf(key) === -1) missing.push(key);
-      if (el.hasAttribute("data-hide-unset")) { el.hidden = true; el.style.display = "none"; }
-      else if (el.closest("#join")) {
-        el.classList.add("is-unset");
-        el.addEventListener("click", function (e) { e.preventDefault(); });
-      }
+      el.hidden = true; el.style.display = "none";
     }
   });
   const actions = document.getElementById("coin-actions");
@@ -873,13 +868,8 @@ const JAS = {
     missing.push("ca");
   }
 
-  // setup note
-  if (missing.length) {
-    const note = document.getElementById("setup");
-    note.textContent = "Setup: " + missing.length + " Angaben fehlen noch (" + missing.join(", ") + "). In index.html unten bei JAS eintragen, dann verschwindet dieser Hinweis. (Antippen blendet ihn aus.)";
-    note.hidden = false;
-    note.addEventListener("click", function () { note.hidden = true; });
-  }
+  // nothing is shown to visitors for missing entries; the console names them
+  if (missing.length && window.console) console.info("JAS setup, not set: " + missing.join(", "));
 
   // music player
   const pl = document.getElementById("player");
