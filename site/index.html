@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0e0b0a">
+<meta name="description" content="Just Another Sheep. A home for outsiders, misfits and free thinkers. Different minds. One flock.">
+<meta property="og:title" content="Just Another Sheep | Don't Follow. Belong.">
+<meta property="og:description" content="A home for outsiders, misfits and free thinkers. Different minds. One flock.">
+<title>Just Another Sheep | Don't Follow. Belong.</title>
+<style>
+@font-face{font-family:"JAS Brush";src:url("fonts/JASBrush.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Caveat Brush";src:url("fonts/CaveatBrush-Regular.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Barlow";font-weight:500;src:url("fonts/Barlow-Medium.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Barlow";font-weight:700;src:url("fonts/Barlow-Bold.woff2") format("woff2");font-display:swap}
+
+:root{
+  --ink:#0e0b0a;--ink-2:#17100d;--cream:#f7ecdc;--paper:#ebcfa6;--muted:#dcc4aa;
+  --red:#d92316;--red-hi:#f0604a;--blood:#e2241a;--orange:#f08a2e;
+  --brush:"Caveat Brush","Comic Sans MS",cursive;
+  --display:"JAS Brush","Impact","Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --torn-a:polygon(0 0,100% 0,100% 84%,99.3% 94%,94.5% 54%,93.9% 68%,90.1% 66%,86.0% 93%,84.7% 94%,83.8% 80%,83.6% 34%,78.9% 91%,76.4% 61%,76.2% 81%,72.2% 83%,72.1% 52%,71.1% 76%,65.2% 100%,64.2% 77%,55.6% 41%,54.1% 86%,49.6% 95%,49.5% 43%,46.0% 50%,44.9% 96%,44.5% 80%,43.8% 77%,43.3% 92%,42.2% 33%,38.1% 90%,33.3% 35%,29.0% 69%,25.5% 80%,23.3% 51%,23.1% 51%,22.9% 94%,22.2% 59%,21.9% 31%,21.7% 55%,18.6% 99%,13.4% 100%,12.1% 59%,9.4% 81%,3.1% 95%,2.9% 74%,2.8% 75%,2.5% 88%,2.1% 64%,0.2% 100%,0 30%);
+  --torn-b:polygon(0 0,100% 0,100% 97%,97.6% 93%,94.8% 73%,85.8% 87%,82.7% 66%,81.6% 39%,79.4% 45%,69.9% 95%,68.0% 83%,65.1% 51%,63.9% 73%,62.7% 49%,58.6% 92%,58.2% 83%,57.7% 35%,57.4% 39%,54.8% 70%,53.6% 73%,50.7% 74%,45.3% 93%,43.4% 88%,42.8% 38%,42.5% 41%,39.7% 64%,37.2% 90%,36.6% 38%,32.4% 37%,31.4% 69%,30.8% 87%,30.0% 66%,29.0% 79%,24.4% 74%,22.3% 32%,20.6% 89%,18.1% 75%,15.1% 51%,14.4% 44%,12.4% 93%,11.8% 37%,9.1% 57%,7.2% 66%,7.0% 46%,6.3% 61%,6.0% 80%,5.8% 80%,4.7% 93%,3.7% 40%,0 51%);
+  --rough-1:polygon(0.7% 3.8%,12.2% 4.2%,24.1% 0.5%,33.4% 5.9%,45.2% 1.6%,58.5% 3.3%,69.2% 3.3%,79.7% 1.1%,90.8% 6.1%,99.4% 13.9%,99.2% 34.5%,99.1% 64.7%,99.6% 86.2%,97.4% 96.7%,86.7% 93.8%,75.6% 93.6%,65.5% 94.4%,54.2% 93.5%,41.8% 99.3%,32.9% 98.5%,19.3% 96.9%,9.2% 97.9%,0.6% 88.9%,0.4% 61.3%,0.7% 32.8%,0.8% 6.6%);
+  --rough-2:polygon(1.4% 3.9%,13.9% 3.3%,23.7% 4.1%,33.9% 3.6%,46.3% 5.6%,55.8% 2.1%,66.9% 5.7%,79.9% 0.3%,91.8% 6.8%,99.2% 12.9%,99.8% 34.1%,99.4% 60.5%,99.8% 87.9%,99.9% 96.8%,87.6% 94.1%,76.2% 95.5%,65.2% 95.4%,54.2% 98.1%,41.5% 93.0%,30.8% 95.0%,21.3% 98.4%,10.2% 99.5%,0.9% 88.8%,1.0% 62.9%,1.1% 33.2%,0.0% 12.3%);
+  --smear:polygon(0.0% 1.6%,9.5% 9.6%,17.1% 1.6%,25.7% 10.6%,33.8% 10.4%,43.7% 1.9%,51.6% 6.3%,59.6% 13.9%,66.9% 0.3%,77.8% 5.6%,83.9% 4.6%,92.8% 13.4%,99.5% 9.7%,98.5% 38.4%,97.6% 66.7%,99.1% 87.6%,97.5% 86.2%,91.6% 89.7%,80.7% 90.9%,74.3% 88.8%,64.5% 97.3%,56.4% 96.9%,49.9% 95.3%,40.7% 94.5%,31.4% 88.3%,22.1% 86.3%,13.7% 88.9%,7.4% 97.5%,1.6% 87.6%,1.7% 65.3%,0.5% 32.6%,1.5% 8.4%);
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--body);font-weight:500;font-size:18px;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:3px solid var(--orange);outline-offset:4px}
+button{font:inherit;color:inherit;cursor:pointer}
+section[id]{scroll-margin-top:68px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.defs{position:absolute;width:0;height:0}
+.ico{width:1.15em;height:1.15em;fill:currentColor;flex:none}
+
+/* ---------- shared pieces ---------- */
+.display{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.92;letter-spacing:.012em;margin:0;color:var(--cream);transform:rotate(-3deg) skewX(-5deg);transform-origin:left bottom;text-shadow:.04em .05em 0 rgba(0,0,0,.6)}
+.display .r{display:block;width:fit-content;position:relative;color:var(--blood)}
+.display .r::after{content:"";position:absolute;left:-4%;right:-7%;bottom:-.13em;height:.12em;background:var(--blood);clip-path:polygon(0 60%,6% 30%,40% 20%,70% 0,100% 10%,97% 55%,60% 70%,20% 95%,3% 100%)}
+.display.c{transform-origin:center bottom;width:fit-content;margin-inline:auto;text-align:center}
+.display.c .r{margin-inline:auto}
+
+.tag{display:inline-block;margin:0;background:var(--paper);color:#1a1210;font-family:var(--brush);font-style:italic;font-size:clamp(17px,1.5vw,22px);line-height:1.1;letter-spacing:.03em;padding:.34em 1.2em .28em .75em;transform:rotate(-2deg);clip-path:var(--smear)}
+
+.btn{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:.45em;min-height:50px;padding:.46em .9em .36em;font-family:var(--brush);font-style:italic;font-size:clamp(22px,2vw,30px);line-height:1;letter-spacing:.03em;color:#fff6e8;transform:rotate(-2deg);transition:transform .15s ease,filter .15s ease;border:0;background:none;white-space:nowrap}
+.btn::before,.btn::after{content:"";position:absolute;z-index:-1}
+.btn::before{inset:0;background:var(--red-hi);clip-path:var(--rough-1)}
+.btn::after{inset:3px;background:var(--red);clip-path:var(--rough-2)}
+.btn:hover{transform:rotate(-3.5deg) scale(1.04);filter:brightness(1.1)}
+.btn.ghost::before{background:var(--cream)}
+.btn.ghost::after{inset:4px;background:var(--ink)}
+.btn.ghost{color:var(--cream)}
+.btn.inkbtn::before{background:#1a1210}
+.btn.inkbtn::after{background:#1a1210}
+.btn i{position:absolute;z-index:-2;top:calc(100% - 5px);width:6px;background:var(--red);border-radius:0 0 6px 6px}
+.btn i:nth-of-type(1){left:7%;height:19px}
+.btn i:nth-of-type(2){left:13%;height:11px;width:4px}
+.btn i:nth-of-type(3){right:10%;height:14px;width:5px}
+.btn.is-unset{cursor:default}
+
+.torn{position:absolute;left:0;right:0;height:24px;z-index:4;pointer-events:none}
+.torn.top{top:-1px;clip-path:var(--torn-a)}
+.torn.bottom{bottom:-1px;clip-path:var(--torn-b);transform:scaleY(-1)}
+
+.stage{position:relative;max-width:1920px;margin:0 auto;isolation:isolate;background:#1c110c}
+.stage img{display:block;width:100%;height:auto}
+
+/* ---------- top bar ---------- */
+.bar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;gap:22px;padding:5px 3%;background:rgba(14,11,10,.95);border-bottom:2px solid #3a251b;transform:translateY(-110%);transition:transform .25s ease}
+body.scrolled .bar{transform:none}
+.bar-logo{display:flex;flex:none}
+.bar-logo img{display:block;height:50px;width:auto}
+.bar-nav{display:flex;align-items:center;gap:clamp(14px,2.6vw,40px);margin-left:auto;font-family:var(--brush);font-style:italic;font-size:22px;letter-spacing:.03em}
+.bar-nav a{padding:8px 2px}
+.bar-nav a:hover,.hero-links a:hover,.foot-nav a:hover{color:var(--orange)}
+.bar-coin{font-family:var(--brush);font-style:italic;font-size:21px;letter-spacing:.03em;padding:.32em .8em .22em;background:var(--red);color:#fff6e8;clip-path:var(--rough-1);flex:none}
+.bar-coin:hover{filter:brightness(1.12)}
+.burger{display:none}
+
+/* ---------- hero ---------- */
+.hero{position:relative;background:var(--ink);overflow:hidden}
+.hero-art img{display:block}
+.hero-tag{clip-path:var(--smear)}
+.hero-socials a{display:flex;padding:8px;font-size:26px}
+.hero-socials a:hover{color:var(--orange)}
+
+@media (min-width:761px){
+  .hero{container-type:inline-size;max-width:1920px;margin:0 auto;aspect-ratio:1344/752}
+  .hero-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .hero-top{position:absolute;z-index:2;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;padding:.5cqw 2.5cqw 0}
+  .hero-logo img{display:block;width:19.2cqw;height:auto}
+  .hero-links{display:flex;gap:4.6cqw;padding-top:1.05cqw;font-family:var(--brush);font-style:italic;font-size:max(15px,2cqw);letter-spacing:.03em}
+  .hero-links a{padding:.3cqw .2cqw}
+  .hero-socials{display:flex;align-items:center;gap:.9cqw;padding-top:.75cqw}
+  .hero-socials a{font-size:max(18px,2cqw)}
+  .hero-copy{position:absolute;z-index:2;left:1.8cqw;top:10.4cqw;display:flex;flex-direction:column;align-items:flex-start}
+  .hero-h1{margin:0;line-height:0}
+  .hero-h1 img{display:block;width:37.6cqw;height:auto}
+  .hero-tag{font-size:max(15px,2cqw);margin:.5cqw 0 0 .9cqw}
+  .hero-sub{margin:1.1cqw 0 0 1.3cqw;font-family:var(--brush);font-style:italic;font-size:max(14px,1.65cqw);line-height:1.22;letter-spacing:.02em;text-shadow:0 2px 6px rgba(0,0,0,.8)}
+  .hero-actions{display:flex;align-items:center;gap:1.5cqw;margin:2.6cqw 0 0 .7cqw}
+  .hero-actions .btn{font-size:max(20px,3cqw);min-height:0;transform:rotate(-3deg)}
+  .hero-actions .btn.ghost{font-size:max(16px,2.1cqw);padding:.52em 1em .42em .9em;transform:rotate(-2deg)}
+}
+
+/* ---------- ticker ---------- */
+.ticker-wrap{position:relative;z-index:5;overflow:hidden;margin:-16px 0;padding:10px 0 14px}
+.ticker{position:relative;width:104%;margin:0 0 0 -2%;background:var(--paper);color:#1a1210;border-block:3px solid #1a1210;transform:rotate(-.7deg);overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,.45)}
+.ticker-track{display:flex;width:max-content;animation:tick 70s linear infinite}
+.ticker p{margin:0;padding:11px 0 8px;white-space:nowrap;font-family:var(--display);font-size:clamp(18px,1.7vw,24px);letter-spacing:.05em}
+.ticker b{font-weight:400;background:var(--red);color:#fff6e8;padding:.1em .5em .02em;margin:0 .7em 0 1.4em}
+.ticker span{margin:0 1.1em;color:var(--red)}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ---------- 01 flock ---------- */
+.flock{position:relative;background:var(--ink)}
+.flock .stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(10,7,6,.72) 0%,rgba(10,7,6,0) 44%)}
+.flock-head{position:absolute;z-index:2;left:5%;top:9%}
+.flock-head .display{font-size:clamp(40px,5.4vw,100px);margin-top:.5em}
+.flock-bar{position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:40px 6%;align-items:center;padding:54px max(5%,calc((100% - 1380px)/2)) 96px;border-top:4px solid var(--paper);background:radial-gradient(circle at 78% 0%,#4a1d12,var(--ink-2) 62%)}
+.flock-bar p{margin:0;font-size:clamp(19px,1.7vw,25px);line-height:1.5;color:#f3e2cc;max-width:36em}
+.flock-bar p strong{color:#fff;font-weight:700}
+.flock-side{display:flex;flex-direction:column;align-items:flex-start;gap:26px}
+.flock-bar .flock-quip{margin:0;max-width:none;color:var(--cream);font-family:var(--display);font-size:clamp(30px,3.2vw,50px);line-height:.98;letter-spacing:.015em;text-transform:uppercase;transform:rotate(-2deg)}
+.flock-quip span{display:block;color:var(--blood)}
+
+/* ---------- 02 world ---------- */
+.world{position:relative;background:var(--ink)}
+.world-poster .stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(10,7,6,.92) 0%,rgba(10,7,6,.66) 30%,rgba(10,7,6,0) 60%),linear-gradient(0deg,rgba(12,7,6,.85),rgba(12,7,6,0) 22%)}
+.world-copy{position:absolute;z-index:2;left:5%;top:9%;width:min(46%,680px)}
+.world-copy .display{font-size:clamp(36px,4.7vw,86px);margin-top:.5em}
+.world-copy .world-text{margin:2.4em 0 0;max-width:27em;font-weight:700;font-size:clamp(16px,1.45vw,21px);line-height:1.45;color:#f3e2cc;text-shadow:0 2px 6px #000}
+
+.ask{position:relative;overflow:hidden;padding:108px max(5%,calc((100% - 1380px)/2)) 88px;background:radial-gradient(ellipse at 85% 60%,#4a1d10,var(--ink) 62%);border-top:4px solid var(--paper)}
+.ask::after{content:"?";position:absolute;right:7%;top:-.14em;font-family:var(--display);font-size:clamp(240px,34vw,560px);line-height:1;color:rgba(226,36,26,.14);transform:rotate(9deg);pointer-events:none}
+.ask .display{font-size:clamp(46px,7.4vw,124px);margin-top:.45em;position:relative;z-index:1}
+.ask-text{position:relative;z-index:1;margin:50px 0 0;max-width:30em;font-size:clamp(19px,1.9vw,26px);font-weight:700;line-height:1.4;color:#f1dcc4}
+
+.think,.ask,.wall,.coin,.join,.flock-bar,.watch-intro,.formats{overflow-x:clip}
+.eyebrow{margin:0;font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--orange)}
+.tag.red{background:var(--red);color:#fff6e8}
+
+.panel{position:relative;display:grid;grid-template-columns:minmax(0,64fr) minmax(0,36fr);align-items:center;max-width:1920px;margin:0 auto;background:var(--ink);border-top:3px solid #2a1810;overflow:hidden}
+.panel.flip{grid-template-columns:minmax(0,36fr) minmax(0,64fr)}
+.panel-art{position:relative;min-width:0}
+.panel-art img{display:block;width:100%;height:auto}
+.panel-art::after{content:"";position:absolute;top:0;bottom:0;right:-1px;width:30%;pointer-events:none;background:linear-gradient(90deg,rgba(14,11,10,0),var(--ink) 92%)}
+.panel.flip .panel-art{order:2}
+.panel.flip .panel-art::after{right:auto;left:-1px;background:linear-gradient(270deg,rgba(14,11,10,0),var(--ink) 92%)}
+.panel-copy{position:relative;z-index:2;padding:48px 13% 48px 0;margin-left:-14%}
+.panel.flip .panel-copy{padding:48px 0 48px 14%;margin:0 -12% 0 0}
+.panel-no{position:absolute;z-index:-1;right:6%;bottom:-.22em;font-family:var(--display);font-size:clamp(150px,19vw,330px);line-height:1;color:rgba(247,236,220,.05);pointer-events:none}
+.panel.flip .panel-no{right:auto;left:8%}
+.panel h3{margin:.55em 0 .5em;font-family:var(--display);font-weight:400;font-size:clamp(40px,5.2vw,92px);line-height:.92;letter-spacing:.012em;text-transform:uppercase;color:var(--cream);transform:rotate(-3deg) skewX(-5deg);transform-origin:left bottom;text-shadow:.04em .05em 0 rgba(0,0,0,.6)}
+.panel h3 span{display:block;color:var(--blood)}
+.panel-text{margin:0;max-width:27em;font-weight:700;font-size:clamp(16px,1.3vw,19px);line-height:1.5;color:#f1dcc4}
+.panel-q{margin:26px 0 0;transform:rotate(-1.5deg);transform-origin:left center;font-family:var(--brush);font-style:italic;font-size:clamp(22px,2.05vw,31px);line-height:1.58;letter-spacing:.02em}
+.panel-q span{background:var(--paper);color:#1a1210;padding:.1em .45em .04em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.panel.flip .panel-q span{background:var(--red);color:#fff6e8}
+
+.panel-end.flip{grid-template-columns:minmax(0,35fr) minmax(0,65fr)}
+.panel-end.flip .panel-art::after{width:17%}
+.panel-end h3{font-size:clamp(38px,4.1vw,74px)}
+.think{position:relative;text-align:center;background:var(--paper);background-image:radial-gradient(ellipse at 20% 0%,rgba(255,244,226,.7),rgba(255,244,226,0) 55%),radial-gradient(ellipse at 90% 100%,rgba(120,66,34,.26),rgba(120,66,34,0) 60%);color:#1a1210;padding:104px 5% 108px}
+.think .torn{background:var(--ink)}
+.think .eyebrow{color:#9a3a1c}
+.think .display{color:#1a1210;text-shadow:none;font-size:clamp(42px,6.6vw,112px);margin-top:.5em}
+.think-text{max-width:31em;margin:50px auto 0;font-weight:700;font-size:clamp(18px,1.7vw,24px);line-height:1.45}
+.display .r.plain::after{display:none}
+.scrawl{font-family:var(--brush);font-style:italic;color:var(--red);line-height:1;letter-spacing:.01em}
+
+.handoff{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px 26px;padding:28px max(5%,calc((100% - 1380px)/2));background:var(--ink-2);border-top:2px solid var(--paper)}
+.handoff p{margin:0;font-family:var(--display);font-size:clamp(24px,2.7vw,40px);line-height:1;letter-spacing:.03em;color:var(--cream)}
+.handoff p span{color:var(--blood)}
+
+/* ---------- 03 watch ---------- */
+.watch{position:relative;background:var(--ink)}
+.watch-intro{padding:92px max(5%,calc((100% - 1380px)/2)) 58px;background:radial-gradient(ellipse at 88% 0%,#3a160c,var(--ink) 66%)}
+.watch-prelude{margin:1.2em 0 0;font-family:var(--display);font-size:clamp(22px,2.9vw,46px);line-height:1;letter-spacing:.02em;color:var(--cream);transform:rotate(-3deg) skewX(-5deg);transform-origin:left bottom;text-shadow:.04em .05em 0 rgba(0,0,0,.6)}
+.watch-intro .display{font-size:clamp(46px,7.4vw,124px);margin-top:.22em}
+.watch-desc{margin:56px 0 0;max-width:27em;padding-left:18px;border-left:4px solid var(--blood);font-size:clamp(18px,1.6vw,23px);font-weight:700;line-height:1.45;color:var(--muted)}
+.watch .stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,#0e0b0a 0%,rgba(14,11,10,0) 22%)}
+.afterimage{overflow-x:clip;text-align:center;padding:60px 5% 74px;border-bottom:2px solid #3a251b}
+.afterimage p{margin:0;font-family:var(--display);font-size:clamp(26px,3.9vw,64px);line-height:1.04;letter-spacing:.015em;text-transform:uppercase;transform:rotate(-2deg);text-shadow:.04em .05em 0 rgba(0,0,0,.6)}
+.afterimage strong{display:block;font-weight:400;color:var(--blood)}
+.formats{padding:78px max(5%,calc((100% - 1380px)/2)) 92px;background:var(--ink)}
+.formats-head{margin-bottom:58px}
+.formats-head .display{font-size:clamp(40px,5.6vw,96px);margin-top:.5em}
+.fmt{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:7%;align-items:center;padding:46px 0;border-top:2px solid #3a251b}
+.fmt.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.12fr)}
+.fmt.flip .fmt-art{order:2}
+.fmt-art img{display:block;width:100%;height:auto;border:3px solid var(--paper);box-shadow:8px 9px 0 #050302;transform:rotate(-1.5deg)}
+.fmt.flip .fmt-art img{transform:rotate(1.5deg)}
+.fmt.comic .fmt-art{max-width:520px;width:100%;justify-self:center}
+.fmt h4{margin:.5em 0 .42em;font-family:var(--display);font-weight:400;font-size:clamp(42px,5.2vw,90px);line-height:.92;letter-spacing:.012em;text-transform:uppercase;color:var(--cream);transform:rotate(-3deg) skewX(-5deg);transform-origin:left bottom;text-shadow:.04em .05em 0 rgba(0,0,0,.6)}
+.fmt-copy .fmt-text{margin:0;max-width:25em;font-weight:700;font-size:clamp(17px,1.45vw,21px);line-height:1.5;color:#f1dcc4}
+.player{margin:28px 0 0;max-width:470px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 18px;align-items:center;background:var(--paper);color:#1a1210;padding:16px 20px 14px 16px;border:3px solid #1a1210;box-shadow:6px 7px 0 #050302;transform:rotate(-1deg)}
+.player-btn{grid-row:1 / span 3;width:64px;height:64px;display:grid;place-items:center;border:0;background:var(--red);color:#fff6e8;clip-path:var(--rough-1);transition:transform .15s ease,filter .15s ease}
+.player-btn:hover{filter:brightness(1.12);transform:scale(1.06) rotate(-3deg)}
+.player-btn svg{width:26px;height:28px;fill:currentColor}
+.player-btn .i-pause{display:none}
+.player.is-playing .i-play{display:none}
+.player.is-playing .i-pause{display:block}
+.player-label{margin:0;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#7a2a14}
+.player-title{margin:0;font-family:var(--display);font-size:clamp(26px,2.5vw,36px);line-height:1;letter-spacing:.02em}
+.player-row{display:flex;align-items:center;gap:12px}
+.player-seek{flex:1 1 auto;min-width:0;height:24px;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer;--p:0%}
+.player-seek::-webkit-slider-runnable-track{height:6px;background:linear-gradient(90deg,var(--red) var(--p),rgba(26,18,16,.28) var(--p))}
+.player-seek::-moz-range-track{height:6px;background:rgba(26,18,16,.28)}
+.player-seek::-moz-range-progress{height:6px;background:var(--red)}
+.player-seek::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:20px;margin-top:-7px;background:#1a1210;border:0;border-radius:0}
+.player-seek::-moz-range-thumb{width:14px;height:20px;background:#1a1210;border:0;border-radius:0}
+.player-seek:focus-visible{outline:3px solid #1a1210;outline-offset:3px}
+.player-time{flex:none;margin:0;font-family:var(--brush);font-style:italic;font-size:19px;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.player-fail{grid-column:1 / -1;margin:6px 0 0;font-size:14px;font-weight:700}
+.player audio{display:none}
+.strip{margin-top:26px;padding:68px 0 0;border-top:4px solid var(--paper);text-align:center}
+.strip .display{font-size:clamp(46px,6.6vw,112px);margin-top:.45em}
+.strip-sub{margin:44px auto 0;max-width:34em;color:var(--muted);font-size:17px}
+.strip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:40px;text-align:left}
+.frame{position:relative;border:4px solid var(--paper);background:#000;box-shadow:6px 7px 0 #050302;overflow:hidden}
+.frame img{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:cover}
+.frame:nth-child(1) img{object-position:40% center}
+.frame:nth-child(3) img{object-position:center 8%}
+.frame:nth-child(3) .frame-cap{top:auto;bottom:12px}
+.frame-cap{position:absolute;left:12px;top:12px;max-width:80%;margin:0;background:var(--paper);color:#1a1210;font-family:var(--brush);font-style:italic;font-size:clamp(17px,1.75vw,26px);line-height:1.1;letter-spacing:.02em;padding:.32em .8em .22em .7em;transform:rotate(-2deg);clip-path:var(--rough-2)}
+.frame-cap strong{font-weight:400;color:var(--red)}
+.frame-no{position:absolute;right:12px;bottom:4px;font-family:var(--display);font-size:30px;color:#fff;text-shadow:2px 2px 0 #000}
+.watch-note{margin:44px 0 0;color:#a58a74;font-size:14px;line-height:1.5}
+.watch-cta{display:flex;flex-wrap:wrap;align-items:center;gap:22px 26px;margin-top:34px}
+.watch-cta .scrawl{font-size:clamp(24px,2.3vw,32px);color:var(--muted)}
+
+/* ---------- 04 coin ---------- */
+.coin{position:relative;background:var(--ink-2)}
+.coin .stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(10,7,6,.6) 0%,rgba(10,7,6,0) 42%)}
+.coin-head{position:absolute;z-index:2;left:5%;top:15%;width:min(31%,470px)}
+.coin-body{position:relative;padding:70px max(5%,calc((100% - 1380px)/2)) 84px;background:radial-gradient(ellipse at 18% 0%,#5a1c10,rgba(90,28,16,0) 55%),radial-gradient(ellipse at 100% 100%,#3a160c,rgba(58,22,12,0) 50%),var(--ink-2)}
+.coin .torn{background:var(--paper)}
+.coin .display{font-size:clamp(32px,4.5vw,84px);margin-top:.5em}
+.coin-lead{margin:2.1em 0 0;max-width:13.5em;font-family:var(--brush);font-style:italic;font-size:clamp(18px,1.9vw,31px);line-height:1.14;color:#fff1dd;text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.coin-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px 7%;align-items:center}
+.coin-pitch .display{font-size:clamp(36px,4.8vw,86px);margin-top:0}
+.coin-text{margin:2.5em 0 0;max-width:26em;font-weight:700;font-size:clamp(18px,1.6vw,23px);line-height:1.5;color:#f1dcc4}
+.coin-quip{margin:30px 0 0;color:var(--red-hi);font-size:clamp(24px,2.4vw,34px);transform:rotate(-2deg);transform-origin:left center}
+.ticket-wrap{filter:drop-shadow(8px 10px 0 #050302);transform:rotate(1.2deg)}
+.ticket{background:var(--paper);background-image:radial-gradient(ellipse at 15% 0%,rgba(255,244,226,.7),rgba(255,244,226,0) 60%);color:#1a1210;padding:32px 32px 48px;clip-path:var(--rough-2)}
+.ticket-title{margin:0 0 12px;font-family:var(--display);font-size:clamp(28px,2.6vw,40px);line-height:1;letter-spacing:.02em}
+.facts{list-style:none;margin:0;padding:0}
+.facts li{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:9px 0 7px;border-top:2px dashed rgba(26,18,16,.45)}
+.facts small{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#7a2a14}
+.facts b{font-family:var(--display);font-weight:400;font-size:clamp(22px,2vw,29px);letter-spacing:.03em;text-align:right}
+.ticket-note{margin:2px 0 0;text-align:right;font-size:clamp(22px,2vw,28px);transform:rotate(-2deg)}
+.ca{margin:14px 0 0;background:#1a1210;color:var(--cream);padding:16px 18px 18px}
+.ca small{display:block;font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--orange);text-transform:uppercase;margin-bottom:8px}
+.ca-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}
+.ca code{flex:1 1 220px;min-width:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:15px;line-height:1.4;color:#fff3e1;overflow-wrap:anywhere}
+.ca-copy{flex:none;font-family:var(--brush);font-style:italic;font-size:20px;letter-spacing:.03em;padding:.38em .9em .26em;border:0;background:var(--red);color:#fff6e8;clip-path:var(--rough-2)}
+.ca-copy:hover{filter:brightness(1.12)}
+.ca-pending{margin:0;font-family:var(--brush);font-style:italic;font-size:clamp(21px,1.9vw,27px);line-height:1.2;color:#fff1dd}
+.coin-actions{display:flex;flex-wrap:wrap;gap:20px 22px;margin-top:26px}
+.howto{margin-top:92px}
+.howto .display{font-size:clamp(36px,4.8vw,86px);margin-top:0}
+.steps-row{list-style:none;margin:58px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;counter-reset:s}
+.steps-row li{position:relative;counter-increment:s;padding:48px 24px 28px;background:#1d130f;border:3px solid var(--paper);box-shadow:6px 7px 0 #050302}
+.steps-row li:nth-child(2){transform:rotate(-1deg)}
+.steps-row li:nth-child(3){transform:rotate(1deg)}
+.steps-row li::before{content:"0" counter(s);position:absolute;top:-18px;left:16px;background:var(--red);color:#fff6e8;font-family:var(--display);font-size:28px;line-height:1;padding:.2em .55em .1em;transform:rotate(-4deg);clip-path:var(--rough-1)}
+.steps-row b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(28px,2.7vw,42px);line-height:1;letter-spacing:.02em;color:#fff0db}
+.steps-row span{display:block;margin-top:10px;color:var(--muted);font-size:17px;line-height:1.45}
+.smallprint{margin-top:76px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 30px;align-items:center;background:var(--paper);color:#1a1210;padding:22px 28px;transform:rotate(-.5deg);border:3px solid #1a1210;box-shadow:6px 7px 0 #050302}
+.smallprint b{font-family:var(--display);font-weight:400;font-size:clamp(22px,2.1vw,30px);line-height:1.02;letter-spacing:.03em}
+.smallprint b span{display:block;color:var(--red)}
+.smallprint p{margin:0;font-size:15px;font-weight:700;line-height:1.5}
+
+/* ---------- 05 join ---------- */
+.join{position:relative;text-align:center;padding:124px 5% 112px;background:#0c0908 url("assets/hero.webp") 70% 30%/cover no-repeat;isolation:isolate}
+.join::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(9,6,5,.9)}
+.join .torn{background:var(--ink-2)}
+.join .display{font-size:clamp(54px,8.4vw,138px);margin-top:.4em}
+.join-text{max-width:26em;margin:58px auto 0;font-size:clamp(20px,2vw,27px);font-weight:700;line-height:1.4;color:#f1dcc4}
+.join-links{display:flex;flex-wrap:wrap;justify-content:center;gap:24px 26px;margin-top:40px}
+.join-links .btn:nth-child(even){transform:rotate(1.5deg)}
+.join-links .btn:nth-child(even):hover{transform:rotate(3deg) scale(1.04)}
+.join .scrawl{margin:54px 0 0;font-size:34px;color:var(--muted)}
+
+/* ---------- footer ---------- */
+.foot{background:#080605;border-top:3px solid #2c1c14;padding:34px max(5%,calc((100% - 1380px)/2)) 40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 40px}
+.foot img{display:block;height:74px;width:auto}
+.foot-nav{display:flex;flex-wrap:wrap;gap:6px 26px;font-family:var(--brush);font-style:italic;font-size:21px;letter-spacing:.03em}
+.foot-nav a{padding:8px 2px}
+.foot small{flex:1 1 100%;color:#a58a74;font-size:13px;line-height:1.5}
+
+.setup{position:fixed;z-index:60;left:12px;bottom:12px;max-width:330px;background:#fff3c4;color:#231a00;border:2px solid #231a00;padding:10px 14px;font-size:13px;line-height:1.4;font-weight:700;box-shadow:4px 4px 0 rgba(0,0,0,.6)}
+.setup{cursor:pointer}
+
+/* ---------- tablet ---------- */
+@media (max-width:1020px){
+}
+
+/* ---------- mobile ---------- */
+@media (max-width:760px){
+  body{font-size:17px}
+  .bar{position:sticky;transform:none;transition:none;padding:6px 16px;gap:12px}
+  .bar-logo img{height:52px}
+  .bar-coin{margin-left:auto;font-size:19px}
+  .burger{display:grid;place-items:center;width:46px;height:46px;border:2px solid var(--paper);background:#1a1210;flex:none}
+  .burger svg{width:24px;height:24px;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;fill:none}
+  .bar-nav{display:none;position:absolute;top:100%;left:0;right:0;margin:0;padding:10px 20px 18px;background:#120d0b;border-bottom:3px solid var(--red);box-shadow:0 12px 24px rgba(0,0,0,.6);font-size:26px}
+  .bar.open .bar-nav{display:grid;gap:2px}
+  .bar-nav a{padding:10px 2px}
+
+  .hero-top{display:none}
+  .hero-art{display:block;position:relative}
+  .hero-art img{width:100%;height:auto}
+  .hero-art::after{content:"";position:absolute;left:0;right:0;bottom:0;height:24%;background:linear-gradient(rgba(14,11,10,0),var(--ink))}
+  .hero-copy{position:relative;z-index:2;margin-top:-9vw;padding:0 16px 58px;display:flex;flex-direction:column;align-items:flex-start}
+  .hero-h1{margin:0;line-height:0}
+  .hero-h1 img{display:block;width:min(100%,470px);height:auto}
+  .hero-tag{font-size:clamp(19px,5.4vw,24px);margin:10px 0 0 4px}
+  .hero-sub{margin:16px 0 0 6px;font-family:var(--brush);font-style:italic;font-size:clamp(19px,5.2vw,23px);line-height:1.2;letter-spacing:.02em}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:22px 16px;margin:28px 0 0 2px}
+  .hero-actions .btn{font-size:clamp(26px,7.4vw,32px)}
+  .hero-actions .btn.ghost{font-size:clamp(21px,5.8vw,25px)}
+
+  .ticker-wrap{margin:-12px 0}
+  .flock-head{position:relative;left:auto;top:auto;padding:26px 20px 6px}
+  .flock .stage::after{display:none}
+  .flock .stage{display:flex;flex-direction:column;background:var(--ink)}
+  .flock-head .display{font-size:clamp(46px,13vw,76px)}
+  .flock-bar{grid-template-columns:1fr;padding:30px 20px 76px;border-top:0;gap:30px}
+  .world-poster .stage{display:flex;flex-direction:column;background:var(--ink)}
+  .world-poster .stage::after{display:none}
+  .world-copy{position:relative;left:auto;top:auto;width:auto;order:-1;padding:64px 20px 34px}
+  .world-copy .display{font-size:clamp(40px,11.4vw,70px)}
+  .world-copy .world-text{font-size:17px;text-shadow:none}
+  .ask{padding:76px 20px 60px}
+  .ask .display{font-size:clamp(46px,13vw,80px)}
+  .ask-text{margin-top:40px}
+  .panel,.panel.flip{grid-template-columns:1fr}
+  .panel.flip .panel-art{order:0}
+  .panel-art::after,.panel.flip .panel-art::after{top:auto;left:0;right:0;bottom:-1px;width:auto;height:34%;background:linear-gradient(180deg,rgba(14,11,10,0),var(--ink) 90%)}
+  .panel-copy,.panel.flip .panel-copy{margin:-34px 0 0;padding:0 20px 62px}
+  .panel h3{font-size:clamp(46px,13vw,78px)}
+  .panel-text{font-size:17px}
+  .panel-end h3{font-size:clamp(36px,10.4vw,62px)}
+  .panel-q{font-size:clamp(23px,6.2vw,29px)}
+  .panel-no,.panel.flip .panel-no{left:auto;right:4%;bottom:auto;top:.1em;font-size:150px}
+  .think{padding:84px 20px 88px}
+  .think .display{font-size:clamp(40px,11.4vw,70px)}
+  .think-text{margin-top:40px}
+  .handoff{padding:24px 20px 30px}
+  .watch-intro{padding:66px 20px 40px}
+  .watch-intro .display{font-size:clamp(40px,11.4vw,72px)}
+  .watch-prelude{font-size:clamp(21px,5.8vw,30px)}
+  .watch-desc{margin-top:42px}
+  .watch .stage img{min-height:340px;object-fit:cover;object-position:62% center}
+  .afterimage{padding:44px 20px 56px}
+  .formats{padding:56px 20px 70px}
+  .formats-head{margin-bottom:36px}
+  .formats-head .display{font-size:clamp(40px,11.4vw,70px)}
+  .fmt,.fmt.flip{grid-template-columns:1fr;gap:28px;padding:38px 0}
+  .fmt.flip .fmt-art{order:0}
+  .fmt h4{font-size:clamp(44px,12.4vw,70px)}
+  .player{max-width:none;transform:none}
+  .strip{padding-top:52px}
+  .strip .display{font-size:clamp(46px,13vw,80px)}
+  .strip-sub{margin-top:34px}
+  .strip-grid{grid-template-columns:1fr;gap:18px;margin-top:30px}
+  .frame-cap{font-size:19px}
+  .coin .stage{display:flex;flex-direction:column;background:var(--ink-2)}
+  .coin .stage::after{display:none}
+  .coin .stage img{aspect-ratio:5/4;object-fit:cover;object-position:78% center}
+  .coin-head{position:relative;left:auto;top:auto;width:auto;padding:30px 20px 0}
+  .coin .display{font-size:clamp(46px,12.6vw,80px)}
+  .coin-lead{margin-top:42px;max-width:none;font-size:clamp(24px,6.6vw,29px);text-shadow:none}
+  .coin-body{padding:44px 20px 64px}
+  .coin-grid{grid-template-columns:1fr;gap:44px}
+  .ticket-wrap{transform:none}
+  .ticket{padding:26px 22px 42px}
+  .howto{margin-top:66px}
+  .howto .display{font-size:clamp(44px,12.4vw,78px)}
+  .steps-row{grid-template-columns:1fr;gap:38px;margin-top:50px}
+  .steps-row li:nth-child(n){transform:none}
+  .smallprint{grid-template-columns:1fr;margin-top:60px;padding:20px 20px 22px;transform:none}
+  .coin-pitch .display{font-size:clamp(44px,12.4vw,78px)}
+  .join{padding:96px 20px 86px}
+  .join .display{font-size:clamp(54px,15vw,90px)}
+  .join-text{margin-top:46px}
+  .foot{padding:30px 20px 36px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .ticker-track{animation:none}
+  .btn,.bar,.player-btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<svg class="defs" aria-hidden="true" focusable="false">
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></symbol>
+  <symbol id="i-tg" viewBox="0 0 24 24"><path d="M21.5 3.5 2.8 10.7c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.5c.3.8 1.3 1 1.9.4l2.6-2.4 4.6 3.4c.7.5 1.7.1 1.9-.8l3-14.6c.2-1-.8-1.9-1.8-1.6zM9.6 14.6l-.5 3.6-1.2-4 9.4-6.3-7.7 6.7z"/></symbol>
+  <symbol id="i-yt" viewBox="0 0 28 24"><path fill-rule="evenodd" d="M6 3h16a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H6a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm5.5 5v8l7-4z"/></symbol>
+  <symbol id="i-dc" viewBox="0 0 26 24"><path fill-rule="evenodd" d="M5 5.5C8 4 10 3.6 11 3.6l.6 1.2c.9-.1 1.9-.1 2.8 0L15 3.6c1 0 3 .4 6 1.9 2 3.2 3 6.8 3 11-1.9 1.6-3.9 2.6-6.1 3.2l-1.3-2c1-.4 1.9-.9 2.7-1.5-3.8 1.8-8.8 1.8-12.6 0 .8.6 1.7 1.1 2.7 1.5l-1.3 2C5.9 19.1 3.9 18.1 2 16.5c0-4.2 1-7.8 3-11zm4.3 4.8c-1.05 0-1.9.95-1.9 2.1s.85 2.1 1.9 2.1 1.9-.95 1.9-2.1-.85-2.1-1.9-2.1zm7.4 0c-1.05 0-1.9.95-1.9 2.1s.85 2.1 1.9 2.1 1.9-.95 1.9-2.1-.85-2.1-1.9-2.1z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 26"><path d="M3 2 22 13 3 24z"/></symbol>
+</svg>
+
+<!-- top bar: slides in after the hero on desktop, always visible on mobile -->
+<div class="bar" id="bar">
+  <a class="bar-logo" href="#home" aria-label="Just Another Sheep, back to top"><img src="assets/logo.svg" alt="" width="615" height="351"></a>
+  <nav class="bar-nav" id="menu" aria-label="Main">
+    <a href="#flock">THE FLOCK</a>
+    <a href="#world">THE WORLD</a>
+    <a href="#watch">WATCH</a>
+    <a href="#coin">COIN</a>
+    <a href="#join">JOIN</a>
+  </nav>
+  <a class="bar-coin" href="#coin">$BAAAH</a>
+  <button class="burger" id="burger" type="button" aria-controls="menu" aria-expanded="false" aria-label="Open menu">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+</div>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+  <picture class="hero-art">
+    <source media="(max-width:760px)" srcset="assets/hero-mobile.webp" width="892" height="816">
+    <img src="assets/hero.webp" width="1344" height="752" fetchpriority="high" alt="Sheep, a black sheep in a hoodie with a cigarette, stands in front of his crew of misfit sheep. Behind them a black flag with the sheep logo, a city skyline and a red sun.">
+  </picture>
+
+  <div class="hero-top">
+    <a class="hero-logo" href="#home" aria-label="Just Another Sheep"><img src="assets/logo.svg" alt="" width="615" height="351"></a>
+    <nav class="hero-links" aria-label="Sections">
+      <a href="#flock">THE FLOCK</a>
+      <a href="#world">THE WORLD</a>
+      <a href="#watch">WATCH</a>
+      <a href="#coin">COIN</a>
+    </nav>
+    <div class="hero-socials">
+      <a href="#join" data-link="x" aria-label="X"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></a>
+      <a href="#join" data-link="telegram" aria-label="Telegram"><svg class="ico" aria-hidden="true"><use href="#i-tg"/></svg></a>
+      <a href="#join" data-link="youtube" aria-label="YouTube"><svg class="ico" aria-hidden="true"><use href="#i-yt"/></svg></a>
+      <a href="#join" data-link="discord" aria-label="Discord"><svg class="ico" aria-hidden="true"><use href="#i-dc"/></svg></a>
+    </div>
+  </div>
+
+  <div class="hero-copy">
+    <h1 class="hero-h1"><img src="assets/headline.svg" width="1256" height="692" alt="Don't follow. Belong."></h1>
+    <p class="tag hero-tag">DIFFERENT MINDS. ONE FLOCK.</p>
+    <p class="hero-sub">A HOME FOR OUTSIDERS, MISFITS<br>AND FREE THINKERS.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#join"><i></i><i></i><i></i>JOIN THE FLOCK</a>
+      <a class="btn ghost" href="#watch"><svg class="ico" style="width:.8em;height:.9em" aria-hidden="true"><use href="#i-play"/></svg>WATCH THE CHAOS</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TICKER ================= -->
+<div class="ticker-wrap"><div class="ticker" aria-label="Satirical news ticker">
+  <div class="ticker-track">
+    <p><b>BREAKING</b>EXPERTS CONFIRM YOU SHOULD BE SCARED. MORE AT 11.<span>///</span>FREEDOM NOW AVAILABLE IN PREMIUM TIER.<span>///</span>NATION DIVIDED INTO TWO TEAMS, BOTH SOMEHOW LOSING.<span>///</span>APP THAT LISTENS TO EVERYTHING PROMISES TO RESPECT PRIVACY.<span>///</span>MAN WORKS 40 HOURS A WEEK TO AFFORD APARTMENT HE SLEEPS IN.<span>///</span>WEATHER: CLOUDY WITH A CHANCE OF PROPAGANDA.<span>///</span>LOCAL SHEEP ASKS QUESTION, INVESTIGATION ONGOING.<span>///</span>FREEDOM OF SPEECH. TERMS AND CONDITIONS APPLY.<span>///</span></p>
+    <p aria-hidden="true"><b>BREAKING</b>EXPERTS CONFIRM YOU SHOULD BE SCARED. MORE AT 11.<span>///</span>FREEDOM NOW AVAILABLE IN PREMIUM TIER.<span>///</span>NATION DIVIDED INTO TWO TEAMS, BOTH SOMEHOW LOSING.<span>///</span>APP THAT LISTENS TO EVERYTHING PROMISES TO RESPECT PRIVACY.<span>///</span>MAN WORKS 40 HOURS A WEEK TO AFFORD APARTMENT HE SLEEPS IN.<span>///</span>WEATHER: CLOUDY WITH A CHANCE OF PROPAGANDA.<span>///</span>LOCAL SHEEP ASKS QUESTION, INVESTIGATION ONGOING.<span>///</span>FREEDOM OF SPEECH. TERMS AND CONDITIONS APPLY.<span>///</span></p>
+  </div>
+</div></div>
+
+<!-- ================= 01 THE FLOCK ================= -->
+<section class="flock" id="flock" aria-labelledby="flock-title">
+  <div class="stage">
+    <picture>
+      <source media="(max-width:760px)" srcset="assets/flock-mobile.webp" width="937" height="941">
+      <img src="assets/flock-rooftop.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Sheep and the flock hanging out on a rooftop at sunset: talking, arguing, reading, listening to music.">
+    </picture>
+    <div class="flock-head">
+      <p class="tag">01 / THE FLOCK</p>
+      <h2 class="display" id="flock-title">WELCOME TO <span class="r">THE FLOCK.</span></h2>
+    </div>
+  </div>
+  <div class="flock-bar">
+    <p>We don't agree on much. <strong>That's the point.</strong> Punks, nerds, night-shift workers, degens and people who actually read the terms and conditions. Nobody here is in charge. We checked.</p>
+    <div class="flock-side">
+      <p class="flock-quip">EVERYONE'S A SHEEP. <span>WE JUST ADMIT IT.</span></p>
+      <a class="btn" href="#world"><i></i><i></i><i></i>WHY WE'RE LIKE THIS</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 THE WORLD ================= -->
+<section class="world" id="world" aria-labelledby="world-title">
+  <div class="world-poster">
+    <div class="stage">
+      <picture>
+        <source media="(max-width:760px)" srcset="assets/world-mobile.webp" width="1086" height="941">
+        <img src="assets/world-panorama.webp" width="1672" height="941" loading="lazy" decoding="async" alt="On the left a grey crowd under cameras, screens and smoke stacks. On the right a small group around a fire with a guitar, sharing coffee.">
+      </picture>
+      <div class="world-copy">
+        <p class="tag">02 / THE WORLD</p>
+        <h2 class="display" id="world-title">THE WORLD<br>DIDN'T BREAK US. <span class="r">IT BROUGHT US<br>TOGETHER.</span></h2>
+        <p class="world-text">They taught us to compete instead of connect. To pick sides instead of asking questions. To follow instead of thinking.</p>
+      </div>
+    </div>
+  </div>
+
+  <header class="ask">
+    <p class="tag">CHAPTER 02 / LOOK CLOSER</p>
+    <h2 class="display">SO WHAT WENT <span class="r">WRONG?</span></h2>
+    <p class="ask-text">We were promised freedom, connection and endless possibilities. So why does the world keep pushing us further apart?</p>
+  </header>
+
+  <article class="panel" aria-labelledby="w-choice">
+    <div class="panel-art"><img src="assets/world-choice.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Sheep leans against a wall and watches a crowd follow advertising screens and arrows, everyone staring at a phone."></div>
+    <div class="panel-copy">
+      <span class="panel-no" aria-hidden="true">01</span>
+      <p class="tag red">01 / THE SYSTEM OF WANT</p>
+      <h3 id="w-choice">THE ILLUSION <span>OF CHOICE.</span></h3>
+      <p class="panel-text">More options than ever. Ads that know our habits. Algorithms that learn what keeps us scrolling. When every choice is suggested to us, how often do we stop to choose for ourselves?</p>
+      <p class="panel-q"><span>ARE YOU CHOOSING — OR JUST FOLLOWING?</span></p>
+    </div>
+  </article>
+  <article class="panel flip" aria-labelledby="w-divide">
+    <div class="panel-art"><img src="assets/world-divide.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Two groups shout at each other across a street at sunset while one sheep stands aside with crossed arms."></div>
+    <div class="panel-copy">
+      <span class="panel-no" aria-hidden="true">02</span>
+      <p class="tag red">02 / THE ART OF ARGUMENT</p>
+      <h3 id="w-divide">DIVIDE <span>&amp; DISTRACT.</span></h3>
+      <p class="panel-text">Left or right. Us or them. Another outrage, another reason not to listen. We can disagree without turning each other into enemies. So why does every argument feel like a war?</p>
+      <p class="panel-q"><span>WHEN DID THINKING DIFFERENTLY BECOME THE ENEMY?</span></p>
+    </div>
+  </article>
+
+  <div class="think">
+    <div class="torn top" aria-hidden="true"></div>
+    <p class="eyebrow">DON'T CONFUSE DOUBT WITH DENIAL</p>
+    <h2 class="display c">QUESTIONING ISN'T <span class="r">THE SAME AS DENYING.</span></h2>
+    <p class="think-text">Ask for evidence. Check your assumptions. Listen when you're wrong. Questions don't weaken the truth — they help us get closer to it.</p>
+    <div class="torn bottom" aria-hidden="true"></div>
+  </div>
+
+  <article class="panel flip" aria-labelledby="w-silence">
+    <div class="panel-art"><img src="assets/world-silence.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Sheep stands apart from a silent crowd with taped mouths while a looming figure speaks from enormous screens."></div>
+    <div class="panel-copy">
+      <span class="panel-no" aria-hidden="true">03</span>
+      <p class="tag red">03 / WHO GETS TO SPEAK?</p>
+      <h3 id="w-silence">THE PRICE <span>OF SILENCE.</span></h3>
+      <p class="panel-text">Power deserves scrutiny. Headlines deserve context. Even the ideas we love deserve a second look. When nobody asks difficult questions, certainty becomes a substitute for accountability.</p>
+      <p class="panel-q"><span>IF NOBODY QUESTIONS POWER, WHO HOLDS IT ACCOUNTABLE?</span></p>
+    </div>
+  </article>
+  <article class="panel" aria-labelledby="w-alone">
+    <div class="panel-art"><img src="assets/world-alone.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Sheep sits alone on a rooftop above a lit city, looking at a phone while chat bubbles float between the windows."></div>
+    <div class="panel-copy">
+      <span class="panel-no" aria-hidden="true">04</span>
+      <p class="tag red">04 / ALWAYS ONLINE</p>
+      <h3 id="w-alone">CONNECTED. <span>STILL ALONE?</span></h3>
+      <p class="panel-text">More followers. More messages. More ways to be seen. But being noticed isn't the same as being understood. A community should make room for who you really are.</p>
+      <p class="panel-q"><span>WHAT IF BELONGING MATTERED MORE THAN FITTING IN?</span></p>
+    </div>
+  </article>
+
+  <article class="panel flip panel-end" aria-labelledby="w-together">
+    <div class="panel-art"><img src="assets/world-together.webp" width="1800" height="1116" loading="lazy" decoding="async" alt="Sheep and the crew around a table made of crates in a garage hideout at sunset, arguing, pointing at each other and laughing."></div>
+    <div class="panel-copy">
+      <span class="panel-no" aria-hidden="true">05</span>
+      <p class="tag red">05 / WHY THE FLOCK EXISTS</p>
+      <h3 id="w-together">WE DON'T NEED<br>TO THINK ALIKE. <span>WE NEED<br>TO THINK.</span></h3>
+      <p class="panel-text">A flock isn't a place where everyone agrees. It's where you can ask questions, challenge ideas, make mistakes, change your mind — and still belong.</p>
+      <p class="panel-q"><span>NOT BLIND FOLLOWERS.<br>JUST ANOTHER SHEEP.</span></p>
+    </div>
+  </article>
+
+  <div class="handoff">
+    <p>WE ASK THE QUESTIONS. <span>THEN WE MAKE SOME NOISE.</span></p>
+    <a class="btn" href="#watch"><i></i><i></i><i></i>WATCH THE CHAOS</a>
+  </div>
+</section>
+
+<!-- ================= 03 WATCH ================= -->
+<section class="watch" id="watch" aria-labelledby="watch-title">
+  <header class="watch-intro">
+    <p class="tag">CHAPTER 03 / THE CONTENT</p>
+    <p class="watch-prelude">THE WORLD GAVE US SOMETHING TO QUESTION.</p>
+    <h2 class="display" id="watch-title">WE GAVE IT <span class="r">SOMETHING TO WATCH.</span></h2>
+    <p class="watch-desc">Stories that challenge. Music that speaks. Satire that bites. Comics that keep the questions alive.</p>
+  </header>
+
+  <div class="stage">
+    <img src="assets/watch-chaos.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Sheep reclining in a director's chair in a cinematic studio with cameras, film reels and a wall of satirical broadcasts.">
+  </div>
+
+  <div class="afterimage"><p>NOT JUST SOMETHING TO SCROLL PAST. <strong>SOMETHING TO THINK ABOUT.</strong></p></div>
+
+  <div class="formats">
+    <header class="formats-head">
+      <p class="eyebrow">OUR WEAPONS OF MASS DISTRACTION</p>
+      <h3 class="display">FOUR WAYS TO <span class="r">MAKE NOISE.</span></h3>
+    </header>
+
+    <div class="fmt-list">
+      <article class="fmt">
+        <div class="fmt-art"><img src="assets/format-stories.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Sheep surveys a vast movie set where a farm facade tears open to reveal a surveillance city."></div>
+        <div class="fmt-copy">
+          <p class="tag red">01 / ANIMATION</p>
+          <h4>THE STORIES.</h4>
+          <p class="fmt-text">Fiction with sharp edges. Characters who refuse to play along. Stories that make room for a different point of view.</p>
+        </div>
+      </article>
+      <article class="fmt flip">
+        <div class="fmt-art"><img src="assets/format-music.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Sheep performing on stage with a microphone under red spotlights as the crowd cheers."></div>
+        <div class="fmt-copy">
+          <p class="tag red">02 / MUSIC</p>
+          <h4>THE MUSIC.</h4>
+          <p class="fmt-text">Original songs about the contradictions we live with. Sometimes angry. Sometimes vulnerable. Never background noise.</p>
+          <div class="player" id="player">
+            <button class="player-btn" id="player-btn" type="button" aria-label="Play The Flock">
+              <svg class="i-play" viewBox="0 0 24 26" aria-hidden="true"><path d="M3 2 22 13 3 24z"/></svg>
+              <svg class="i-pause" viewBox="0 0 24 26" aria-hidden="true"><path d="M3 2h7v22H3zM14 2h7v22h-7z"/></svg>
+            </button>
+            <p class="player-label">First track / out now</p>
+            <p class="player-title">THE FLOCK</p>
+            <div class="player-row">
+              <input class="player-seek" id="player-seek" type="range" min="0" max="1000" step="1" value="0" aria-label="Seek in The Flock">
+              <p class="player-time"><span id="player-cur">0:00</span> / <span id="player-dur">4:17</span></p>
+            </div>
+            <p class="player-fail" id="player-fail" hidden>This track could not be loaded.</p>
+            <audio id="player-audio" preload="none" src="audio/the-flock.mp3"></audio>
+          </div>
+        </div>
+      </article>
+      <article class="fmt">
+        <div class="fmt-art"><img src="assets/format-satire.webp" width="1672" height="933" loading="lazy" decoding="async" alt="Sheep leans on a road case and watches a press conference where giant hands hold four faceless puppets in suits on strings."></div>
+        <div class="fmt-copy">
+          <p class="tag red">03 / SATIRE</p>
+          <h4>THE SATIRE.</h4>
+          <p class="fmt-text">Memes, uncomfortable questions and a little well-aimed absurdity. Because sometimes the only sane response is to laugh.</p>
+        </div>
+      </article>
+      <article class="fmt flip comic">
+        <div class="fmt-art"><img src="assets/format-comic.webp" width="1199" height="1312" loading="lazy" decoding="async" alt="Black-and-white manga page of Sheep moving through a controlled, surveilled city."></div>
+        <div class="fmt-copy">
+          <p class="tag red">04 / GRAPHIC NOVEL</p>
+          <h4>THE COMIC.</h4>
+          <p class="fmt-text">When a single frame says more than a thousand posts. Original comic stories, recurring characters and the questions no one wants to ask.</p>
+        </div>
+      </article>
+    </div>
+
+    <section class="strip" aria-labelledby="strip-title">
+      <p class="eyebrow">THE COMIC / CONCEPT STRIP 00</p>
+      <h4 class="display c" id="strip-title">THE <span class="r">QUESTION.</span></h4>
+      <p class="strip-sub">A tiny preview of how JAS can work on the page. Concept only — not a published issue.</p>
+      <div class="strip-grid">
+        <figure class="frame" style="margin:0"><img src="assets/comic-panel-1.webp" width="1169" height="254" loading="lazy" decoding="async" alt="Close-up manga panel of Sheep with a skeptical expression."><figcaption class="frame-cap">“EVER WONDER WHO BUILT THE FENCE?”</figcaption><span class="frame-no" aria-hidden="true">01</span></figure>
+        <figure class="frame" style="margin:0"><img src="assets/comic-panel-2.webp" width="657" height="315" loading="lazy" decoding="async" alt="Sheep notices surveillance cameras and a public screen."><figcaption class="frame-cap">“THE FENCE IS FOR YOUR SAFETY.”</figcaption><span class="frame-no" aria-hidden="true">02</span></figure>
+        <figure class="frame" style="margin:0"><img src="assets/comic-panel-3.webp" width="516" height="356" loading="lazy" decoding="async" alt="Sheep stands above an immense flock, seen from behind."><figcaption class="frame-cap">“SURE. BUT WHO'S IT KEEPING IN?”</figcaption><span class="frame-no" aria-hidden="true">03</span></figure>
+        <figure class="frame" style="margin:0"><img src="assets/comic-panel-4.webp" width="569" height="308" loading="lazy" decoding="async" alt="Sheep reaches forward toward the reader."><figcaption class="frame-cap">TO BE CONTINUED… <strong>BAAAH.</strong></figcaption><span class="frame-no" aria-hidden="true">04</span></figure>
+      </div>
+    </section>
+
+    <p class="watch-note">Concept artwork and sample panels. Official films, music, comics and releases will be linked once published.</p>
+    <div class="watch-cta">
+      <a class="btn" href="#join" data-link="x"><i></i><i></i><i></i><svg class="ico" style="width:.8em;height:.8em" aria-hidden="true"><use href="#i-x"/></svg>FIRST DROPS LAND ON X</a>
+      <a class="btn ghost" href="#join" data-link="youtube"><svg class="ico" style="width:1em;height:.85em" aria-hidden="true"><use href="#i-yt"/></svg>YOUTUBE</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 COIN ================= -->
+<section class="coin" id="coin" aria-labelledby="coin-title">
+  <div class="torn top" aria-hidden="true"></div>
+  <div class="stage">
+    <img src="assets/coin-flip.webp" width="1920" height="1071" loading="lazy" decoding="async" alt="On a rooftop at sunset Sheep flicks a single coin with the sheep logo into the air and eyes it skeptically. Around him the crew laughs, rolls their eyes and holds up a coin of their own.">
+    <div class="coin-head">
+      <p class="tag">04 / THE COIN</p>
+      <h2 class="display" id="coin-title">YES, THE SHEEP <span class="r">HAS A COIN.</span></h2>
+      <p class="coin-lead">The anti-system sheep has a coin. We see the irony. We're laughing too.</p>
+    </div>
+  </div>
+  <div class="coin-body">
+    <div class="coin-grid">
+      <div class="coin-pitch">
+        <h3 class="display">IT BELONGS <span class="r">TO THE FLOCK.</span></h3>
+        <p class="coin-text">No bank asked for it and no committee approved it. It won't make you rich, smart or free. It makes you one of us, with a ticker.</p>
+        <p class="scrawl coin-quip">Influencer said 100x. Influencer sold.</p>
+      </div>
+
+      <div class="ticket-wrap">
+        <div class="ticket">
+          <p class="ticket-title">THE BORING DETAILS</p>
+          <ul class="facts">
+            <li><small>Name</small><b>JUST ANOTHER SHEEP</b></li>
+            <li><small>Ticker</small><b>$BAAAH</b></li>
+            <li><small>Chain</small><b>SOLANA</b></li>
+          </ul>
+          <p class="scrawl ticket-note">Three A's. We counted.</p>
+          <div class="ca">
+            <small>Contract address</small>
+            <div class="ca-row" id="ca-live" hidden>
+              <code id="ca-value"></code>
+              <button class="ca-copy" id="ca-copy" type="button">COPY</button>
+            </div>
+            <p class="ca-pending" id="ca-pending">Drops at launch. If it's not on this page, it's not us.</p>
+          </div>
+          <div class="coin-actions" id="coin-actions" hidden>
+            <a class="btn" href="#coin" data-link="buy" data-hide-unset><i></i><i></i><i></i>GET $BAAAH</a>
+            <a class="btn inkbtn" href="#coin" data-link="chart" data-hide-unset>SEE THE CHART</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="howto">
+      <h3 class="display">HOW TO <span class="r">GET SOME.</span></h3>
+      <ol class="steps-row">
+        <li><b>GET A WALLET.</b><span>Phantom or Solflare. Write the seed phrase on paper. Yes, paper.</span></li>
+        <li><b>GET SOME SOL.</b><span>From an exchange, into your wallet.</span></li>
+        <li><b>SWAP FOR $BAAAH.</b><span>Paste the contract address from this page. Not from a reply guy.</span></li>
+      </ol>
+    </div>
+
+    <div class="smallprint">
+      <b>THE SMALL PRINT. <span>READ IT ANYWAY.</span></b>
+      <p>$BAAAH is a memecoin. It has no intrinsic value, no promise of return and no roadmap to riches, and it can go to zero. Nothing on this page is financial advice. Never put in money you can't afford to lose, and check the rules where you live before you take part.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 JOIN ================= -->
+<section class="join" id="join" aria-labelledby="join-title">
+  <div class="torn top" aria-hidden="true"></div>
+  <p class="tag">05 / YOUR MOVE</p>
+  <h2 class="display c" id="join-title">PULL UP <span class="r">A CRATE.</span></h2>
+  <p class="join-text">No savior. No king. No onboarding call. Show up, say something, stay weird.</p>
+  <div class="join-links">
+    <a class="btn" href="#join" data-link="x"><i></i><i></i><i></i><svg class="ico" style="width:.8em;height:.8em" aria-hidden="true"><use href="#i-x"/></svg>FIND US ON X</a>
+    <a class="btn ghost" href="#join" data-link="telegram"><svg class="ico" style="width:.95em;height:.95em" aria-hidden="true"><use href="#i-tg"/></svg>TELEGRAM</a>
+    <a class="btn ghost" href="#join" data-link="discord"><svg class="ico" style="width:1em;height:.92em" aria-hidden="true"><use href="#i-dc"/></svg>DISCORD</a>
+    <a class="btn ghost" href="#join" data-link="youtube"><svg class="ico" style="width:1em;height:.85em" aria-hidden="true"><use href="#i-yt"/></svg>YOUTUBE</a>
+  </div>
+  <p class="scrawl">Baaah.</p>
+</section>
+
+</main>
+
+<footer class="foot">
+  <a href="#home" aria-label="Just Another Sheep, back to top"><img src="assets/logo.svg" alt="" width="615" height="351" loading="lazy"></a>
+  <nav class="foot-nav" aria-label="Footer">
+    <a href="#flock">THE FLOCK</a>
+    <a href="#world">THE WORLD</a>
+    <a href="#watch">WATCH</a>
+    <a href="#coin">COIN</a>
+    <a href="#join">JOIN</a>
+  </nav>
+  <small>Just Another Sheep. Don't follow. Belong. $BAAAH is a memecoin with no intrinsic value and no promise of return. Nothing here is financial advice.</small>
+</footer>
+
+<div class="setup" id="setup" hidden></div>
+
+<script>
+/* =====================================================================
+   SETUP: fill these in before launch. Empty values keep the page working
+   (buttons stay on the page, the coin buttons stay hidden) and show a
+   small yellow note in the corner until everything is set.
+   ===================================================================== */
+const JAS = {
+  ca: "",                       // Solana contract address of $BAAAH
+  links: {
+    x: "",                      // https://x.com/...
+    telegram: "",               // https://t.me/...
+    discord: "",                // https://discord.gg/...
+    youtube: "",                // https://youtube.com/@...
+    buy: "",                    // swap / launchpad link
+    chart: ""                   // chart link
+  }
+};
+
+(function () {
+  const missing = [];
+
+  // outbound links
+  document.querySelectorAll("[data-link]").forEach(function (el) {
+    const key = el.getAttribute("data-link");
+    const url = (JAS.links[key] || "").trim();
+    if (url) {
+      el.href = url;
+      el.target = "_blank";
+      el.rel = "noopener";
+    } else {
+      if (missing.indexOf(key) === -1) missing.push(key);
+      if (el.hasAttribute("data-hide-unset")) { el.hidden = true; el.style.display = "none"; }
+      else if (el.closest("#join")) {
+        el.classList.add("is-unset");
+        el.addEventListener("click", function (e) { e.preventDefault(); });
+      }
+    }
+  });
+  const actions = document.getElementById("coin-actions");
+  if ((JAS.links.buy || "").trim() || (JAS.links.chart || "").trim()) actions.hidden = false;
+
+  // contract address
+  const ca = (JAS.ca || "").trim();
+  const copyBtn = document.getElementById("ca-copy");
+  const caValue = document.getElementById("ca-value");
+  if (ca) {
+    caValue.textContent = ca;
+    document.getElementById("ca-live").hidden = false;
+    document.getElementById("ca-pending").hidden = true;
+    copyBtn.addEventListener("click", function () {
+      const done = function () {
+        copyBtn.textContent = "COPIED";
+        setTimeout(function () { copyBtn.textContent = "COPY"; }, 1600);
+      };
+      const select = function () {
+        const r = document.createRange(); r.selectNodeContents(caValue);
+        const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        copyBtn.textContent = "SELECTED";
+        setTimeout(function () { copyBtn.textContent = "COPY"; }, 1600);
+      };
+      try { navigator.clipboard.writeText(ca).then(done, select); } catch (e) { select(); }
+    });
+  } else {
+    missing.push("ca");
+  }
+
+  // setup note
+  if (missing.length) {
+    const note = document.getElementById("setup");
+    note.textContent = "Setup: " + missing.length + " Angaben fehlen noch (" + missing.join(", ") + "). In index.html unten bei JAS eintragen, dann verschwindet dieser Hinweis. (Antippen blendet ihn aus.)";
+    note.hidden = false;
+    note.addEventListener("click", function () { note.hidden = true; });
+  }
+
+  // music player
+  const pl = document.getElementById("player");
+  const au = document.getElementById("player-audio");
+  const pb = document.getElementById("player-btn");
+  const seek = document.getElementById("player-seek");
+  const cur = document.getElementById("player-cur");
+  const dur = document.getElementById("player-dur");
+  const fmt = function (t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); };
+  const total = function () { return isFinite(au.duration) && au.duration > 0 ? au.duration : 258; };
+  const paint = function () {
+    const f = au.currentTime / total();
+    seek.value = String(Math.round(f * 1000));
+    seek.style.setProperty("--p", (f * 100).toFixed(2) + "%");
+    cur.textContent = fmt(au.currentTime);
+  };
+  pb.addEventListener("click", function () {
+    if (au.paused) {
+      const pr = au.play();
+      if (pr && pr.catch) pr.catch(function () { document.getElementById("player-fail").hidden = false; });
+    } else { au.pause(); }
+  });
+  au.addEventListener("play", function () { pl.classList.add("is-playing"); pb.setAttribute("aria-label", "Pause The Flock"); });
+  au.addEventListener("pause", function () { pl.classList.remove("is-playing"); pb.setAttribute("aria-label", "Play The Flock"); });
+  au.addEventListener("ended", function () { au.currentTime = 0; paint(); });
+  au.addEventListener("loadedmetadata", function () { dur.textContent = fmt(au.duration); });
+  au.addEventListener("timeupdate", paint);
+  au.addEventListener("error", function () { document.getElementById("player-fail").hidden = false; });
+  seek.addEventListener("input", function () {
+    const f = Number(seek.value) / 1000;
+    seek.style.setProperty("--p", (f * 100).toFixed(2) + "%");
+    cur.textContent = fmt(f * total());
+    try { au.currentTime = f * total(); } catch (e) {}
+  });
+
+  // mobile menu
+  const bar = document.getElementById("bar");
+  const burger = document.getElementById("burger");
+  const setMenu = function (open) {
+    bar.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  };
+  burger.addEventListener("click", function () { setMenu(!bar.classList.contains("open")); });
+  document.querySelectorAll("#menu a, .bar-coin, .bar-logo").forEach(function (a) {
+    a.addEventListener("click", function () { setMenu(false); });
+  });
+
+  // desktop: show the bar once the hero is mostly out of view
+  const hero = document.getElementById("home");
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      document.body.classList.toggle("scrolled", !entries[0].isIntersecting);
+    }, { threshold: 0.25 }).observe(hero);
+  } else {
+    document.body.classList.add("scrolled");
+  }
+})();
+</script>
+</body>
+</html>

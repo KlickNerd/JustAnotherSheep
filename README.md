@@ -1,50 +1,48 @@
 # Just Another Sheep
 
-Source-controlled migration of the published Just Another Sheep experience.
-This project preserves the live site as the visual reference. It is a migration,
-not a redesign.
+Statische Website von Just Another Sheep ("Don't follow. Belong.") plus das
+PEACEHOLD-Browserspiel. Die frühere React/Vite-Seite wurde am 22.11.2026 durch
+die neue Homepage ersetzt; sie liegt weiterhin in der Git-Historie.
 
-## Checkpoint Status
+## Website
 
-The React/Vite scaffold, shared visual tokens, global header/menu/footer, homepage,
-character recovery, informational pages, archive pages, community pages, and route
-views are implemented against the approved primary reference.
+Alles, was ausgeliefert wird, liegt in [`site/`](site/):
 
-Canonical imagery is currently loaded from the published reference site so visual
-comparison uses the existing source art. Local asset copying remains a follow-up
-before production deployment.
+- `site/index.html`: die komplette Homepage (HTML, CSS und JS in einer Datei)
+- `site/assets/`: Illustrationen (WebP), Logo und Headline-Lettering (SVG)
+- `site/audio/`: der Song "The Flock", läuft im Player bei "The Music"
+- `site/fonts/`: JAS Brush, Caveat Brush, Barlow (SIL Open Font License, lokal eingebunden)
+- `site/404.html`: leitet unbekannte Pfade auf die Startseite
+- `site/peacehold-game/` und `site/images/`: die Spiel-Demo unter `/peacehold-game/`
+  mit ihren Bildern, unverändert aus der alten Seite übernommen
+
+### Vor dem Launch eintragen
+
+Ganz unten in `site/index.html`, im Block `const JAS = { ... }`:
+
+- `ca`: Contract Address von $BAAAH
+- `links.x`, `links.telegram`, `links.discord`, `links.youtube`
+- `links.buy` (Swap/Launchpad) und `links.chart`
+
+Solange etwas fehlt, zeigt die Seite unten links einen gelben Setup-Hinweis.
+Die Buttons "GET $BAAAH" und "SEE THE CHART" erscheinen erst, wenn ihre Links
+gesetzt sind.
+
+### Build und Deployment
+
+```bash
+npm run build     # kopiert site/ nach dist/, kein Bundler
+npm run preview   # Build plus lokaler Cloudflare-Worker (wrangler dev)
+```
+
+Cloudflare Workers (`wrangler.jsonc`) liefert `./dist` aus. In Workers Builds:
+Build-Befehl `npm run build`, Deploy-Befehl `npx wrangler deploy`.
 
 ## Game
 
 The PEACEHOLD browser game lives in [`game/`](game/README.md) and deploys as its
 own Cloudflare Worker (`peacehold-game`). It is not part of the website build.
-
-## Local Setup
-
-```bash
-npm install
-npm run dev
-```
-
-Build with `npm run build` and preview the production output with `npm run preview`.
-
-## Route Map
-
-Implemented routes include:
-
-- `/start-here`
-- `/episodes` and `/episodes/001-voluntary-assembly`
-- `/files`
-- `/watch`
-- `/sounds`
-- `/meet-the-flock` and individual character records
-- `/peacehold`
-- `/open-field` and discussion threads
-- `/notebook` and Notebook entries
-- `/about`
-
-Future episode records beyond the approved Episode 001 source remain reserved
-until their primary-reference content is available.
+An older playable demo is still served by the website at `/peacehold-game/`.
 
 ## Collaboration Workflow
 
@@ -64,8 +62,8 @@ Examples: `feature/audio-player`, `feature/open-field-backend`,
 	git switch -c feature/your-change
 	```
 
-2. Make changes; run `npm install` if dependencies need installing, then
-	`npm run dev` for local review and `npm run build` before committing.
+2. Make changes in `site/`; open `site/index.html` in a browser for local
+	review and run `npm run build` before committing.
 3. Commit and push your branch with `git push -u origin HEAD`.
 4. Open a pull request using the PR template. Include a summary, affected
 	routes/components, build/test results, known limitations, and screenshots
@@ -81,13 +79,8 @@ build output. Use the Bug, Feature, or Content Update issue template to propose 
 ### Canonical Areas
 
 **Do not regenerate or reinterpret canonical JAS character art without approval.**
-
-The approved character identities and explicit image mappings in
-`src/data/characters.js`, artwork under `public/images/characters/`, and core
-brand assets under `public/images/brand/` require explicit owner review before
-changes. CODEOWNERS also flags shared layout/navigation (`src/main.jsx`), global
-styles, and collaboration guidance for review by `@LanceMeacham`. These areas
-are review-sensitive, not technically locked against legitimate approved changes.
+Artwork under `site/assets/` and `docs/style-guide/` requires owner review before
+changes.
 
 The intended `main` protections are PRs, one approval, code-owner review,
 stale-review dismissal, conversation resolution, and strict `Build` status checks.
