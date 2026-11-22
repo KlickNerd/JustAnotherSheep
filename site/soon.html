@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0e0b0a">
+<meta name="robots" content="noindex">
+<meta name="description" content="Just Another Sheep opens soon. Hold your wool.">
+<meta property="og:title" content="Just Another Sheep | Hold your wool.">
+<meta property="og:description" content="Not a maintenance break. The flock opens soon.">
+<title>Just Another Sheep | Hold your wool.</title>
+<script src="launch.js"></script>
+<style>
+@font-face{font-family:"JAS Brush";src:url("fonts/JASBrush.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Caveat Brush";src:url("fonts/CaveatBrush-Regular.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Barlow";font-weight:700;src:url("fonts/Barlow-Bold.woff2") format("woff2");font-display:swap}
+:root{
+  --ink:#0e0b0a;--cream:#f7ecdc;--paper:#ebcfa6;--red:#d92316;--blood:#e2241a;
+  --brush:"Caveat Brush","Comic Sans MS",cursive;
+  --display:"JAS Brush","Impact","Arial Narrow",sans-serif;
+  --rough:polygon(1.4% 3.9%,13.9% 3.3%,23.7% 4.1%,33.9% 3.6%,46.3% 5.6%,55.8% 2.1%,66.9% 5.7%,79.9% 0.3%,91.8% 6.8%,99.2% 12.9%,99.8% 34.1%,99.4% 60.5%,99.8% 87.9%,99.9% 96.8%,87.6% 94.1%,76.2% 95.5%,65.2% 95.4%,54.2% 98.1%,41.5% 93.0%,30.8% 95.0%,21.3% 98.4%,10.2% 99.5%,0.9% 88.8%,1.0% 62.9%,1.1% 33.2%,0.0% 12.3%);
+  --smear:polygon(0.0% 1.6%,9.5% 9.6%,17.1% 1.6%,25.7% 10.6%,33.8% 10.4%,43.7% 1.9%,51.6% 6.3%,59.6% 13.9%,66.9% 0.3%,77.8% 5.6%,83.9% 4.6%,92.8% 13.4%,99.5% 9.7%,98.5% 38.4%,97.6% 66.7%,99.1% 87.6%,97.5% 86.2%,91.6% 89.7%,80.7% 90.9%,74.3% 88.8%,64.5% 97.3%,56.4% 96.9%,49.9% 95.3%,40.7% 94.5%,31.4% 88.3%,22.1% 86.3%,13.7% 88.9%,7.4% 97.5%,1.6% 87.6%,1.7% 65.3%,0.5% 32.6%,1.5% 8.4%);
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;background:var(--ink);color:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{max-width:100%}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.tag{display:inline-block;margin:0;font-family:var(--brush);font-style:italic;line-height:1.1;letter-spacing:.03em;padding:.34em 1.2em .26em .75em;transform:rotate(-2deg);clip-path:var(--smear)}
+.tag.paper{background:var(--paper);color:#1a1210}
+.tag.red{background:var(--red);color:#fff6e8}
+h1{margin:0;font-family:var(--display);font-weight:400;line-height:.9;letter-spacing:.012em;text-transform:uppercase;transform:rotate(-4deg) skewX(-6deg);transform-origin:left bottom;text-shadow:.04em .05em 0 rgba(0,0,0,.6)}
+h1 span{display:block;width:fit-content;position:relative;color:var(--blood)}
+h1 span::after{content:"";position:absolute;left:-4%;right:-8%;bottom:-.12em;height:.12em;background:var(--blood);clip-path:polygon(0 60%,6% 30%,40% 20%,70% 0,100% 10%,97% 55%,60% 70%,20% 95%,3% 100%)}
+.lead{margin:0;font-family:var(--brush);font-style:italic;letter-spacing:.03em;text-shadow:0 2px 6px rgba(0,0,0,.9)}
+.status{display:flex;align-items:center;gap:.4em;margin:0;font-family:var(--brush);font-style:italic;letter-spacing:.03em}
+.dot{width:.5em;height:.5em;border-radius:50%;background:var(--blood);box-shadow:0 0 0 .17em rgba(226,36,26,.28)}
+.timer{display:flex;align-items:flex-start}
+.unit{display:flex;flex-direction:column;align-items:center}
+.card{position:relative;display:grid;place-items:center;background:var(--paper);background-image:linear-gradient(180deg,rgba(255,246,230,.75) 0 50%,rgba(120,70,30,.14) 50% 100%);color:#1a1210;font-family:var(--display);line-height:1;letter-spacing:.02em;font-variant-numeric:tabular-nums;border:.045em solid #1a1210;box-shadow:.075em .085em 0 rgba(0,0,0,.75)}
+.card::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(26,18,16,.32)}
+.unit:nth-child(1) .card{transform:rotate(-3deg);color:var(--red)}
+.unit:nth-child(3) .card{transform:rotate(2deg)}
+.unit:nth-child(5) .card{transform:rotate(-2deg)}
+.sep{font-family:var(--display);color:var(--blood);text-shadow:.04em .04em 0 #000}
+.lbl{font-family:"Barlow",system-ui,sans-serif;font-weight:700;letter-spacing:.24em;text-transform:uppercase;text-shadow:0 2px 4px #000}
+
+/* ---------- desktop: one framed scene, scales with its width ---------- */
+@media (min-width:761px){
+  .scene{position:relative;width:100%;max-width:1920px;margin:0 auto;aspect-ratio:16/9;container-type:inline-size;overflow:hidden;background:var(--ink)}
+  .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%}
+  .scene::before{content:"";position:absolute;z-index:1;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(10,7,6,.55) 0%,rgba(10,7,6,.25) 26%,rgba(10,7,6,0) 44%)}
+  .top{position:absolute;z-index:2;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;padding:.95cqw 3.1cqw 0 2.8cqw}
+  .logo{display:block;width:18.75cqw;height:auto}
+  .status{font-size:max(15px,2cqw);padding-top:.5cqw}
+  .copy{position:absolute;z-index:2;left:3.2cqw;top:13.4cqw}
+  .copy .tag{font-size:max(13px,1.9cqw)}
+  h1{margin-top:2cqw;font-size:8.65cqw}
+  .lead{margin:3.65cqw 0 0 .2cqw;font-size:max(13px,1.82cqw)}
+  .timer{gap:.62cqw;margin-top:.95cqw}
+  .unit{gap:.42cqw}
+  .card{height:6.15cqw;min-width:5.85cqw;padding:0 .73cqw;font-size:4.8cqw}
+  .sep{font-size:3.85cqw;line-height:6.15cqw}
+  .lbl{font-size:max(9px,.84cqw)}
+  .foot{position:absolute;z-index:2;left:3cqw;bottom:1.05cqw;font-size:max(12px,1.72cqw)}
+}
+
+/* ---------- mobile ---------- */
+@media (max-width:760px){
+  body{justify-content:flex-start}
+  .scene{display:flex;flex-direction:column}
+  .top{order:-1;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 16px;background:rgba(14,11,10,.95);border-bottom:2px solid #3a251b}
+  .logo{display:block;width:112px;height:auto}
+  .status{font-size:21px}
+  .art{display:block;position:relative}
+  .art img{display:block;width:100%;height:auto}
+  .art::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26%;background:linear-gradient(rgba(14,11,10,0),var(--ink))}
+  .copy{position:relative;z-index:2;margin-top:-7vw;padding:0 18px 26px}
+  .copy .tag{font-size:clamp(18px,5.2vw,23px)}
+  h1{margin-top:22px;font-size:clamp(64px,19.5vw,104px)}
+  .lead{margin:50px 0 0 2px;font-size:clamp(20px,5.6vw,25px)}
+  .timer{gap:8px;margin-top:12px}
+  .unit{gap:8px}
+  .card{height:84px;min-width:82px;padding:0 10px;font-size:64px}
+  .sep{font-size:50px;line-height:84px}
+  .lbl{font-size:11px}
+  .foot{display:block;width:fit-content;margin:0 0 34px 16px;font-size:clamp(16px,4.5vw,20px)}
+}
+</style>
+</head>
+<body>
+<main class="scene">
+  <picture class="art">
+    <source media="(max-width:760px)" srcset="assets/hero-mobile.webp" width="892" height="816">
+    <img src="assets/hero.webp" width="1344" height="752" alt="Sheep, a black sheep in a hoodie with a cigarette, stands in front of his crew of misfit sheep. Behind them a black flag with the sheep logo, a city skyline and a red sun.">
+  </picture>
+
+  <div class="top">
+    <img class="logo" src="assets/logo.svg" width="615" height="351" alt="Just Another Sheep">
+    <p class="status"><span class="dot" aria-hidden="true"></span>STATUS: ALMOST.</p>
+  </div>
+
+  <div class="copy">
+    <p class="tag paper">NOT A MAINTENANCE BREAK.</p>
+    <h1>HOLD YOUR <span>WOOL.</span></h1>
+    <p class="lead">THE FLOCK OPENS IN</p>
+    <div class="timer" role="timer" aria-label="Time until the site opens">
+      <div class="unit"><div class="card" id="t-h">--</div><span class="lbl">Hours</span></div>
+      <div class="sep" aria-hidden="true">:</div>
+      <div class="unit"><div class="card" id="t-m">--</div><span class="lbl">Minutes</span></div>
+      <div class="sep" aria-hidden="true">:</div>
+      <div class="unit"><div class="card" id="t-s">--</div><span class="lbl">Seconds</span></div>
+    </div>
+  </div>
+
+  <p class="tag red foot">NO SAVIOR. NO KING. NO LAUNCH PARTY.</p>
+</main>
+
+<script>
+(function () {
+  var launch = Date.parse(window.JAS_LAUNCH || "");
+  var h = document.getElementById("t-h"), m = document.getElementById("t-m"), s = document.getElementById("t-s");
+  var two = function (n) { return String(n).padStart(2, "0"); };
+  var open = function () { location.replace("./"); };
+  if (!launch) { open(); return; }
+  var tick = function () {
+    var left = Math.ceil((launch - Date.now()) / 1000);
+    if (left <= 0) { h.textContent = m.textContent = s.textContent = "00"; open(); return false; }
+    h.textContent = two(Math.floor(left / 3600));
+    m.textContent = two(Math.floor(left % 3600 / 60));
+    s.textContent = two(left % 60);
+    return true;
+  };
+  if (tick()) { var id = setInterval(function () { if (!tick()) clearInterval(id); }, 250); }
+})();
+</script>
+</body>
+</html>

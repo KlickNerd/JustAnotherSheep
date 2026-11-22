@@ -2,6 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script src="launch.js"></script>
+<script>
+/* Before the launch time the homepage hands over to soon.html (the countdown).
+   ?preview=1 shows the real page in this tab, ?preview=0 switches that off. */
+try {
+  var jasLaunch = Date.parse(window.JAS_LAUNCH || "");
+  if (/[?&]preview=1\b/.test(location.search)) sessionStorage.setItem("jas-preview", "1");
+  if (/[?&]preview=0\b/.test(location.search)) sessionStorage.removeItem("jas-preview");
+  if (jasLaunch && Date.now() < jasLaunch && sessionStorage.getItem("jas-preview") !== "1") location.replace("soon.html");
+} catch (e) {}
+</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0e0b0a">
 <meta name="description" content="Just Another Sheep. A home for outsiders, misfits and free thinkers. Different minds. One flock.">

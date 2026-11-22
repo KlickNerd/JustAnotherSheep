@@ -18,6 +18,19 @@ Alles, was ausgeliefert wird, liegt in [`site/`](site/):
 - `site/peacehold-game/` und `site/images/`: die Spiel-Demo unter `/peacehold-game/`
   mit ihren Bildern, unverändert aus der alten Seite übernommen
 
+### Countdown vor dem Launch
+
+Bis zur Startzeit zeigt die Startseite die Countdown-Seite `site/soon.html`
+("Hold your wool."). Bei null öffnet sie die echte Startseite von selbst.
+
+- Startzeit: `site/launch.js` (UTC). Aktuell 2026-11-23T20:30:00Z, das ist
+  Dienstag, 24.11.2026, 00:30 Uhr in Tbilisi.
+- Vorschau der echten Seite vor dem Start: `?preview=1` an die Adresse hängen
+  (gilt für den Browser-Tab), `?preview=0` schaltet das wieder ab.
+- Früher öffnen: in `launch.js` eine Zeit in der Vergangenheit eintragen.
+- Das ist ein Vorhang, kein Schloss: Die echte Seite liegt weiter auf dem
+  Server und ist über `?preview=1` oder den Quelltext erreichbar.
+
 ### Vor dem Launch eintragen
 
 Ganz unten in `site/index.html`, im Block `const JAS = { ... }`:
