@@ -10,7 +10,9 @@ Alles, was ausgeliefert wird, liegt in [`site/`](site/):
 
 - `site/index.html`: die komplette Homepage (HTML, CSS und JS in einer Datei)
 - `site/assets/`: Illustrationen (WebP), Logo und Headline-Lettering (SVG)
-- `site/audio/`: der Song "The Flock", läuft im Player bei "The Music"
+- `site/audio/`: der Song "The Flock". Startet mit der Seite bzw. beim ersten Klick
+  (Browser blockieren Ton ohne Interaktion), steuerbar über den Button unten rechts
+  und den Player bei "The Music"
 - `site/fonts/`: JAS Brush, Caveat Brush, Barlow (SIL Open Font License, lokal eingebunden)
 - `site/404.html`: leitet unbekannte Pfade auf die Startseite
 - `site/peacehold-game/` und `site/images/`: die Spiel-Demo unter `/peacehold-game/`

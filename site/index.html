@@ -221,6 +221,20 @@ body.scrolled .bar{transform:none}
 .player-time{flex:none;margin:0;font-family:var(--brush);font-style:italic;font-size:19px;letter-spacing:.02em;font-variant-numeric:tabular-nums}
 .player-fail{grid-column:1 / -1;margin:6px 0 0;font-size:14px;font-weight:700}
 .player audio{display:none}
+.soundchip{position:fixed;z-index:50;right:14px;bottom:14px;display:flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border:3px solid #1a1210;background:var(--paper);color:#1a1210;box-shadow:5px 6px 0 rgba(0,0,0,.6);font-family:var(--display);font-size:20px;line-height:1;letter-spacing:.03em;transform:rotate(-1.5deg);transition:transform .15s ease}
+.soundchip:hover{transform:rotate(-3deg) scale(1.04)}
+.soundchip-ico{width:36px;height:36px;display:grid;place-items:center;background:var(--red);color:#fff6e8;clip-path:var(--rough-1);flex:none}
+.soundchip-ico svg{width:15px;height:16px;fill:currentColor}
+.soundchip .i-pause,.soundchip.is-playing .i-play{display:none}
+.soundchip.is-playing .i-pause{display:block}
+.soundchip-bars{display:none;align-items:flex-end;gap:3px;height:16px}
+.soundchip.is-playing .soundchip-bars{display:flex}
+.soundchip-bars i{width:3px;background:#1a1210;animation:eq .9s ease-in-out infinite}
+.soundchip-bars i:nth-child(1){height:60%}
+.soundchip-bars i:nth-child(2){height:100%;animation-delay:-.3s}
+.soundchip-bars i:nth-child(3){height:45%;animation-delay:-.6s}
+@keyframes eq{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+.soundchip-bars i{transform-origin:bottom}
 .strip{margin-top:26px;padding:68px 0 0;border-top:4px solid var(--paper);text-align:center}
 .strip .display{font-size:clamp(46px,6.6vw,112px);margin-top:.45em}
 .strip-sub{margin:44px auto 0;max-width:34em;color:var(--muted);font-size:17px}
@@ -369,6 +383,9 @@ body.scrolled .bar{transform:none}
   .fmt.flip .fmt-art{order:0}
   .fmt h4{font-size:clamp(44px,12.4vw,70px)}
   .player{max-width:none;transform:none}
+  .soundchip{right:10px;bottom:10px;font-size:18px;padding:6px 12px 6px 6px}
+  .soundchip-ico{width:32px;height:32px}
+  .setup{max-width:calc(100% - 24px);bottom:66px}
   .strip{padding-top:52px}
   .strip .display{font-size:clamp(46px,13vw,80px)}
   .strip-sub{margin-top:34px}
@@ -398,8 +415,8 @@ body.scrolled .bar{transform:none}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .ticker-track{animation:none}
-  .btn,.bar,.player-btn{transition:none}
+  .ticker-track,.soundchip-bars i{animation:none}
+  .btn,.bar,.player-btn,.soundchip{transition:none}
 }
 </style>
 </head>
@@ -631,7 +648,7 @@ body.scrolled .bar{transform:none}
               <p class="player-time"><span id="player-cur">0:00</span> / <span id="player-dur">4:17</span></p>
             </div>
             <p class="player-fail" id="player-fail" hidden>This track could not be loaded.</p>
-            <audio id="player-audio" preload="none" src="audio/the-flock.mp3"></audio>
+            <audio id="player-audio" preload="metadata" src="audio/the-flock.mp3"></audio>
           </div>
         </div>
       </article>
@@ -762,6 +779,15 @@ body.scrolled .bar{transform:none}
   <small>Just Another Sheep. Don't follow. Belong. $BAAAH is a memecoin with no intrinsic value and no promise of return. Nothing here is financial advice.</small>
 </footer>
 
+<button class="soundchip" id="soundchip" type="button" aria-label="Play The Flock">
+  <span class="soundchip-ico" aria-hidden="true">
+    <svg class="i-play" viewBox="0 0 24 26"><path d="M3 2 22 13 3 24z"/></svg>
+    <svg class="i-pause" viewBox="0 0 24 26"><path d="M3 2h7v22H3zM14 2h7v22h-7z"/></svg>
+  </span>
+  <span id="soundchip-label">PLAY THE FLOCK</span>
+  <span class="soundchip-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+</button>
+
 <div class="setup" id="setup" hidden></div>
 
 <script>
@@ -845,6 +871,8 @@ const JAS = {
   const seek = document.getElementById("player-seek");
   const cur = document.getElementById("player-cur");
   const dur = document.getElementById("player-dur");
+  const chip = document.getElementById("soundchip");
+  const chipLabel = document.getElementById("soundchip-label");
   const fmt = function (t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); };
   const total = function () { return isFinite(au.duration) && au.duration > 0 ? au.duration : 258; };
   const paint = function () {
@@ -853,14 +881,48 @@ const JAS = {
     seek.style.setProperty("--p", (f * 100).toFixed(2) + "%");
     cur.textContent = fmt(au.currentTime);
   };
-  pb.addEventListener("click", function () {
+  // The song starts with the page. Browsers block sound until the visitor has
+  // interacted, so the first click, tap or key press starts it where autoplay
+  // is refused. A visitor who pauses it keeps it paused for the session.
+  const soundOff = function () { try { return sessionStorage.getItem("jas-sound") === "off"; } catch (e) { return false; } };
+  const remember = function (v) { try { sessionStorage.setItem("jas-sound", v); } catch (e) {} };
+  const toggle = function () {
     if (au.paused) {
+      remember("on");
       const pr = au.play();
       if (pr && pr.catch) pr.catch(function () { document.getElementById("player-fail").hidden = false; });
-    } else { au.pause(); }
+    } else { remember("off"); au.pause(); }
+  };
+  pb.addEventListener("click", toggle);
+  chip.addEventListener("click", toggle);
+
+  let waiting = false;
+  const onFirst = function (e) {
+    if (e.target && e.target.closest && e.target.closest(".player, .soundchip")) { stopWaiting(); return; }
+    stopWaiting();
+    if (au.paused && !soundOff()) { const pr = au.play(); if (pr && pr.catch) pr.catch(function () {}); }
+  };
+  const stopWaiting = function () {
+    if (!waiting) return; waiting = false;
+    document.removeEventListener("click", onFirst, true);
+    document.removeEventListener("keydown", onFirst, true);
+  };
+  if (!soundOff()) {
+    const first = au.play();
+    if (first && first.catch) first.catch(function () {
+      waiting = true;
+      document.addEventListener("click", onFirst, true);
+      document.addEventListener("keydown", onFirst, true);
+    });
+  }
+  au.addEventListener("play", function () {
+    pl.classList.add("is-playing"); pb.setAttribute("aria-label", "Pause The Flock");
+    chip.classList.add("is-playing"); chip.setAttribute("aria-label", "Pause The Flock"); chipLabel.textContent = "THE FLOCK";
   });
-  au.addEventListener("play", function () { pl.classList.add("is-playing"); pb.setAttribute("aria-label", "Pause The Flock"); });
-  au.addEventListener("pause", function () { pl.classList.remove("is-playing"); pb.setAttribute("aria-label", "Play The Flock"); });
+  au.addEventListener("pause", function () {
+    pl.classList.remove("is-playing"); pb.setAttribute("aria-label", "Play The Flock");
+    chip.classList.remove("is-playing"); chip.setAttribute("aria-label", "Play The Flock"); chipLabel.textContent = "PLAY THE FLOCK";
+  });
   au.addEventListener("ended", function () { au.currentTime = 0; paint(); });
   au.addEventListener("loadedmetadata", function () { dur.textContent = fmt(au.duration); });
   au.addEventListener("timeupdate", paint);
